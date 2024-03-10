@@ -18,19 +18,38 @@
             text-shadow: 4px 4px 4px #000000;
         }
         body {
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    background: linear-gradient(to bottom, #666666, #333333 );
-    align-items: center;
-    flex-direction: column;
+            height: 150vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background: linear-gradient(to bottom, #666666, #333333 );
+            align-items: center;
+            flex-direction: column;
+        }
+        #description {
+            margin-top: 10px;
+            margin-right: 300px;
+            font-size: 18px;
+            text-align: left;
+            width: 300px;
+            color: rgb(36, 209, 228);
         }
     </style>
 </head>
+
 <body>
     <h1>Galactic warrior</h1>
     <canvas id = "game"></canvas>
     <script type="module" src="index.js"></script>
 </body>
+
+<div id="description">
+    <h2>Controls:</h2>
+    <ul>
+        <li>Movement: Arrow keys </li>
+        <li>Shoot: Spacebar</li>
+        <li>Restart: [R]</li>
+    </ul>
+</div>
+
 </html>
