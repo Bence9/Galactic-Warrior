@@ -1,10 +1,12 @@
 export default class Player {
     rightPress = false;
     leftPress = false;
+    shootPressed = false;
 
-    constructor(canvas, velocity) {
+    constructor(canvas, velocity, bulletController) {
         this.canvas = canvas;
         this.velocity = velocity;
+        this.BulletController = bulletController;
 
         this.x = this.canvas.width / 2;
         this.y = this.canvas.height - 75;
@@ -18,6 +20,9 @@ export default class Player {
     }
 
     draw(ctx) {
+        if(this.shootPressed === true){
+            this.BulletController.shoot(this.x + this.width/2, this.y, 4, 10);
+        }
         this.move();
         this.collisionWithWalls();
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -48,6 +53,10 @@ export default class Player {
         if (event.code === 'ArrowLeft') {
             this.leftPress = true;
         }
+        if (event.code === 'Space'){
+            event.preventDefault(); //space lenyomása esetén ne gördüljen le az oldal aljára
+            this.shootPressed = true;
+        }
     }
 
     handleKeyUp = (event) => {
@@ -56,6 +65,10 @@ export default class Player {
         }
         if (event.code === 'ArrowLeft') {
             this.leftPress = false;
+        }
+        if (event.code === 'Space'){
+            event.preventDefault();
+            this.shootPressed = false;
         }
     }
 }

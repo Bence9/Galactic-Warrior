@@ -20,17 +20,54 @@ export default class EnemyController {
     defaultYVelocity = 1;
     moveDownTimerDefault = 30;
     moveDownTimer = this.moveDownTimerDefault;
+    fireBulletTimerDefault = 100;
+    fireBulletTimer = this.fireBulletTimerDefault;
 
-    constructor(canvas) {
+    constructor(canvas, enemyBulletController, playerBulletController) {
         this.canvas = canvas;
+        this.enemyBulletController = enemyBulletController;
+        this.playerBulletController = playerBulletController;
+
+        this.enemyDeathSound = new Audio('sounds/enemy-death.wav');
+        this.enemyDeathSound.volume = 0.5;
+
         this.createEnemies();
+
     }
 
     draw(ctx) {
         this.decrementMoveDownTimer();
         this.updateVelocityAndDirection();
+        this.collisionDetection();
         this.drawEnemies(ctx);
         this.resetMoveDownTimer();
+        this.fireBullet();
+    }
+
+    collisionDetection(){
+        this.enemyRows.forEach((enemyRow)=>{
+            enemyRow.forEach((enemy, enemyIndex)=>{
+            if(this.playerBulletController.collideWith(enemy)){
+                this.enemyDeathSound.currentTime = 0;
+                this.enemyDeathSound.play();    
+                enemyRow.splice(enemyIndex, 1);
+            }
+        });
+    });
+
+        this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0)
+    }
+
+    fireBullet(){
+        this.fireBulletTimer--;
+        if(this.fireBulletTimer <= 0){
+            this.fireBulletTimer = this.fireBulletTimerDefault;
+            const allEnemies = this.enemyRows.flat();
+            const enemyIndex = Math.floor(Math.random() * allEnemies.length);
+            const enemy = allEnemies[enemyIndex];
+            this.enemyBulletController.shoot(enemy.x + enemy.width/2, enemy.y, -3);
+            console.log(enemyIndex);
+        }
     }
 
     resetMoveDownTimer() {
@@ -107,10 +144,17 @@ export default class EnemyController {
             row.forEach((enemyNumber, enemyIndex) => {
                 if (enemyNumber > 0) {
                     this.enemyRows[rowIndex].push(
-                        new Enemy(enemyIndex * 45, rowIndex * 30, enemyNumber)
+                        new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
                     );
                 }
             });
         });
     }
+
+
+    collideWith(sprite){
+        const collisionDetected = this.enemyRows.flat().some((enemy)=>enemy.collideWith(sprite));
+        return collisionDetected;
+    }
+
 }
