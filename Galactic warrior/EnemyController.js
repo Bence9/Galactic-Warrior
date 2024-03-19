@@ -22,6 +22,7 @@ export default class EnemyController {
     moveDownTimer = this.moveDownTimerDefault;
     fireBulletTimerDefault = 100;
     fireBulletTimer = this.fireBulletTimerDefault;
+//    score = 0;
 
     constructor(canvas, enemyBulletController, playerBulletController) {
         this.canvas = canvas;
@@ -51,6 +52,7 @@ export default class EnemyController {
                 this.enemyDeathSound.currentTime = 0;
                 this.enemyDeathSound.play();    
                 enemyRow.splice(enemyIndex, 1);
+//                this.score++;
             }
         });
     });
@@ -58,6 +60,10 @@ export default class EnemyController {
         this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0)
     }
 
+/*    getScore(){
+        return score;
+    }
+*/
     fireBullet(){
         this.fireBulletTimer--;
         if(this.fireBulletTimer <= 0){
@@ -66,7 +72,6 @@ export default class EnemyController {
             const enemyIndex = Math.floor(Math.random() * allEnemies.length);
             const enemy = allEnemies[enemyIndex];
             this.enemyBulletController.shoot(enemy.x + enemy.width/2, enemy.y, -3);
-            console.log(enemyIndex);
         }
     }
 
@@ -158,3 +163,5 @@ export default class EnemyController {
     }
 
 }
+
+

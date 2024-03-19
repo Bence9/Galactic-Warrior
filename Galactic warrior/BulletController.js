@@ -1,10 +1,10 @@
 import Bullet from "./Bullet.js";
 
-export default class BulletController{
+export default class BulletController {
     bullets = [];
     timeTillNextBulletAllowed = 0;
 
-    constructor(canvas, maxBulletsAtATime, bulletColor, soundEnabled){
+    constructor(canvas, maxBulletsAtATime, bulletColor, soundEnabled) {
         this.canvas = canvas;
         this.maxBulletsAtATime = maxBulletsAtATime;
         this.bulletColor = bulletColor;
@@ -14,23 +14,26 @@ export default class BulletController{
         this.shootSound.volume = 0.5;
     }
 
-    draw(ctx){
+    draw(ctx) {
         this.bullets = this.bullets.filter(bullet => bullet.y + bullet.width > 0 && bullet.y <= this.canvas.height);
 
         this.bullets.forEach(bullet => bullet.draw(ctx));
-        if(this.timeTillNextBulletAllowed > 0){
+
+        if (this.timeTillNextBulletAllowed > 0) {
             this.timeTillNextBulletAllowed--;
         }
     }
 
-    shoot(x,y,velocity,timeTillNextBulletAllowed=0){
-        if(this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime){
-            const bullet = new Bullet(this.canvas,x,y,velocity,this.bulletColor);
+    shoot(x, y, velocity, timeTillNextBulletAllowed = 0) {
+        if (this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime) {
+            const bullet = new Bullet(this.canvas, x, y, velocity, this.bulletColor);
             this.bullets.push(bullet);
-            if(this.soundEnabled){
+
+            if (this.soundEnabled) {
                 this.shootSound.currentTime = 0;
                 this.shootSound.play();
             }
+
             this.timeTillNextBulletAllowed = timeTillNextBulletAllowed;
         }
     }
@@ -39,7 +42,7 @@ export default class BulletController{
         const bulletThatHitSpriteIndex = this.bullets.findIndex((bullet) =>
             bullet.collideWith(sprite)
         );
-    
+
         if (bulletThatHitSpriteIndex >= 0) {
             this.bullets.splice(bulletThatHitSpriteIndex, 1);
             return true;
@@ -47,6 +50,4 @@ export default class BulletController{
             return false;
         }
     }
-    
-
 }

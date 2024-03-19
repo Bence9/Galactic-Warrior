@@ -1,74 +1,80 @@
-export default class Player {
-    rightPress = false;
-    leftPress = false;
-    shootPressed = false;
 
+export default class Player {
     constructor(canvas, velocity, bulletController) {
         this.canvas = canvas;
         this.velocity = velocity;
-        this.BulletController = bulletController;
-
-        this.x = this.canvas.width / 2;
-        this.y = this.canvas.height - 75;
+        this.bulletController = bulletController;
         this.width = 60;
         this.height = 61;
         this.image = new Image();
         this.image.src = `images/player.png`;
+        this.x = this.canvas.width / 2 - this.width / 2;
+        this.y = this.canvas.height - 75;
 
         document.addEventListener("keydown", this.handleKeyDown);
         document.addEventListener("keyup", this.handleKeyUp);
     }
 
     draw(ctx) {
-        if(this.shootPressed === true){
-            this.BulletController.shoot(this.x + this.width/2, this.y, 4, 10);
-        }
+        this.handleShooting();
         this.move();
-        this.collisionWithWalls();
+        this.handleWallCollision();
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
     move() {
-        if (this.rightPress) {
+        if (this.moveRight) {
             this.x += this.velocity;
-        } else if (this.leftPress) {
+        } else if (this.moveLeft) {
             this.x -= this.velocity;
         }
     }
 
-    collisionWithWalls() {
+    handleWallCollision() {
         if (this.x < 0) {
             this.x = 0;
-        }
-
-        if (this.x > this.canvas.width - this.width) {
+        } else if (this.x > this.canvas.width - this.width) {
             this.x = this.canvas.width - this.width;
         }
     }
 
-    handleKeyDown = (event) => {
-        if (event.code === 'ArrowRight') {
-            this.rightPress = true;
-        }
-        if (event.code === 'ArrowLeft') {
-            this.leftPress = true;
-        }
-        if (event.code === 'Space'){
-            event.preventDefault(); //space lenyomása esetén ne gördüljen le az oldal aljára
-            this.shootPressed = true;
+    handleShooting() {
+        if (this.shootPressed) {
+            this.bulletController.shoot(this.x + this.width / 2, this.y, 4, 10);
         }
     }
 
+    handleKeyDown = (event) => {
+        switch (event.code) {
+            case "ArrowRight":
+                this.moveRight = true;
+                break;
+            case "ArrowLeft":
+                this.moveLeft = true;
+                break;
+            case "Space":
+                event.preventDefault(); // space megnyomása esetén nem ugrik az oldal aljára
+                this.shootPressed = true;
+                break;
+            default:
+                break;
+        }
+    };
+
     handleKeyUp = (event) => {
-        if (event.code === 'ArrowRight') {
-            this.rightPress = false;
+        switch (event.code) {
+            case "ArrowRight":
+                this.moveRight = false;
+                break;
+            case "ArrowLeft":
+                this.moveLeft = false;
+                break;
+            case "Space":
+                event.preventDefault();
+                this.shootPressed = false;
+                break;
+            default:
+                break;
         }
-        if (event.code === 'ArrowLeft') {
-            this.leftPress = false;
-        }
-        if (event.code === 'Space'){
-            event.preventDefault();
-            this.shootPressed = false;
-        }
-    }
+    };
 }
