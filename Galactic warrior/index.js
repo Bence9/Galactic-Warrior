@@ -12,11 +12,11 @@ canvas.height = 600;
 
 const background = new Image();
 background.src = 'images/space.png';
-background.onload = drawCanvas;
+background.onload = menu;
 
 const logoImage = new Image();
 logoImage.src = 'icon.png';
-logoImage.onload = drawCanvas;
+logoImage.onload = menu;
 
 
 const playerBulletController = new BulletController(canvas, 10, "red", true);
@@ -29,23 +29,40 @@ let isGameOver = false;
 let didwin = false;
 let life = 3;
 let seconds = 0;
-let fps = 80;
+let fps = 90;
+let gameInterval;
 
 
-function drawButtonStart() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';;
-    ctx.fillRect(250, 350, 200, 50);
+function drawButton(text, xPos, yPos, width, height) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(xPos, yPos, width, height);
 
     ctx.strokeStyle = "red";
-    ctx.strokeRect(250, 350, 200, 50);
+    ctx.strokeRect(xPos, yPos, width, height);
 
     ctx.fillStyle = "#39ff14";
-    ctx.font = "25px Arial";
-    ctx.fillText("Start Game", canvas.width/2 , canvas.height/2 + logoImage.height/2 + 45);
-
+    ctx.font = "30px sans-serif";
+    ctx.fillText(text, xPos + 125 , yPos + height / 2 + 10);
 }
 
-function drawCanvas() {
+function drawMenuButtons() {
+    drawButton("Start Game", 225, 350, 255, 50);
+    drawButton("Description", 225, 400, 255, 50);
+    drawButton("Options", 225, 450, 255, 50);
+    drawButton("Customization", 225, 500, 255, 50);
+}
+
+function drawButtonBack() {
+    ctx.fillStyle = 'red';
+    ctx.fillRect(600, 20, 80, 40); 
+
+    ctx.fillStyle = "white";
+    ctx.font = "20px sans-serif";
+    ctx.fillText("Back", 640, 45); 
+}
+
+
+function menu() {
     if (!background.complete || !logoImage.complete) {
         return;
     }
@@ -57,49 +74,105 @@ function drawCanvas() {
     ctx.fillStyle = '#39FF14';
     ctx.textAlign = 'center';
 
-    drawButtonStart();
+    drawMenuButtons();
 
     canvas.addEventListener('click', function(event) {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-        if (x >= 250 && x <= 450 && y >= 350 && y <= 400) {
+        if (x >= 225 && x <= 480 && y >= 350 && y <= 400) {
             startGame();
+        }
+        else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
+            description();
+        }
+        else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
+            console.log("options");
+        }
+        else if(x >= 225 && x <= 480 && y >= 500 && y <= 550){
+            console.log("custumization");
         }
     });
 
-
 }
 
-
 function startGame() {
-    const gameInterval = setInterval(game, 1000 / fps);
+    clearInterval(gameInterval);
+    gameInterval = setInterval(game, 1000 / fps);
+}
 
-    function game() {
-        checkGameOver();
-        lifeLosing();
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-        displayGameOver();
-        if (!isGameOver) {
-            enemyController.draw(ctx);
-            player.draw(ctx);
-            playerBulletController.draw(ctx);
-            enemyBulletController.draw(ctx);
+function game() {
+    checkGameOver();
+    lifeLosing();
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    displayGameOver();
+    if (!isGameOver) {
+        enemyController.draw(ctx);
+        player.draw(ctx);
+        playerBulletController.draw(ctx);
+        enemyBulletController.draw(ctx);
 
-            ctx.fillStyle = '#333333';
-            ctx.fillRect(0, 0, canvas.width, 30);
+        ctx.fillStyle = '#333333';
+        ctx.fillRect(0, 0, canvas.width, 30);
 
-            ctx.fillStyle = 'white';
-            ctx.font = '20px sans-serif';
-            ctx.fillText('Score: 0', 125, 23);
-            ctx.fillText('Life: ' + life, canvas.width - 125, 23);
-            ctx.fillText('Time: ' + updateTime(), canvas.width - 350, 23);
-        } else {
-            clearInterval(gameInterval); 
-        }
+        ctx.fillStyle = 'white';
+        ctx.font = '20px sans-serif';
+        ctx.fillText('Score: 0', 125, 23);
+        ctx.fillText('Life: ' + life, canvas.width - 125, 23);
+        ctx.fillText('Time: ' + updateTime(), canvas.width - 350, 23);
+    } else {
+        clearInterval(gameInterval); 
     }
 }
 
+function description() {
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+    drawButtonBack();
+
+    canvas.addEventListener('click', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        if (x >= 600 && x <= 680 && y >= 20 && y <= 60) {
+            menu();
+        }
+    });
+    
+    var text = 'Space Invaders, released in 1978, is an iconic arcade game known for its addictive gameplay and pixelated graphics. Players control a laser cannon at the bottom of the screen, tasked with defending Earth from descending waves of alien invaders. As the game progresses, the aliens move faster and descend more aggressively, adding to the challenge. Despite its simplicity, Space Invaders has had a significant cultural impact, inspiring numerous adaptations and homages across various media. Its enduring popularity is a testament to its timeless appeal and status as a classic in video game history.';
+    var maxWidth = 400;
+    var lineHeight = 30;
+    var x = 350;
+    var y = 100;
+
+    drawWrappedText(ctx, text, x, y, maxWidth, lineHeight);
+
+}
+
+function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
+    var words = text.split(' ');
+    var line = '';
+    var lines = [];
+
+    words.forEach(function(word) {
+        var testLine = line + word + ' ';
+        var metrics = ctx.measureText(testLine);
+        var testWidth = metrics.width;
+        if (testWidth > maxWidth) {
+            lines.push(line);
+            line = word + ' ';
+        } else {
+            line = testLine;
+        }
+    });
+    lines.push(line);
+
+    lines.forEach(function(line, index) {
+        ctx.font = "25px Arial"; 
+        ctx.fillStyle = "white";
+        ctx.fillText(line, x, y + (index * lineHeight));
+    });
+}
 
 function displayGameOver(){
     if(isGameOver) {
@@ -145,13 +218,3 @@ function formatTime(seconds) {
     const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
     return `${formattedHours}:${formattedMinutes}`;
 }
-
-/*
-function increaseScore(){
-    let scoreIncrease = 0;
-    if(playerBulletController.collideWith(enemyController)){
-        scoreIncrease += 10;
-    }
-    return scoreIncrease;
-}
-*/
