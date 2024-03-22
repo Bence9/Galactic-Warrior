@@ -1,12 +1,13 @@
-class Description {
-    constructor(canvas, ctx, menuCallback) {
+export default class Description {
+    constructor(canvas, ctx, background, menuCallback) {
         this.canvas = canvas;
         this.ctx = ctx;
-        this.menuCallback = menuCallback; // Reference to the menu function
+        this.background = background;
+        this.menuCallback = menuCallback; 
     }
 
     draw() {
-        this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
 
         this.drawButtonBack();
 
@@ -15,7 +16,7 @@ class Description {
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
             if (x >= 600 && x <= 680 && y >= 20 && y <= 60) {
-                this.menuCallback(); // Call the menu function provided as a reference
+                this.menuCallback(); // menu() visszahívása
             }
         });
 

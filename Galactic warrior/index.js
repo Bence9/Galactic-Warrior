@@ -1,6 +1,7 @@
 import EnemyController from "./EnemyController.js";
 import Player from "./Player.js";
 import BulletController from "./BulletController.js";
+import Description from "./Description.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -24,6 +25,8 @@ const enemyBulletController = new BulletController(canvas, 5, "white", false);
 const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController);
 const player = new Player(canvas, 3, playerBulletController);
 
+const description = new Description(canvas, ctx, background, menu);
+
 
 let isGameOver = false;
 let didwin = false;
@@ -31,7 +34,6 @@ let life = 3;
 let seconds = 0;
 let fps = 90;
 let gameInterval;
-
 
 function drawButton(text, xPos, yPos, width, height) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -52,20 +54,13 @@ function drawMenuButtons() {
     drawButton("Customization", 225, 500, 255, 50);
 }
 
-function drawButtonBack() {
-    ctx.fillStyle = 'red';
-    ctx.fillRect(600, 20, 80, 40); 
-
-    ctx.fillStyle = "white";
-    ctx.font = "20px sans-serif";
-    ctx.fillText("Back", 640, 45); 
-}
-
 
 function menu() {
     if (!background.complete || !logoImage.complete) {
         return;
     }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(logoImage, canvas.width/3 - logoImage.width/2, canvas.height/4 - logoImage.height/2 - 50, 350, 300);
@@ -84,7 +79,7 @@ function menu() {
             startGame();
         }
         else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
-            description();
+            description.draw(); 
         }
         else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
             console.log("options");
@@ -96,12 +91,16 @@ function menu() {
 
 }
 
+
 function startGame() {
     clearInterval(gameInterval);
     gameInterval = setInterval(game, 1000 / fps);
 }
 
+
 function game() {
+//    clearInterval(gameInterval);
+//    gameInterval = setInterval(game, 1000 / fps);
     checkGameOver();
     lifeLosing();
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
@@ -120,59 +119,12 @@ function game() {
         ctx.fillText('Score: 0', 125, 23);
         ctx.fillText('Life: ' + life, canvas.width - 125, 23);
         ctx.fillText('Time: ' + updateTime(), canvas.width - 350, 23);
+
     } else {
         clearInterval(gameInterval); 
     }
 }
 
-function description() {
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-
-    drawButtonBack();
-
-    canvas.addEventListener('click', function(event) {
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        if (x >= 600 && x <= 680 && y >= 20 && y <= 60) {
-            menu();
-        }
-    });
-    
-    var text = 'Space Invaders, released in 1978, is an iconic arcade game known for its addictive gameplay and pixelated graphics. Players control a laser cannon at the bottom of the screen, tasked with defending Earth from descending waves of alien invaders. As the game progresses, the aliens move faster and descend more aggressively, adding to the challenge. Despite its simplicity, Space Invaders has had a significant cultural impact, inspiring numerous adaptations and homages across various media. Its enduring popularity is a testament to its timeless appeal and status as a classic in video game history.';
-    var maxWidth = 400;
-    var lineHeight = 30;
-    var x = 350;
-    var y = 100;
-
-    drawWrappedText(ctx, text, x, y, maxWidth, lineHeight);
-
-}
-
-function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
-    var words = text.split(' ');
-    var line = '';
-    var lines = [];
-
-    words.forEach(function(word) {
-        var testLine = line + word + ' ';
-        var metrics = ctx.measureText(testLine);
-        var testWidth = metrics.width;
-        if (testWidth > maxWidth) {
-            lines.push(line);
-            line = word + ' ';
-        } else {
-            line = testLine;
-        }
-    });
-    lines.push(line);
-
-    lines.forEach(function(line, index) {
-        ctx.font = "25px Arial"; 
-        ctx.fillStyle = "white";
-        ctx.fillText(line, x, y + (index * lineHeight));
-    });
-}
 
 function displayGameOver(){
     if(isGameOver) {
@@ -181,6 +133,7 @@ function displayGameOver(){
         ctx.fillStyle = "#39ff14";
         ctx.font = "70px Arial";
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+        
     }
 }
 
