@@ -35,6 +35,7 @@ let seconds = 0;
 let fps = 90;
 let gameInterval;
 
+
 function drawButton(text, xPos, yPos, width, height) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
     ctx.fillRect(xPos, yPos, width, height);
@@ -116,7 +117,7 @@ function game() {
 
         ctx.fillStyle = 'white';
         ctx.font = '20px sans-serif';
-        ctx.fillText('Score: 0', 125, 23);
+        ctx.fillText('Score: ' + enemyController.score, 125, 23);
         ctx.fillText('Life: ' + life, canvas.width - 125, 23);
         ctx.fillText('Time: ' + updateTime(), canvas.width - 350, 23);
 

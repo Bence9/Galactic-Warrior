@@ -2,13 +2,14 @@ import Enemy from "./enemy.js";
 import MovingDirection from "./MovingDirection.js";
 
 export default class EnemyController {
+
     enemyMap = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 5, 5, 5, 5, 5, 5, 5, 5, 1],
-        [2, 2, 4, 4, 4, 4, 4, 4, 2, 2],
+        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        [2, 4, 4, 4, 4, 4, 4, 4, 4, 2],
         [2, 2, 2, 3, 3, 3, 3, 2, 2, 2],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
 
     enemyRows = [];
@@ -22,7 +23,7 @@ export default class EnemyController {
     moveDownTimer = this.moveDownTimerDefault;
     fireBulletTimerDefault = 100;
     fireBulletTimer = this.fireBulletTimerDefault;
-//    score = 0;
+    score = 0;
 
     constructor(canvas, enemyBulletController, playerBulletController) {
         this.canvas = canvas;
@@ -49,21 +50,48 @@ export default class EnemyController {
         this.enemyRows.forEach((enemyRow)=>{
             enemyRow.forEach((enemy, enemyIndex)=>{
             if(this.playerBulletController.collideWith(enemy)){
+
+                const enemyValue = enemy.value; 
+                console.log(enemyValue);
+                this.addScore(enemyValue);
+
                 this.enemyDeathSound.currentTime = 0;
                 this.enemyDeathSound.play();    
                 enemyRow.splice(enemyIndex, 1);
-//                this.score++;
             }
         });
     });
-
         this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0)
     }
 
-/*    getScore(){
-        return score;
+
+    // This method count the score based on the enemyValue (literally: based on different colors)
+    addScore(enemyValue) {
+        let scoreToAdd = 0;
+
+        switch (enemyValue) {
+            case 1:
+                scoreToAdd = 10;
+                break;
+            case 2:
+                scoreToAdd = 20;
+                break;
+            case 3:
+                scoreToAdd = 30;
+                break;
+            case 4:
+                scoreToAdd = 40;
+                break;
+            case 5:
+                scoreToAdd = 50;
+                break;
+        }
+
+        this.score += scoreToAdd;
+
     }
-*/
+
+
     fireBullet(){
         this.fireBulletTimer--;
         if(this.fireBulletTimer <= 0){

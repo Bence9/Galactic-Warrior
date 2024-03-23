@@ -6,6 +6,8 @@ export default class Enemy{
         this.width = 60;
         this.height = 33;
 
+        this.value = imageNumber;
+
         this.image = new Image();
         this.image.src = `images/enemy${imageNumber}.png`;
     }
