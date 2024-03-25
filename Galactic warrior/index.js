@@ -2,6 +2,7 @@ import EnemyController from "./EnemyController.js";
 import Player from "./Player.js";
 import BulletController from "./BulletController.js";
 import Description from "./Description.js";
+import Options from "./options.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -16,23 +17,22 @@ background.src = 'images/space.png';
 background.onload = menu;
 
 const logoImage = new Image();
-logoImage.src = 'icon.png';
+logoImage.src = 'images/icon.png';
 logoImage.onload = menu;
 
-
-const playerBulletController = new BulletController(canvas, 10, "red", true);
-const enemyBulletController = new BulletController(canvas, 5, "white", false);
-const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController);
-const player = new Player(canvas, 3, playerBulletController);
-
 const description = new Description(canvas, ctx, background, menu);
+const options = new Options(canvas, ctx, background, menu);
+
+const playerBulletController = new BulletController(canvas, 5, "red", true);
+const enemyBulletController = new BulletController(canvas, 10, "white", true);
+const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController, true);
+const player = new Player(canvas, 3, playerBulletController);
 
 
 let isGameOver = false;
 let didwin = false;
 let life = 3;
 let seconds = 0;
-let fps = 90;
 let gameInterval;
 
 
@@ -80,10 +80,10 @@ function menu() {
             startGame();
         }
         else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
-            description.draw(); 
+            description.draw();
         }
         else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
-            console.log("options");
+            options.draw();
         }
         else if(x >= 225 && x <= 480 && y >= 500 && y <= 550){
             console.log("custumization");
@@ -95,23 +95,32 @@ function menu() {
 
 function startGame() {
     clearInterval(gameInterval);
-    gameInterval = setInterval(game, 1000 / fps);
+    gameInterval = setInterval(game, 1000 / 90);
 }
 
 
 function game() {
 //    clearInterval(gameInterval);
-//    gameInterval = setInterval(game, 1000 / fps);
+//    gameInterval = setInterval(game, 1000 / 90);
     checkGameOver();
     lifeLosing();
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
     displayGameOver();
     if (!isGameOver) {
-        enemyController.draw(ctx);
+
         player.draw(ctx);
+        enemyController.draw(ctx);
         playerBulletController.draw(ctx);
         enemyBulletController.draw(ctx);
 
+        enemyController.soundEnabled = options.soundOn;
+        playerBulletController.soundEnabled = options.soundOn;
+        enemyBulletController.soundEnabled = options.soundOn;
+
+        enemyController.enemyDeathSound.volume = (options.volume/100);
+        playerBulletController.shootSound.volume = (options.volume/100);
+        enemyBulletController.shootSound.volume = (options.volume/100);
+        
         ctx.fillStyle = '#333333';
         ctx.fillRect(0, 0, canvas.width, 30);
 

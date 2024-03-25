@@ -25,10 +25,11 @@ export default class EnemyController {
     fireBulletTimer = this.fireBulletTimerDefault;
     score = 0;
 
-    constructor(canvas, enemyBulletController, playerBulletController) {
+    constructor(canvas, enemyBulletController, playerBulletController, soundEnabled) {
         this.canvas = canvas;
         this.enemyBulletController = enemyBulletController;
         this.playerBulletController = playerBulletController;
+        this.soundEnabled = soundEnabled;
 
         this.enemyDeathSound = new Audio('sounds/enemy-death.wav');
         this.enemyDeathSound.volume = 0.5;
@@ -52,11 +53,14 @@ export default class EnemyController {
             if(this.playerBulletController.collideWith(enemy)){
 
                 const enemyValue = enemy.value; 
-                console.log(enemyValue);
+
                 this.addScore(enemyValue);
 
-                this.enemyDeathSound.currentTime = 0;
-                this.enemyDeathSound.play();    
+                if(this.soundEnabled){
+                    this.enemyDeathSound.currentTime = 0;
+                    this.enemyDeathSound.play();
+                }
+
                 enemyRow.splice(enemyIndex, 1);
             }
         });
@@ -65,7 +69,7 @@ export default class EnemyController {
     }
 
 
-    // This method count the score based on the enemyValue (literally: based on different colors)
+    // This method count the score based on the enemyValue (literally: based on different colors of enemies)
     addScore(enemyValue) {
         let scoreToAdd = 0;
 

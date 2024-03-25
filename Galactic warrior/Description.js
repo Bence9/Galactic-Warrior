@@ -4,6 +4,8 @@ export default class Description {
         this.ctx = ctx;
         this.background = background;
         this.menuCallback = menuCallback; 
+        this.buttonImage = new Image();
+        this.buttonImage.src = 'images/return.png';
     }
 
     draw() {
@@ -33,9 +35,11 @@ export default class Description {
         this.ctx.fillStyle = 'red';
         this.ctx.fillRect(600, 20, 80, 40);
 
-        this.ctx.fillStyle = "white";
+        this.ctx.drawImage(this.buttonImage, 610, 10, 60, 50);
+
+        this.ctx.fillStyle = "black";
         this.ctx.font = "20px sans-serif";
-        this.ctx.fillText("Back", 640, 45);
+        this.ctx.fillText("back", 630, 55);
     }
 
     drawWrappedText(text, x, y, maxWidth, lineHeight) {
