@@ -9,33 +9,32 @@ export default class Options {
         this.soundOn = true;
         this.volume = 50;
         
-    
-        // Eseményfigyelő hozzáadása a konstruktorban a dinamikus kirajzolás miatt
-        this.canvas.addEventListener('click', (event) => {
+        const clickHandler = (event) => {
             const rect = this.canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
-
+        
             if (x >= 600 && x <= 680 && y >= 20 && y <= 60) {
                 this.menuCallback(); // menu() visszahívása
             }
-
-            if (x >= 450 && x <= 500 && y >= 130 && y <= 180) {
+        
+            if (x >= 100 && x <= 150 && y >= 130 && y <= 180) {
                 this.toggleSound(); // Hang ki/be kapcsolása
                 this.draw(); // újra rajzolás a gomb on -> off / off -> on váltás miatt
             }
-
-            if (x >= 450 && x <= 500 && y >= 200 && y <= 250) {
+        
+            if (x >= 100 && x <= 150 && y >= 200 && y <= 250) {
                 this.increaseVolume();
                 this.draw();
             }
-            
-            if (x >= 450 && x <= 500 && y >= 270 && y <= 320) {
+        
+            if (x >= 100 && x <= 150 && y >= 270 && y <= 320) {
                 this.decreaseVolume();
                 this.draw();
             }
-
-        });
+        };
+        
+        this.canvas.addEventListener('click', clickHandler);
     }
     
     draw() {
@@ -53,37 +52,43 @@ export default class Options {
         this.ctx.font = "30px sans-serif";
         this.ctx.fillText("Sound: " + (this.soundOn ? "On" : "Off"), 270, 165);
         this.ctx.fillText("Volume: " + this.volume + " %", 270, 275);
+
+        const image = new Image();
+        image.src = 'images/gear.png';
+        image.onload = () => {
+        this.ctx.drawImage(image, 200, 350, 150, 150);
+        this.ctx.drawImage(image, 330, 450, 100, 100);
+        };
     }
 
     drawVolumeButton() {
         // Volume növelése gomb
         this.ctx.fillStyle = 'yellow';
-        this.ctx.fillRect(450, 200, 50, 50);
+        this.ctx.fillRect(100, 200, 50, 50);
         this.ctx.fillStyle = "black";
         this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("+", 475, 245);
+        this.ctx.fillText("+", 125, 245);
 
         // Volume csökkentése gomb
         this.ctx.fillStyle = 'yellow';
-        this.ctx.fillRect(450, 270, 50, 50);
+        this.ctx.fillRect(100, 270, 50, 50);
         this.ctx.fillStyle = "black";
         this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("-", 475, 310);
+        this.ctx.fillText("-", 125, 310);
     }
 
     drawSoundButton() {
         this.ctx.fillStyle = this.soundOn ? 'green' : 'red';
-        this.ctx.fillRect(450, 130, 50, 50);
+        this.ctx.fillRect(100, 130, 50, 50);
 
         this.ctx.fillStyle = "white";
         this.ctx.font = "25px sans-serif";
-        this.ctx.fillText(this.soundOn ? "On" : "Off", 470, 165);
+        this.ctx.fillText(this.soundOn ? "On" : "Off", 120, 165);
     }
 
- // Hang be/kikapcsolás
+    // Hang be/kikapcsolás
     toggleSound() {
         this.soundOn = !this.soundOn;
-        console.log(this.soundOn);
     }
 
     increaseVolume() {
@@ -108,6 +113,5 @@ export default class Options {
         this.ctx.font = "20px sans-serif";
         this.ctx.fillText("back", 630, 55);
     }
-
-
+    
 }

@@ -5,9 +5,9 @@ export default class Player {
         this.velocity = velocity;
         this.bulletController = bulletController;
         this.width = 60;
-        this.height = 61;
+        this.height = 60;
         this.image = new Image();
-        this.image.src = `images/player.png`;
+        this.image.src = `images/player/player1.png`;
         this.x = this.canvas.width / 2 - this.width / 2;
         this.y = this.canvas.height - 75;
 

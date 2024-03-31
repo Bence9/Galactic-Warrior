@@ -2,7 +2,8 @@ import EnemyController from "./EnemyController.js";
 import Player from "./Player.js";
 import BulletController from "./BulletController.js";
 import Description from "./Description.js";
-import Options from "./options.js";
+import Options from "./Options.js";
+import Costumization from "./Costumization.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -22,9 +23,10 @@ logoImage.onload = menu;
 
 const description = new Description(canvas, ctx, background, menu);
 const options = new Options(canvas, ctx, background, menu);
+const costumization = new Costumization(canvas, ctx, background, menu);
 
-const playerBulletController = new BulletController(canvas, 5, "red", true);
-const enemyBulletController = new BulletController(canvas, 10, "white", true);
+const playerBulletController = new BulletController(canvas, 10, "red", true);
+const enemyBulletController = new BulletController(canvas, 5, "white", true);
 const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController, true);
 const player = new Player(canvas, 3, playerBulletController);
 
@@ -72,23 +74,31 @@ function menu() {
 
     drawMenuButtons();
 
-    canvas.addEventListener('click', function(event) {
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        if (x >= 225 && x <= 480 && y >= 350 && y <= 400) {
-            startGame();
-        }
-        else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
-            description.draw();
-        }
-        else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
-            options.draw();
-        }
-        else if(x >= 225 && x <= 480 && y >= 500 && y <= 550){
-            console.log("custumization");
-        }
-    });
+const clickHandler = (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    if (x >= 225 && x <= 480 && y >= 350 && y <= 400) {
+        startGame();
+        canvas.removeEventListener('click', clickHandler);
+    }
+    else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
+        description.draw();
+        canvas.removeEventListener('click', clickHandler); 
+    }
+    else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
+        options.draw();
+        canvas.removeEventListener('click', clickHandler);
+    }
+    else if(x >= 225 && x <= 480 && y >= 500 && y <= 550){
+        costumization.draw();
+        canvas.removeEventListener('click', clickHandler);
+    }
+
+};
+
+canvas.addEventListener('click', clickHandler);
 
 }
 
@@ -108,6 +118,8 @@ function game() {
     displayGameOver();
     if (!isGameOver) {
 
+        player.image.src = costumization.selectedPlayer;
+
         player.draw(ctx);
         enemyController.draw(ctx);
         playerBulletController.draw(ctx);
@@ -120,6 +132,9 @@ function game() {
         enemyController.enemyDeathSound.volume = (options.volume/100);
         playerBulletController.shootSound.volume = (options.volume/100);
         enemyBulletController.shootSound.volume = (options.volume/100);
+
+        playerBulletController.bulletColor = costumization.playerBulletColor;
+        enemyBulletController.bulletColor = costumization.enemyBulletColor;
         
         ctx.fillStyle = '#333333';
         ctx.fillRect(0, 0, canvas.width, 30);
@@ -135,10 +150,27 @@ function game() {
     }
 }
 
+function drawButtonBack() {
+    const buttonImage = new Image();
+    buttonImage.src = 'images/return.png';
+
+    buttonImage.onload = () => {
+        ctx.drawImage(buttonImage, 610, 10, 60, 50);
+
+        ctx.fillStyle = "black";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("back", 630, 55);
+    };
+
+    ctx.fillStyle = 'red';
+    ctx.fillRect(600, 20, 80, 40);
+}
 
 function displayGameOver(){
     if(isGameOver) {
         let text = didwin ? "You win" : "Game Over";
+
+        drawButtonBack();
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "70px Arial";
