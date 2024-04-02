@@ -69,6 +69,7 @@ export default class Costumization {
                     this.draw();
                 }
 
+                // Player selector
                 if (x >= 30 && x <= 110 && y >= 380 && y <= 460) {
                     this.selectedPlayer = 'images/player/player1.png';
                     this.playerName = 'Player1';
@@ -116,8 +117,6 @@ export default class Costumization {
         this.ctx.fillStyle = "orange";
         this.ctx.font = "40px sans-serif";
         this.ctx.fillText(this.playerName + " selected", 170, 550);
-
-
     }
 
     drawPlayers(){

@@ -2,7 +2,7 @@ import Bullet from "./Bullet.js";
 
 export default class BulletController {
     bullets = [];
-    timeTillNextBulletAllowed = 0;
+    timeTillNextBulletAllowed = 1;
 
     constructor(canvas, maxBulletsAtATime, bulletColor, soundEnabled) {
         this.canvas = canvas;
@@ -50,4 +50,10 @@ export default class BulletController {
             return false;
         }
     }
+
+    // Clear the bullets off the screen
+    clearBullets() {
+        this.bullets = [];
+    }
+
 }

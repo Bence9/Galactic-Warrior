@@ -4,6 +4,7 @@ import BulletController from "./BulletController.js";
 import Description from "./Description.js";
 import Options from "./Options.js";
 import Costumization from "./Costumization.js";
+import Enemy from "./Enemy.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -82,6 +83,9 @@ const clickHandler = (event) => {
     if (x >= 225 && x <= 480 && y >= 350 && y <= 400) {
         startGame();
         canvas.removeEventListener('click', clickHandler);
+        if(isGameOver){
+            restartGame();
+        }
     }
     else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
         description.draw();
@@ -110,8 +114,6 @@ function startGame() {
 
 
 function game() {
-//    clearInterval(gameInterval);
-//    gameInterval = setInterval(game, 1000 / 90);
     checkGameOver();
     lifeLosing();
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
@@ -175,8 +177,33 @@ function displayGameOver(){
         ctx.fillStyle = "#39ff14";
         ctx.font = "70px Arial";
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+        ctx.fillStyle = "#39ff14";
+        ctx.font = "50px Arial";
+        ctx.fillText('Press R to restart game', canvas.width - 350, 400);
         
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'r') {
+                restartGame();
+            }
+        });
+
     }
+}
+
+function restartGame() {
+    seconds = 0;
+    isGameOver = false;
+    didwin = false;
+    enemyController.score = 0;
+    life = 3;
+    clearInterval(gameInterval);
+    player.x = canvas.width / 2 ;
+    player.y = canvas.height - 75;
+    enemyController.createEnemies();
+    startGame();
+    enemyBulletController.clearBullets();
+    playerBulletController.clearBullets();
 }
 
 function lifeLosing(){
