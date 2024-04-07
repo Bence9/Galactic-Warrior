@@ -83,6 +83,10 @@ export default class Costumization {
                 this.selectedPlayer = 'images/player/player3.png';
                 this.playerName = 'Player3';
                 this.draw(); 
+            } else if (x >= 125 && x <= 215 && y >= 480 && y <= 570) {
+                this.selectedPlayer = 'images/player/player4.png';
+                this.playerName = 'Player4';
+                this.draw(); 
             }
 
             // Background selector
@@ -133,15 +137,15 @@ export default class Costumization {
 
         this.ctx.fillStyle = "orange";
         this.ctx.font = "30px sans-serif";
-        this.ctx.fillText("Choose player: ", 170, 330);
+        this.ctx.fillText("Choose player: ", 120, 330);
 
         this.ctx.fillStyle = "orange";
         this.ctx.font = "20px sans-serif";
-        this.ctx.fillText(this.playerName + " selected", 170, 360);
+        this.ctx.fillText(this.playerName + " selected", 120, 360);
 
         this.ctx.fillStyle = "orange";
         this.ctx.font = "30px sans-serif";
-        this.ctx.fillText("Choose field: ", 520, 330);
+        this.ctx.fillText("Choose field: ", 590, 330);
 
         const image = new Image();
         image.src = 'images/costumize.png';
@@ -186,41 +190,50 @@ export default class Costumization {
         image3.onload = () => {
         this.ctx.drawImage(image3, 30, 480, 80, 80);
         };
+
+        const image4 = new Image();
+        this.ctx.strokeStyle = "red";
+        this.ctx.strokeRect(125, 480, 90, 90);
+        image4.src = 'images/player/player4.png';
+        image4.onload = () => {
+        this.ctx.drawImage(image4, 130, 480, 80, 80);
+        };
+
     }
 
 
     drawField(){
 
-        const image4 = new Image();
-        this.ctx.strokeStyle = "yellow";
-        this.ctx.strokeRect(520, 400, 70, 80);
-        image4.src = 'images/background/desert.png';
-        image4.onload = () => {
-        this.ctx.drawImage(image4, 520, 400, 70, 80);
-        };
-
         const image5 = new Image();
         this.ctx.strokeStyle = "yellow";
-        this.ctx.strokeRect(600, 400, 70, 80);
-        image5.src = 'images/background/space.png';
+        this.ctx.strokeRect(520, 400, 70, 80);
+        image5.src = 'images/background/desert.png';
         image5.onload = () => {
-        this.ctx.drawImage(image5, 600, 400, 70, 80);
+        this.ctx.drawImage(image5, 520, 400, 70, 80);
         };
 
         const image6 = new Image();
         this.ctx.strokeStyle = "yellow";
-        this.ctx.strokeRect(520, 490, 70, 80);
-        image6.src = 'images/background/space2.png';
+        this.ctx.strokeRect(600, 400, 70, 80);
+        image6.src = 'images/background/space.png';
         image6.onload = () => {
-        this.ctx.drawImage(image6, 520, 490, 70, 80);
+        this.ctx.drawImage(image6, 600, 400, 70, 80);
         };
-        
+
         const image7 = new Image();
         this.ctx.strokeStyle = "yellow";
-        this.ctx.strokeRect(600, 490, 70, 80);
-        image7.src = 'images/background/universe.png';
+        this.ctx.strokeRect(520, 490, 70, 80);
+        image7.src = 'images/background/space2.png';
         image7.onload = () => {
-        this.ctx.drawImage(image7, 600, 490, 70, 80);
+        this.ctx.drawImage(image7, 520, 490, 70, 80);
+        };
+        
+        const image8 = new Image();
+        this.ctx.strokeStyle = "yellow";
+        this.ctx.strokeRect(600, 490, 70, 80);
+        image8.src = 'images/background/universe.png';
+        image8.onload = () => {
+        this.ctx.drawImage(image8, 600, 490, 70, 80);
         };
 
     }
