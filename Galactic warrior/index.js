@@ -2,9 +2,8 @@ import EnemyController from "./EnemyController.js";
 import Player from "./Player.js";
 import BulletController from "./BulletController.js";
 import Description from "./Description.js";
-import Options from "./Options.js";
+import Sound from "./Sound.js";
 import Costumization from "./Costumization.js";
-import Enemy from "./Enemy.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -15,7 +14,7 @@ canvas.height = 600;
 
 
 const background = new Image();
-background.src = 'images/space.png';
+background.src = 'images/background/space.png';
 background.onload = menu;
 
 const logoImage = new Image();
@@ -23,7 +22,7 @@ logoImage.src = 'images/icon.png';
 logoImage.onload = menu;
 
 const description = new Description(canvas, ctx, background, menu);
-const options = new Options(canvas, ctx, background, menu);
+const sound = new Sound(canvas, ctx, background, menu);
 const costumization = new Costumization(canvas, ctx, background, menu);
 
 const playerBulletController = new BulletController(canvas, 10, "red", true);
@@ -54,7 +53,7 @@ function drawButton(text, xPos, yPos, width, height) {
 function drawMenuButtons() {
     drawButton("Start Game", 225, 350, 255, 50);
     drawButton("Description", 225, 400, 255, 50);
-    drawButton("Options", 225, 450, 255, 50);
+    drawButton("Sound", 225, 450, 255, 50);
     drawButton("Customization", 225, 500, 255, 50);
 }
 
@@ -67,7 +66,7 @@ function menu() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-    ctx.drawImage(logoImage, canvas.width/3 - logoImage.width/2, canvas.height/4 - logoImage.height/2 - 50, 350, 300);
+    ctx.drawImage(logoImage, canvas.width/3 - logoImage.width/2, canvas.height/4 - logoImage.height/2 - 75, 350, 300);
 
     ctx.font = '30px sans-serif';
     ctx.fillStyle = '#39FF14';
@@ -81,6 +80,7 @@ const clickHandler = (event) => {
     const y = event.clientY - rect.top;
     
     if (x >= 225 && x <= 480 && y >= 350 && y <= 400) {
+        background.src = costumization.field;
         startGame();
         canvas.removeEventListener('click', clickHandler);
         if(isGameOver){
@@ -89,10 +89,10 @@ const clickHandler = (event) => {
     }
     else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
         description.draw();
-        canvas.removeEventListener('click', clickHandler); 
+        canvas.removeEventListener('click', clickHandler);
     }
     else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
-        options.draw();
+        sound.draw();
         canvas.removeEventListener('click', clickHandler);
     }
     else if(x >= 225 && x <= 480 && y >= 500 && y <= 550){
@@ -127,13 +127,13 @@ function game() {
         playerBulletController.draw(ctx);
         enemyBulletController.draw(ctx);
 
-        enemyController.soundEnabled = options.soundOn;
-        playerBulletController.soundEnabled = options.soundOn;
-        enemyBulletController.soundEnabled = options.soundOn;
+        enemyController.soundEnabled = sound.soundOn;
+        playerBulletController.soundEnabled = sound.soundOn;
+        enemyBulletController.soundEnabled = sound.soundOn;
 
-        enemyController.enemyDeathSound.volume = (options.volume/100);
-        playerBulletController.shootSound.volume = (options.volume/100);
-        enemyBulletController.shootSound.volume = (options.volume/100);
+        enemyController.enemyDeathSound.volume = (sound.volume/100);
+        playerBulletController.shootSound.volume = (sound.volume/100);
+        enemyBulletController.shootSound.volume = (sound.volume/100);
 
         playerBulletController.bulletColor = costumization.playerBulletColor;
         enemyBulletController.bulletColor = costumization.enemyBulletColor;
@@ -175,12 +175,12 @@ function displayGameOver(){
         drawButtonBack();
 
         ctx.fillStyle = "#39ff14";
-        ctx.font = "70px Arial";
+        ctx.font = "80px Arial";
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
 
         ctx.fillStyle = "#39ff14";
-        ctx.font = "50px Arial";
-        ctx.fillText('Press R to restart game', canvas.width - 350, 400);
+        ctx.font = "30px Arial";
+        ctx.fillText('Press [R] to restart game', canvas.width - 350, 400);
         
         document.addEventListener('keydown', function(event) {
             if (event.key === 'r') {

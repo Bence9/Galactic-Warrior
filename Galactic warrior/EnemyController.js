@@ -45,6 +45,7 @@ export default class EnemyController {
         this.drawEnemies(ctx);
         this.resetMoveDownTimer();
         this.fireBullet();
+
     }
 
     collisionDetection(){
@@ -62,6 +63,7 @@ export default class EnemyController {
                 }
 
                 enemyRow.splice(enemyIndex, 1);
+
             }
         });
     });
@@ -90,9 +92,7 @@ export default class EnemyController {
                 scoreToAdd = 50;
                 break;
         }
-
         this.score += scoreToAdd;
-
     }
 
 
