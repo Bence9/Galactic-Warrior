@@ -23,13 +23,17 @@ export default class Description {
     draw() {
         this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
 
+        this.ctx.fillStyle = "white";
+        this.ctx.font = "50px sans-serif";
+        this.ctx.fillText("Costumizaton", 350, 80);
+
         this.drawButtonBack();
 
         var text = 'Space Invaders, released in 1978, is an iconic arcade game known for its addictive gameplay and pixelated graphics. Players control a laser cannon at the bottom of the screen, tasked with defending Earth from descending waves of alien invaders. As the game progresses, the aliens move faster and descend more aggressively, adding to the challenge. Despite its simplicity, Space Invaders has had a significant cultural impact, inspiring numerous adaptations and homages across various media. Its enduring popularity is a testament to its timeless appeal and status as a classic in video game history.';
         var maxWidth = 400;
         var lineHeight = 30;
         var x = 350;
-        var y = 100;
+        var y = 130;
 
         this.drawWrappedText(text, x, y, maxWidth, lineHeight);
     }
@@ -62,9 +66,6 @@ export default class Description {
             }
         });
         lines.push(line);
-
-//        this.ctx.fillStyle = 'grey'; 
-//        this.ctx.fillRect(100, 70, 500, 470);
 
         lines.forEach((line, index) => {
             this.ctx.font = "25px Arial";

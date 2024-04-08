@@ -80,7 +80,7 @@ const clickHandler = (event) => {
     const y = event.clientY - rect.top;
     
     if (x >= 225 && x <= 480 && y >= 350 && y <= 400) {
-        background.src = costumization.field;
+//        background.src = costumization.field;
         startGame();
         canvas.removeEventListener('click', clickHandler);
         if(isGameOver){
@@ -109,7 +109,8 @@ canvas.addEventListener('click', clickHandler);
 
 function startGame() {
     clearInterval(gameInterval);
-    gameInterval = setInterval(game, 1000 / 90);
+    gameInterval = setInterval(game, 1000 / 70);
+    background.src = costumization.field;
 }
 
 
@@ -120,24 +121,8 @@ function game() {
     displayGameOver();
     if (!isGameOver) {
 
-        player.image.src = costumization.selectedPlayer;
+        settings();
 
-        player.draw(ctx);
-        enemyController.draw(ctx);
-        playerBulletController.draw(ctx);
-        enemyBulletController.draw(ctx);
-
-        enemyController.soundEnabled = sound.soundOn;
-        playerBulletController.soundEnabled = sound.soundOn;
-        enemyBulletController.soundEnabled = sound.soundOn;
-
-        enemyController.enemyDeathSound.volume = (sound.volume/100);
-        playerBulletController.shootSound.volume = (sound.volume/100);
-        enemyBulletController.shootSound.volume = (sound.volume/100);
-
-        playerBulletController.bulletColor = costumization.playerBulletColor;
-        enemyBulletController.bulletColor = costumization.enemyBulletColor;
-        
         ctx.fillStyle = '#333333';
         ctx.fillRect(0, 0, canvas.width, 30);
 
@@ -146,10 +131,33 @@ function game() {
         ctx.fillText('Score: ' + enemyController.score, 125, 23);
         ctx.fillText('Life: ' + life, canvas.width - 125, 23);
         ctx.fillText('Time: ' + updateTime(), canvas.width - 350, 23);
-
     } else {
         clearInterval(gameInterval); 
     }
+
+}
+
+// All things that user chose from sound and costumization menu
+function settings(){
+
+    player.image.src = costumization.selectedPlayer;
+
+    player.draw(ctx);
+    enemyController.draw(ctx);
+    playerBulletController.draw(ctx);
+    enemyBulletController.draw(ctx);
+
+    enemyController.soundEnabled = sound.soundOn;
+    playerBulletController.soundEnabled = sound.soundOn;
+    enemyBulletController.soundEnabled = sound.soundOn;
+
+    enemyController.enemyDeathSound.volume = (sound.volume/100);
+    playerBulletController.shootSound.volume = (sound.volume/100);
+    enemyBulletController.shootSound.volume = (sound.volume/100);
+
+    playerBulletController.bulletColor = costumization.playerBulletColor;
+    enemyBulletController.bulletColor = costumization.enemyBulletColor;
+    
 }
 
 function drawButtonBack() {
@@ -175,12 +183,17 @@ function displayGameOver(){
         drawButtonBack();
 
         ctx.fillStyle = "#39ff14";
-        ctx.font = "80px Arial";
-        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+        ctx.font = "100px Arial";
+        ctx.fillText(text, 350, 280);
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "30px Arial";
-        ctx.fillText('Press [R] to restart game', canvas.width - 350, 400);
+        ctx.fillText('Earned Score: ' + enemyController.score, 350, 360);
+        ctx.fillText('Time: ' + updateTime(), 350, 400);
+
+        ctx.fillStyle = "#39ff14";
+        ctx.font = "30px Arial";
+        ctx.fillText('Press [R] to restart game', 350, 470);
         
         document.addEventListener('keydown', function(event) {
             if (event.key === 'r') {
