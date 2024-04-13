@@ -4,6 +4,9 @@ import BulletController from "./BulletController.js";
 import Description from "./Description.js";
 import Sound from "./Sound.js";
 import Costumization from "./Costumization.js";
+import GiftController from "./GiftController.js";
+import Gift2Controller from "./Gift2Controller.js";
+import MeteorController from "./MeteorController.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -27,7 +30,10 @@ const costumization = new Costumization(canvas, ctx, background, menu);
 
 const playerBulletController = new BulletController(canvas, 10, "red", true);
 const enemyBulletController = new BulletController(canvas, 5, "white", true);
-const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController, true);
+const giftController = new GiftController(canvas, 1);
+const gift2Controller = new Gift2Controller(canvas, 1);
+const meteorController = new MeteorController(canvas, 2);
+const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const player = new Player(canvas, 3, playerBulletController);
 
 
@@ -80,24 +86,23 @@ const clickHandler = (event) => {
     const y = event.clientY - rect.top;
     
     if (x >= 225 && x <= 480 && y >= 350 && y <= 400) {
-//        background.src = costumization.field;
         startGame();
-        canvas.removeEventListener('click', clickHandler);
+//        canvas.removeEventListener('click', clickHandler);
         if(isGameOver){
             restartGame();
         }
     }
     else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
         description.draw();
-        canvas.removeEventListener('click', clickHandler);
+//        canvas.removeEventListener('click', clickHandler);
     }
     else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
         sound.draw();
-        canvas.removeEventListener('click', clickHandler);
+//        canvas.removeEventListener('click', clickHandler);
     }
     else if(x >= 225 && x <= 480 && y >= 500 && y <= 550){
         costumization.draw();
-        canvas.removeEventListener('click', clickHandler);
+//        canvas.removeEventListener('click', clickHandler);
     }
 
 };
@@ -109,7 +114,7 @@ canvas.addEventListener('click', clickHandler);
 
 function startGame() {
     clearInterval(gameInterval);
-    gameInterval = setInterval(game, 1000 / 70);
+    gameInterval = setInterval(game, 100 / 70);
     background.src = costumization.field;
 }
 
@@ -146,6 +151,9 @@ function settings(){
     enemyController.draw(ctx);
     playerBulletController.draw(ctx);
     enemyBulletController.draw(ctx);
+    giftController.draw(ctx);
+    gift2Controller.draw(ctx);
+    meteorController.draw(ctx);
 
     enemyController.soundEnabled = sound.soundOn;
     playerBulletController.soundEnabled = sound.soundOn;
@@ -217,9 +225,13 @@ function restartGame() {
     startGame();
     enemyBulletController.clearBullets();
     playerBulletController.clearBullets();
+    giftController.clearGifts();
+    gift2Controller.clearGifts();
+    meteorController.clearMeteors();
 }
 
 function lifeLosing(){
+
     if(enemyBulletController.collideWith(player)){
         life--;
     }
@@ -227,6 +239,19 @@ function lifeLosing(){
     if(enemyController.collideWith(player)){
         life--;
     }
+    
+    if (giftController.collideWith(player)) {
+        life++;
+    }
+
+    if(gift2Controller.collideWith(player)){
+        enemyController.score *= 2;
+    }
+
+    if(meteorController.collideWith(player)){
+        life--;
+    }
+
 }
 
 function checkGameOver(){
@@ -247,9 +272,9 @@ function updateTime() {
 }
 
 function formatTime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const formattedHours = hours < 10 ? `0${hours}` : `${hours}`;
+    const minutes = Math.floor(seconds / 3600); 
+    const second = Math.floor((seconds % 3600) / 60);
     const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    return `${formattedHours}:${formattedMinutes}`;
+    const formattedSeconds = second < 10 ? `0${second}` : `${second}`;
+    return `${formattedMinutes}:${formattedSeconds}`;
 }

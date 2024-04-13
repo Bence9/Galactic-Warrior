@@ -23,12 +23,17 @@ export default class EnemyController {
     moveDownTimer = this.moveDownTimerDefault;
     fireBulletTimerDefault = 100;
     fireBulletTimer = this.fireBulletTimerDefault;
+    dropGiftTimer = 700;
+    dropMeteorTimer = 300;
     score = 0;
 
-    constructor(canvas, enemyBulletController, playerBulletController, soundEnabled) {
+    constructor(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, soundEnabled) {
         this.canvas = canvas;
         this.enemyBulletController = enemyBulletController;
         this.playerBulletController = playerBulletController;
+        this.giftController = giftController;
+        this.gift2Controller = gift2Controller;
+        this.meteorController = meteorController;
         this.soundEnabled = soundEnabled;
 
         this.enemyDeathSound = new Audio('sounds/enemy-death.wav');
@@ -45,6 +50,8 @@ export default class EnemyController {
         this.drawEnemies(ctx);
         this.resetMoveDownTimer();
         this.fireBullet();
+        this.dropGift();
+        this.dropMeteor();
 
     }
 
@@ -67,7 +74,7 @@ export default class EnemyController {
             }
         });
     });
-        this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0)
+        this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0);
     }
 
 
@@ -106,6 +113,40 @@ export default class EnemyController {
             this.enemyBulletController.shoot(enemy.x + enemy.width/2, enemy.y, -3);
         }
     }
+
+    dropGift() {
+        this.dropGiftTimer--;
+        if (this.dropGiftTimer <= 0) {
+            this.dropGiftTimer = Math.floor(Math.random() * (2500 - 1000)) + 1000; //Véletlenszerű időpontokban ajándékledobás (1000-2500 ms)
+            const x = Math.random() * this.canvas.width; // Véletlenszerű x pozíció a vászon szélességének tartományából
+            const y = 0; // A vászon teteje
+            const Yvelocity = -2; // Sebesség, lefelé esés
+            const Xvelocity = 0;
+            const timeTillNextGiftAllowed = 10;
+            const number = Math.floor(Math.random() * (100 - 1)) + 1; // ez véletlenszerűen adja a gift1 és gift2 tipusokat felváltva
+            if(number >= 50){
+                this.giftController.drop(x, y, Yvelocity, Xvelocity, timeTillNextGiftAllowed);
+            }
+            else if(number < 50){
+                this.gift2Controller.drop(x, y, Yvelocity, Xvelocity, timeTillNextGiftAllowed);
+            }
+            
+        }
+    }
+
+
+    dropMeteor() {
+        this.dropMeteorTimer--;
+        if (this.dropMeteorTimer <= 0) {
+            this.dropMeteorTimer = Math.floor(Math.random() * (1200 - 600)) + 600; //Véletlenszerű időpontokban ledobás (600 - 1200 ms)
+            const x = Math.random() * this.canvas.width; // Véletlenszerű x pozíció a vászon szélességének tartományából
+            const y = 0; // A vászon teteje
+            const Yvelocity = -4; // Sebesség (4), lefelé esés (-)
+            const timeTillNextMeteorAllowed = 10;
+            this.meteorController.drop(x, y, Yvelocity, timeTillNextMeteorAllowed);
+        }
+    }
+
 
     resetMoveDownTimer() {
         if (this.moveDownTimer <= 0) {
