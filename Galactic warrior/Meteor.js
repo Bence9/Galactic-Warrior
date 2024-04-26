@@ -6,7 +6,7 @@ export default class Meteor {
         this.Yvelocity = Yvelocity;
         
         this.image = new Image();
-        this.image.src = `images/drop/meteor.png`;
+        this.image.src = "images/drop/meteor.png";
 
         this.width = 60;
         this.height = 55;

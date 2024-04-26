@@ -7,7 +7,7 @@ export default class Gift {
         this.Xvelocity = Xvelocity;
         
         this.image = new Image();
-        this.image.src = `images/drop/gift1.png`;
+        this.image.src = "images/drop/gift1.png";
 
         this.width = 30;
         this.height = 30;

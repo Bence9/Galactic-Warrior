@@ -5,7 +5,7 @@ export default class Sound {
         this.background = background;
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
-        this.buttonImage.src = 'images/return.png';
+        this.buttonImage.src = "images/return.png";
         this.soundOn = true;
         this.volume = 50;
         
@@ -54,22 +54,22 @@ export default class Sound {
         this.ctx.fillText("Volume: " + this.volume + " %", 270, 275);
 
         const image = new Image();
-        image.src = 'images/sound.png';
+        image.src = "images/sound.png";
         image.onload = () => {
-        this.ctx.drawImage(image, 230, 350, 190, 190);
+        this.ctx.drawImage(image, 230, 350, 200, 200);
         };
     }
 
     drawVolumeButton() {
         // Volume növelése gomb
-        this.ctx.fillStyle = 'yellow';
+        this.ctx.fillStyle = "yellow";
         this.ctx.fillRect(100, 200, 50, 50);
         this.ctx.fillStyle = "black";
         this.ctx.font = "50px sans-serif";
         this.ctx.fillText("+", 125, 245);
 
         // Volume csökkentése gomb
-        this.ctx.fillStyle = 'yellow';
+        this.ctx.fillStyle = "yellow";
         this.ctx.fillRect(100, 270, 50, 50);
         this.ctx.fillStyle = "black";
         this.ctx.font = "50px sans-serif";
@@ -77,7 +77,7 @@ export default class Sound {
     }
 
     drawSoundButton() {
-        this.ctx.fillStyle = this.soundOn ? 'green' : 'red';
+        this.ctx.fillStyle = this.soundOn ? "green" : "red";
         this.ctx.fillRect(100, 130, 50, 50);
 
         this.ctx.fillStyle = "white";
@@ -103,7 +103,7 @@ export default class Sound {
     }
 
     drawButtonBack() {
-        this.ctx.fillStyle = 'red';
+        this.ctx.fillStyle = "red";
         this.ctx.fillRect(600, 20, 80, 40);
 
         this.ctx.drawImage(this.buttonImage, 610, 10, 60, 50);

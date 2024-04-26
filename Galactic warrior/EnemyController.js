@@ -36,7 +36,7 @@ export default class EnemyController {
         this.meteorController = meteorController;
         this.soundEnabled = soundEnabled;
 
-        this.enemyDeathSound = new Audio('sounds/enemy-death.wav');
+        this.enemyDeathSound = new Audio("sounds/enemy-death.wav");
         this.enemyDeathSound.volume = 0.5;
 
         this.createEnemies();
@@ -114,6 +114,7 @@ export default class EnemyController {
         }
     }
 
+
     dropGift() {
         this.dropGiftTimer--;
         if (this.dropGiftTimer <= 0) {
@@ -168,12 +169,9 @@ export default class EnemyController {
             if (this.currentDirection === MovingDirection.right) {
                 this.xVelocity = this.defaultXVelocity;
                 this.yVelocity = 0;
-                const rightMostEnemies =
-                    enemyRow[enemyRow.length - 1];
-                if (
-                    rightMostEnemies.x + rightMostEnemies.width >=
-                    this.canvas.width
-                ) {
+                const rightMostEnemies = enemyRow[enemyRow.length - 1];
+                if ( rightMostEnemies.x + rightMostEnemies.width >= this.canvas.width )
+                {
                     this.currentDirection = MovingDirection.downLeft;
                     break;
                 }
@@ -208,12 +206,10 @@ export default class EnemyController {
     }
 
     drawEnemies(ctx) {
-        this.enemyRows
-            .flat()
-            .forEach((enemy) => {
+        this.enemyRows.flat().forEach((enemy) => {
                 enemy.move(this.xVelocity, this.yVelocity);
                 enemy.draw(ctx);
-            });
+        });
     }
 
     createEnemies() {

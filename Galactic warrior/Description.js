@@ -5,7 +5,7 @@ export default class Description {
         this.background = background;
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
-        this.buttonImage.src = 'images/return.png';
+        this.buttonImage.src = "images/return.png";
 
         const clickHandler = (event) => {
             const rect = this.canvas.getBoundingClientRect();
@@ -18,6 +18,7 @@ export default class Description {
         };
 
         this.canvas.addEventListener('click', clickHandler);
+        
     }
 
     draw() {
@@ -29,7 +30,7 @@ export default class Description {
 
         this.drawButtonBack();
 
-        var text = 'Space Invaders, released in 1978, is an iconic arcade game known for its addictive gameplay and pixelated graphics. Players control a laser cannon at the bottom of the screen, tasked with defending Earth from descending waves of alien invaders. As the game progresses, the aliens move faster and descend more aggressively, adding to the challenge. Despite its simplicity, Space Invaders has had a significant cultural impact, inspiring numerous adaptations and homages across various media. Its enduring popularity is a testament to its timeless appeal and status as a classic in video game history.';
+        var text = "Space Invaders, released in 1978, is an iconic arcade game known for its addictive gameplay and pixelated graphics. Players control a laser cannon at the bottom of the screen, tasked with defending Earth from descending waves of alien invaders. As the game progresses, the aliens move faster and descend more aggressively, adding to the challenge. Despite its simplicity, Space Invaders has had a significant cultural impact, inspiring numerous adaptations and homages across various media. Its enduring popularity is a testament to its timeless appeal and status as a classic in video game history.";
         var maxWidth = 400;
         var lineHeight = 30;
         var x = 350;
@@ -39,7 +40,7 @@ export default class Description {
     }
 
     drawButtonBack() {
-        this.ctx.fillStyle = 'red';
+        this.ctx.fillStyle = "red";
         this.ctx.fillRect(600, 20, 80, 40);
 
         this.ctx.drawImage(this.buttonImage, 610, 10, 60, 50);
@@ -65,6 +66,7 @@ export default class Description {
                 line = testLine;
             }
         });
+        
         lines.push(line);
 
         lines.forEach((line, index) => {
@@ -73,4 +75,5 @@ export default class Description {
             this.ctx.fillText(line, x, y + (index * lineHeight));
         });
     }
+
 }

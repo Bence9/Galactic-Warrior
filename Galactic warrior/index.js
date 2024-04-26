@@ -17,19 +17,23 @@ canvas.height = 600;
 
 
 const background = new Image();
-background.src = 'images/background/space.png';
+background.src = "images/background/space.png";
 background.onload = menu;
 
+// Játék hátterének különválasztása
+const gameBackground = new Image();
+gameBackground.src = "images/background/space.png";
+
 const logoImage = new Image();
-logoImage.src = 'images/icon.png';
+logoImage.src = "images/icon.png";
 logoImage.onload = menu;
 
 const description = new Description(canvas, ctx, background, menu);
 const sound = new Sound(canvas, ctx, background, menu);
-const costumization = new Costumization(canvas, ctx, background, menu);
+const costumization = new Costumization(canvas, ctx, menu);
 
-const playerBulletController = new BulletController(canvas, 10, "red", true);
 const enemyBulletController = new BulletController(canvas, 5, "white", true);
+const playerBulletController = new BulletController(canvas, 10, "red", true);
 const giftController = new GiftController(canvas, 1);
 const gift2Controller = new Gift2Controller(canvas, 1);
 const meteorController = new MeteorController(canvas, 2);
@@ -45,7 +49,7 @@ let gameInterval;
 
 
 function drawButton(text, xPos, yPos, width, height) {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(xPos, yPos, width, height);
 
     ctx.strokeStyle = "red";
@@ -74,9 +78,9 @@ function menu() {
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(logoImage, canvas.width/3 - logoImage.width/2, canvas.height/4 - logoImage.height/2 - 75, 350, 300);
 
-    ctx.font = '30px sans-serif';
-    ctx.fillStyle = '#39FF14';
-    ctx.textAlign = 'center';
+    ctx.font = "30px sans-serif";
+    ctx.fillStyle = "#39FF14";
+    ctx.textAlign = "center";
 
     drawMenuButtons();
 
@@ -98,11 +102,9 @@ const clickHandler = (event) => {
     }
     else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
         sound.draw();
-//        canvas.removeEventListener('click', clickHandler);
     }
     else if(x >= 225 && x <= 480 && y >= 500 && y <= 550){
         costumization.draw();
-//        canvas.removeEventListener('click', clickHandler);
     }
 
 };
@@ -115,27 +117,27 @@ canvas.addEventListener('click', clickHandler);
 function startGame() {
     clearInterval(gameInterval);
     gameInterval = setInterval(game, 100 / 70);
-    background.src = costumization.field;
+    gameBackground.src = costumization.field;
 }
 
 
 function game() {
     checkGameOver();
-    lifeLosing();
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    collideWithObject();
+    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver();
     if (!isGameOver) {
 
         settings();
 
-        ctx.fillStyle = '#333333';
-        ctx.fillRect(0, 0, canvas.width, 30);
+//        ctx.fillStyle = "#333333";
+//        ctx.fillRect(0, 0, canvas.width, 30);
 
-        ctx.fillStyle = 'white';
-        ctx.font = '20px sans-serif';
-        ctx.fillText('Score: ' + enemyController.score, 125, 23);
-        ctx.fillText('Life: ' + life, canvas.width - 125, 23);
-        ctx.fillText('Time: ' + updateTime(), canvas.width - 350, 23);
+        ctx.fillStyle = "white";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Score: " + enemyController.score, 125, 23);
+        ctx.fillText("Life: " + life, canvas.width - 125, 23);
+        ctx.fillText("Time: " + updateTime(), canvas.width - 350, 23);
     } else {
         clearInterval(gameInterval); 
     }
@@ -170,7 +172,7 @@ function settings(){
 
 function drawButtonBack() {
     const buttonImage = new Image();
-    buttonImage.src = 'images/return.png';
+    buttonImage.src = "images/return.png";
 
     buttonImage.onload = () => {
         ctx.drawImage(buttonImage, 610, 10, 60, 50);
@@ -180,7 +182,7 @@ function drawButtonBack() {
         ctx.fillText("back", 630, 55);
     };
 
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = "red";
     ctx.fillRect(600, 20, 80, 40);
 }
 
@@ -196,15 +198,15 @@ function displayGameOver(){
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "30px Arial";
-        ctx.fillText('Earned Score: ' + enemyController.score, 350, 360);
-        ctx.fillText('Time: ' + updateTime(), 350, 400);
+        ctx.fillText("Earned Score: " + enemyController.score, 350, 360);
+        ctx.fillText("Time: " + updateTime(), 350, 400);
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "30px Arial";
-        ctx.fillText('Press [R] to restart game', 350, 470);
+        ctx.fillText("Press [R] to restart game", 350, 470);
         
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'r') {
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "r") {
                 restartGame();
             }
         });
@@ -230,7 +232,7 @@ function restartGame() {
     meteorController.clearMeteors();
 }
 
-function lifeLosing(){
+function collideWithObject(){
 
     if(enemyBulletController.collideWith(player)){
         life--;
