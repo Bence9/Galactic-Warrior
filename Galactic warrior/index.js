@@ -12,7 +12,7 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 
-canvas.width = 700;
+canvas.width = 1000;
 canvas.height = 600;
 
 
@@ -47,8 +47,8 @@ let life = 3;
 let seconds = 0;
 let gameInterval;
 
-
-function drawButton(text, xPos, yPos, width, height) {
+// ide tegyem a hover, clicked stb eseményt
+function makeButton(text, xPos, yPos, width, height) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(xPos, yPos, width, height);
 
@@ -61,10 +61,10 @@ function drawButton(text, xPos, yPos, width, height) {
 }
 
 function drawMenuButtons() {
-    drawButton("Start Game", 225, 350, 255, 50);
-    drawButton("Description", 225, 400, 255, 50);
-    drawButton("Sound", 225, 450, 255, 50);
-    drawButton("Customization", 225, 500, 255, 50);
+    makeButton("Start Game", canvas.width/3, 350, 255, 50);
+    makeButton("Description", canvas.width/3, 400, 255, 50);
+    makeButton("Sound", canvas.width/3, 450, 255, 50);
+    makeButton("Customization", canvas.width/3, 500, 255, 50);
 }
 
 
@@ -89,27 +89,29 @@ const clickHandler = (event) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     
-    if (x >= 225 && x <= 480 && y >= 350 && y <= 400) {
+    if (x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 350 && y <= 400) {
         startGame();
 //        canvas.removeEventListener('click', clickHandler);
         if(isGameOver){
             restartGame();
         }
     }
-    else if(x >= 225 && x <= 480 && y >= 400 && y <= 450){
+    else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 400 && y <= 450){
         description.draw();
 //        canvas.removeEventListener('click', clickHandler);
     }
-    else if(x >= 225 && x <= 480 && y >= 450 && y <= 500){
+    else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 450 && y <= 500){
         sound.draw();
     }
-    else if(x >= 225 && x <= 480 && y >= 500 && y <= 550){
+    else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 500 && y <= 550){
         costumization.draw();
     }
 
 };
 
 canvas.addEventListener('click', clickHandler);
+// ide kell megírni a színátmenet eseményt (event), ez nem jó, de már működik: fontos hogy külön legyen kezelve a clickhandlertől -> mousehandler
+// canvas.addEventListener('mousemove', clickHandler);
 
 }
 
@@ -133,18 +135,25 @@ function game() {
 //        ctx.fillStyle = "#333333";
 //        ctx.fillRect(0, 0, canvas.width, 30);
 
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "blue";
         ctx.font = "20px sans-serif";
         ctx.fillText("Score: " + enemyController.score, 125, 23);
+
+        ctx.fillStyle = "yellow";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+
+        ctx.fillStyle = "red";
+        ctx.font = "20px sans-serif";
         ctx.fillText("Life: " + life, canvas.width - 125, 23);
-        ctx.fillText("Time: " + updateTime(), canvas.width - 350, 23);
+
     } else {
         clearInterval(gameInterval); 
     }
 
 }
 
-// All things that user chose from sound and costumization menu
+// All things that user choose from sound and costumization menu
 function settings(){
 
     player.image.src = costumization.selectedPlayer;
@@ -175,15 +184,15 @@ function drawButtonBack() {
     buttonImage.src = "images/return.png";
 
     buttonImage.onload = () => {
-        ctx.drawImage(buttonImage, 610, 10, 60, 50);
+        ctx.drawImage(buttonImage, 910, 10, 60, 50);
 
         ctx.fillStyle = "black";
         ctx.font = "20px sans-serif";
-        ctx.fillText("back", 630, 55);
+        ctx.fillText("back", 930, 55);
     };
 
     ctx.fillStyle = "red";
-    ctx.fillRect(600, 20, 80, 40);
+    ctx.fillRect(900, 20, 80, 40);
 }
 
 function displayGameOver(){
@@ -194,16 +203,16 @@ function displayGameOver(){
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "100px Arial";
-        ctx.fillText(text, 350, 280);
+        ctx.fillText(text, canvas.width/2 , 250);
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "30px Arial";
-        ctx.fillText("Earned Score: " + enemyController.score, 350, 360);
-        ctx.fillText("Time: " + updateTime(), 350, 400);
+        ctx.fillText("Earned Score: " + enemyController.score, canvas.width/2, 340);
+        ctx.fillText("Time: " + updateTime(), canvas.width/2, 380);
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "30px Arial";
-        ctx.fillText("Press [R] to restart game", 350, 470);
+        ctx.fillText("Press [R] to restart game", canvas.width/2, 470);
         
         document.addEventListener("keydown", function(event) {
             if (event.key === "r") {

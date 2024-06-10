@@ -14,21 +14,21 @@ export default class Sound {
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
         
-            if (x >= 600 && x <= 680 && y >= 20 && y <= 60) {
+            if (x >= 900 && x <= 980 && y >= 20 && y <= 60) {
                 this.menuCallback(); // menu() visszahívása
             }
         
-            if (x >= 100 && x <= 150 && y >= 130 && y <= 180) {
+            if (x >= 350 && x <= 400 && y >= 180 && y <= 230) {
                 this.toggleSound(); // Hang ki/be kapcsolása
                 this.draw(); // újra rajzolás a gomb on -> off / off -> on váltás miatt
             }
         
-            if (x >= 100 && x <= 150 && y >= 200 && y <= 250) {
+            if (x >= 750 && x <= 800 && y >= 150 && y <= 200) {
                 this.increaseVolume();
                 this.draw();
             }
         
-            if (x >= 100 && x <= 150 && y >= 270 && y <= 320) {
+            if (x >= 750 && x <= 800 && y >= 220 && y <= 270) {
                 this.decreaseVolume();
                 this.draw();
             }
@@ -42,47 +42,50 @@ export default class Sound {
 
         this.ctx.fillStyle = "white";
         this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("Sound", 350, 80);
+        this.ctx.fillText("Sound", 500, 80);
     
         this.drawButtonBack();
         this.drawSoundButton();
         this.drawVolumeButton()
+
+        this.ctx.fillStyle = "white";
+        this.ctx.font = "40px sans-serif";
+        this.ctx.fillText("Sound: ", 270, 220);
     
         this.ctx.fillStyle = "white";
-        this.ctx.font = "30px sans-serif";
-        this.ctx.fillText("Sound: " + (this.soundOn ? "On" : "Off"), 270, 165);
-        this.ctx.fillText("Volume: " + this.volume + " %", 270, 275);
+        this.ctx.font = "35px sans-serif";
+        this.ctx.fillText("Volume: " + this.volume + " %", 600, 220);
 
         const image = new Image();
         image.src = "images/sound.png";
         image.onload = () => {
-        this.ctx.drawImage(image, 230, 350, 200, 200);
+        this.ctx.drawImage(image, 370, 320, 240, 240);
         };
     }
 
     drawVolumeButton() {
         // Volume növelése gomb
         this.ctx.fillStyle = "yellow";
-        this.ctx.fillRect(100, 200, 50, 50);
+        this.ctx.fillRect(750, 150, 50, 50);
         this.ctx.fillStyle = "black";
         this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("+", 125, 245);
+        this.ctx.fillText("+", 775, 195);
 
         // Volume csökkentése gomb
         this.ctx.fillStyle = "yellow";
-        this.ctx.fillRect(100, 270, 50, 50);
+        this.ctx.fillRect(750, 220, 50, 50);
         this.ctx.fillStyle = "black";
         this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("-", 125, 310);
+        this.ctx.fillText("-", 775, 260);
     }
 
     drawSoundButton() {
         this.ctx.fillStyle = this.soundOn ? "green" : "red";
-        this.ctx.fillRect(100, 130, 50, 50);
+        this.ctx.fillRect(350, 180, 50, 50);
 
         this.ctx.fillStyle = "white";
         this.ctx.font = "25px sans-serif";
-        this.ctx.fillText(this.soundOn ? "On" : "Off", 120, 165);
+        this.ctx.fillText(this.soundOn ? "On" : "Off", 370, 215);
     }
 
     // Hang be/kikapcsolás
@@ -104,13 +107,13 @@ export default class Sound {
 
     drawButtonBack() {
         this.ctx.fillStyle = "red";
-        this.ctx.fillRect(600, 20, 80, 40);
+        this.ctx.fillRect(900, 20, 80, 40);
 
-        this.ctx.drawImage(this.buttonImage, 610, 10, 60, 50);
+        this.ctx.drawImage(this.buttonImage, 910, 10, 60, 50);
 
         this.ctx.fillStyle = "black";
         this.ctx.font = "20px sans-serif";
-        this.ctx.fillText("back", 630, 55);
+        this.ctx.fillText("back", 930, 55);
     }
     
 }

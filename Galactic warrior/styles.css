@@ -3,7 +3,7 @@
 canvas {
     box-shadow: #39FF14 10px 10px 15px;
     position: relative;
-    z-index: 1;
+/*    z-index: 1; */
 }
 
 h1 {

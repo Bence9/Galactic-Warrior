@@ -12,7 +12,7 @@ export default class Description {
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
             
-            if (x >= 600 && x <= 680 && y >= 20 && y <= 60) {
+            if (x >= 900 && x <= 980 && y >= 20 && y <= 60) {
                 this.menuCallback(); // menu() visszahívása
             }
         };
@@ -26,14 +26,14 @@ export default class Description {
 
         this.ctx.fillStyle = "white";
         this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("Costumizaton", 350, 80);
+        this.ctx.fillText("Costumizaton", 500, 80);
 
         this.drawButtonBack();
 
         var text = "Space Invaders, released in 1978, is an iconic arcade game known for its addictive gameplay and pixelated graphics. Players control a laser cannon at the bottom of the screen, tasked with defending Earth from descending waves of alien invaders. As the game progresses, the aliens move faster and descend more aggressively, adding to the challenge. Despite its simplicity, Space Invaders has had a significant cultural impact, inspiring numerous adaptations and homages across various media. Its enduring popularity is a testament to its timeless appeal and status as a classic in video game history.";
         var maxWidth = 400;
         var lineHeight = 30;
-        var x = 350;
+        var x = 500;
         var y = 130;
 
         this.drawWrappedText(text, x, y, maxWidth, lineHeight);
@@ -41,13 +41,13 @@ export default class Description {
 
     drawButtonBack() {
         this.ctx.fillStyle = "red";
-        this.ctx.fillRect(600, 20, 80, 40);
+        this.ctx.fillRect(900, 20, 80, 40);
 
-        this.ctx.drawImage(this.buttonImage, 610, 10, 60, 50);
+        this.ctx.drawImage(this.buttonImage, 910, 10, 60, 50);
 
         this.ctx.fillStyle = "black";
         this.ctx.font = "20px sans-serif";
-        this.ctx.fillText("back", 630, 55);
+        this.ctx.fillText("back", 930, 55);
     }
 
     drawWrappedText(text, x, y, maxWidth, lineHeight) {

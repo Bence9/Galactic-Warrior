@@ -56,6 +56,12 @@ export default class Player {
                 event.preventDefault(); // space megnyomása esetén nem ugrik az oldal aljára
                 this.shootPressed = true;
                 break;
+            case "ArrowUp":
+                event.preventDefault(); // fel nyíl megnyomása esetén nem mozdul el a kép
+                break;
+            case "ArrowDown":
+                event.preventDefault(); // le nyíl megnyomása esetén nem mozdul el a kép
+                break;
             default:
                 break;
         }
