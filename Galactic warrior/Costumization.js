@@ -7,13 +7,13 @@ export default class Costumization {
 //        this.background = background;
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
-        this.buttonImage.src = "images/return.png";
+        this.buttonImage.src = "images/ikon/return.png";
         this.playerBulletColor = "red";
         this.enemyBulletColor = "white";
         this.selectedPlayer = "images/player/player1.png";
         this.playerName = "Azure Vortex";
         this.field = "images/background/space.png";
-        this.fieldName = "Space1";
+        this.fieldName = "Space";
     
         // Négyzetek méretei és az eltolás mértéke
         this.squareSize = 30; 
@@ -98,7 +98,7 @@ export default class Costumization {
                 this.draw();
             } else if (x >= 820 && x <= 920 && y >= 350 && y <= 450) {
                 this.field = "images/background/space.png";
-                this.fieldName = "Space1";
+                this.fieldName = "Space";
                 this.draw();
             } else if (x >= 700 && x <= 800 && y >= 470 && y <= 570) {
                 this.field = "images/background/cosmic.png";
@@ -153,7 +153,7 @@ export default class Costumization {
         this.ctx.fillText(this.fieldName + " selected", 800, 330);
 
         const image = new Image();
-        image.src = "images/costumize.png";
+        image.src = "images/ikon/costumize.png";
         image.onload = () => {
         this.ctx.drawImage(image, 380, 340, 220, 220);
         };

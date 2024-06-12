@@ -5,7 +5,7 @@ export default class Sound {
         this.background = background;
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
-        this.buttonImage.src = "images/return.png";
+        this.buttonImage.src = "images/ikon/return.png";
         this.soundOn = true;
         this.volume = 50;
         
@@ -57,7 +57,7 @@ export default class Sound {
         this.ctx.fillText("Volume: " + this.volume + " %", 600, 220);
 
         const image = new Image();
-        image.src = "images/sound.png";
+        image.src = "images/ikon/sound.png";
         image.onload = () => {
         this.ctx.drawImage(image, 370, 320, 240, 240);
         };

@@ -5,7 +5,7 @@ export default class Description {
         this.background = background;
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
-        this.buttonImage.src = "images/return.png";
+        this.buttonImage.src = "images/ikon/return.png";
 
         const clickHandler = (event) => {
             const rect = this.canvas.getBoundingClientRect();
@@ -26,7 +26,7 @@ export default class Description {
 
         this.ctx.fillStyle = "white";
         this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("Costumizaton", 500, 80);
+        this.ctx.fillText("Description", 500, 80);
 
         this.drawButtonBack();
 
@@ -37,6 +37,14 @@ export default class Description {
         var y = 130;
 
         this.drawWrappedText(text, x, y, maxWidth, lineHeight);
+
+        const image = new Image();
+        image.src = "images/ikon/description.png";
+        image.onload = () => {
+        this.ctx.drawImage(image, 50, 250, 150, 150);
+        this.ctx.drawImage(image, 800, 250, 150, 150);
+        };
+
     }
 
     drawButtonBack() {

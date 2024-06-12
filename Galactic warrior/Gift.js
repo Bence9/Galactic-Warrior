@@ -9,8 +9,8 @@ export default class Gift {
         this.image = new Image();
         this.image.src = "images/drop/gift1.png";
 
-        this.width = 30;
-        this.height = 30;
+        this.width = 32;
+        this.height = 32;
     }
 
     draw(ctx) {

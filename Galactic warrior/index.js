@@ -15,7 +15,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = 1000;
 canvas.height = 600;
 
-
+// menu háttér
 const background = new Image();
 background.src = "images/background/space.png";
 background.onload = menu;
@@ -25,7 +25,7 @@ const gameBackground = new Image();
 gameBackground.src = "images/background/space.png";
 
 const logoImage = new Image();
-logoImage.src = "images/icon.png";
+logoImage.src = "images/ikon/welcomeIcon.png";
 logoImage.onload = menu;
 
 const description = new Description(canvas, ctx, background, menu);
@@ -47,7 +47,7 @@ let life = 3;
 let seconds = 0;
 let gameInterval;
 
-// ide tegyem a hover, clicked stb eseményt
+
 function makeButton(text, xPos, yPos, width, height) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(xPos, yPos, width, height);
@@ -67,6 +67,12 @@ function drawMenuButtons() {
     makeButton("Customization", canvas.width/3, 500, 255, 50);
 }
 
+const buttons = [
+    { text: "Start Game", x: canvas.width / 3, y: 350, width: 255, height: 50 },
+    { text: "Description", x: canvas.width / 3, y: 400, width: 255, height: 50 },
+    { text: "Sound", x: canvas.width / 3, y: 450, width: 255, height: 50 },
+    { text: "Customization", x: canvas.width / 3, y: 500, width: 255, height: 50 }
+];
 
 function menu() {
     if (!background.complete || !logoImage.complete) {
@@ -82,8 +88,6 @@ function menu() {
     ctx.fillStyle = "#39FF14";
     ctx.textAlign = "center";
 
-    drawMenuButtons();
-
 const clickHandler = (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -91,27 +95,55 @@ const clickHandler = (event) => {
     
     if (x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 350 && y <= 400) {
         startGame();
-//        canvas.removeEventListener('click', clickHandler);
+        canvas.removeEventListener('mousemove', mouseMoveHandler);
         if(isGameOver){
             restartGame();
         }
     }
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 400 && y <= 450){
         description.draw();
-//        canvas.removeEventListener('click', clickHandler);
+        canvas.removeEventListener('mousemove', mouseMoveHandler);
     }
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 450 && y <= 500){
         sound.draw();
+        canvas.removeEventListener('mousemove', mouseMoveHandler);
     }
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 500 && y <= 550){
         costumization.draw();
+        canvas.removeEventListener('mousemove', mouseMoveHandler);
     }
 
 };
 
+const mouseMoveHandler = (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(logoImage, canvas.width / 3 - logoImage.width / 2, canvas.height / 4 - logoImage.height / 2 - 75, 350, 300);
+
+    for (const button of buttons) {
+        if (x >= button.x && x <= button.x + button.width && y >= button.y && y <= button.y + button.height) {
+//            ctx.fillStyle = "rgba(255, 255, 0, 0.8)"; // háttérszín
+            ctx.fillStyle = "rgba(57, 255, 20, 0.8)";
+            ctx.fillRect(button.x, button.y, button.width, button.height);
+            ctx.strokeStyle = "red";
+            ctx.strokeRect(button.x, button.y, button.width, button.height);
+            ctx.fillStyle = "#000000"; // szövegszín
+            ctx.font = "30px sans-serif";
+            ctx.fillText(button.text, button.x + 125, button.y + button.height / 2 + 10);
+        } else {
+            makeButton(button.text, button.x, button.y, button.width, button.height);
+        }
+    }
+};
+
+canvas.addEventListener('mousemove', mouseMoveHandler);
 canvas.addEventListener('click', clickHandler);
-// ide kell megírni a színátmenet eseményt (event), ez nem jó, de már működik: fontos hogy külön legyen kezelve a clickhandlertől -> mousehandler
-// canvas.addEventListener('mousemove', clickHandler);
+
+drawMenuButtons();
 
 }
 
@@ -181,7 +213,7 @@ function settings(){
 
 function drawButtonBack() {
     const buttonImage = new Image();
-    buttonImage.src = "images/return.png";
+    buttonImage.src = "images/ikon/return.png";
 
     buttonImage.onload = () => {
         ctx.drawImage(buttonImage, 910, 10, 60, 50);
@@ -212,11 +244,15 @@ function displayGameOver(){
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "30px Arial";
-        ctx.fillText("Press [R] to restart game", canvas.width/2, 470);
+        ctx.fillText("Press [R] to restart game", canvas.width/2, 460);
+        ctx.fillText("Press [Esc] or click [back] to return to menu", canvas.width/2,500);
         
         document.addEventListener("keydown", function(event) {
             if (event.key === "r") {
                 restartGame();
+            }
+            else if (event.key === "Escape"){
+                menu();
             }
         });
 
@@ -250,13 +286,13 @@ function collideWithObject(){
     if(enemyController.collideWith(player)){
         life--;
     }
-    
+
     if (giftController.collideWith(player)) {
         life++;
     }
 
     if(gift2Controller.collideWith(player)){
-        enemyController.score *= 2;
+        enemyController.score += 200;
     }
 
     if(meteorController.collideWith(player)){
