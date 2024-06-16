@@ -5,7 +5,7 @@ export default class Sound {
         this.background = background;
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
-        this.buttonImage.src = "images/ikon/return.png";
+        this.buttonImage.src = "images/ikon/back.png";
         this.soundOn = true;
         this.volume = 50;
         
@@ -14,7 +14,7 @@ export default class Sound {
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
         
-            if (x >= 900 && x <= 980 && y >= 20 && y <= 60) {
+            if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
                 this.menuCallback(); // menu() visszahívása
             }
         
@@ -106,14 +106,7 @@ export default class Sound {
     }
 
     drawButtonBack() {
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(900, 20, 80, 40);
-
-        this.ctx.drawImage(this.buttonImage, 910, 10, 60, 50);
-
-        this.ctx.fillStyle = "black";
-        this.ctx.font = "20px sans-serif";
-        this.ctx.fillText("back", 930, 55);
+        this.ctx.drawImage(this.buttonImage, 910, 10, 64, 64);
     }
     
 }

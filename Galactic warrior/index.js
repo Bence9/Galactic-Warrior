@@ -8,12 +8,12 @@ import GiftController from "./GiftController.js";
 import Gift2Controller from "./Gift2Controller.js";
 import MeteorController from "./MeteorController.js";
 
-const canvas = document.getElementById("game");
+const canvas = document.getElementById("menu");
 const ctx = canvas.getContext("2d");
-
 
 canvas.width = 1000;
 canvas.height = 600;
+
 
 // menu háttér
 const background = new Image();
@@ -126,12 +126,11 @@ const mouseMoveHandler = (event) => {
 
     for (const button of buttons) {
         if (x >= button.x && x <= button.x + button.width && y >= button.y && y <= button.y + button.height) {
-//            ctx.fillStyle = "rgba(255, 255, 0, 0.8)"; // háttérszín
             ctx.fillStyle = "rgba(57, 255, 20, 0.8)";
             ctx.fillRect(button.x, button.y, button.width, button.height);
             ctx.strokeStyle = "red";
             ctx.strokeRect(button.x, button.y, button.width, button.height);
-            ctx.fillStyle = "#000000"; // szövegszín
+            ctx.fillStyle = "#000000"; // szövegszín fekete
             ctx.font = "30px sans-serif";
             ctx.fillText(button.text, button.x + 125, button.y + button.height / 2 + 10);
         } else {
@@ -167,7 +166,7 @@ function game() {
 //        ctx.fillStyle = "#333333";
 //        ctx.fillRect(0, 0, canvas.width, 30);
 
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = "white";
         ctx.font = "20px sans-serif";
         ctx.fillText("Score: " + enemyController.score, 125, 23);
 
@@ -213,18 +212,12 @@ function settings(){
 
 function drawButtonBack() {
     const buttonImage = new Image();
-    buttonImage.src = "images/ikon/return.png";
+    buttonImage.src = "images/ikon/back.png";
 
     buttonImage.onload = () => {
-        ctx.drawImage(buttonImage, 910, 10, 60, 50);
-
-        ctx.fillStyle = "black";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("back", 930, 55);
+        ctx.drawImage(buttonImage, 910, 10, 64, 64);
     };
 
-    ctx.fillStyle = "red";
-    ctx.fillRect(900, 20, 80, 40);
 }
 
 function displayGameOver(){
@@ -247,6 +240,7 @@ function displayGameOver(){
         ctx.fillText("Press [R] to restart game", canvas.width/2, 460);
         ctx.fillText("Press [Esc] or click [back] to return to menu", canvas.width/2,500);
         
+        // gomb lenyomás figyelő
         document.addEventListener("keydown", function(event) {
             if (event.key === "r") {
                 restartGame();
@@ -255,6 +249,19 @@ function displayGameOver(){
                 menu();
             }
         });
+
+        // click figyelő
+        const clickHandler = (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
+                menu();
+            }
+        };
+
+        canvas.addEventListener('click', clickHandler);
 
     }
 }

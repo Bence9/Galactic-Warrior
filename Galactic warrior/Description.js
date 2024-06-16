@@ -5,20 +5,19 @@ export default class Description {
         this.background = background;
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
-        this.buttonImage.src = "images/ikon/return.png";
+        this.buttonImage.src = "images/ikon/back.png";
 
         const clickHandler = (event) => {
             const rect = this.canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
             
-            if (x >= 900 && x <= 980 && y >= 20 && y <= 60) {
+            if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
                 this.menuCallback(); // menu() visszahívása
             }
         };
 
         this.canvas.addEventListener('click', clickHandler);
-        
     }
 
     draw() {
@@ -41,24 +40,17 @@ export default class Description {
         const image = new Image();
         image.src = "images/ikon/description.png";
         image.onload = () => {
-        this.ctx.drawImage(image, 50, 250, 150, 150);
-        this.ctx.drawImage(image, 800, 250, 150, 150);
+            this.ctx.drawImage(image, 50, 250, 150, 150);
+            this.ctx.drawImage(image, 800, 250, 150, 150);
         };
-
     }
 
     drawButtonBack() {
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(900, 20, 80, 40);
-
-        this.ctx.drawImage(this.buttonImage, 910, 10, 60, 50);
-
-        this.ctx.fillStyle = "black";
-        this.ctx.font = "20px sans-serif";
-        this.ctx.fillText("back", 930, 55);
+        this.ctx.drawImage(this.buttonImage, 910, 10, 64, 64);
     }
 
     drawWrappedText(text, x, y, maxWidth, lineHeight) {
+        this.ctx.font = "20px sans-serif";
         var words = text.split(' ');
         var line = '';
         var lines = [];
@@ -74,14 +66,13 @@ export default class Description {
                 line = testLine;
             }
         });
-        
+
         lines.push(line);
 
         lines.forEach((line, index) => {
-            this.ctx.font = "25px Arial";
+            this.ctx.font = "25px Arial"; // ettől nagyobbnak tűnik a szöveg
             this.ctx.fillStyle = "white";
             this.ctx.fillText(line, x, y + (index * lineHeight));
         });
     }
-
 }

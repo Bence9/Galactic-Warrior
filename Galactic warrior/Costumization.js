@@ -7,7 +7,7 @@ export default class Costumization {
 //        this.background = background;
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
-        this.buttonImage.src = "images/ikon/return.png";
+        this.buttonImage.src = "images/ikon/back.png";
         this.playerBulletColor = "red";
         this.enemyBulletColor = "white";
         this.selectedPlayer = "images/player/player1.png";
@@ -26,7 +26,7 @@ export default class Costumization {
             const y = event.clientY - rect.top;
         
             // Visszalépés a menube
-            if (x >= 900 && x <= 980 && y >= 20 && y <= 60) {
+            if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
                 this.menuCallback();
             }
         
@@ -235,14 +235,9 @@ export default class Costumization {
 
 
     drawButtonBack() {
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(900, 20, 80, 40);
 
-        this.ctx.drawImage(this.buttonImage, 910, 10, 60, 50);
+        this.ctx.drawImage(this.buttonImage, 910, 10, 64, 64);
 
-        this.ctx.fillStyle = "black";
-        this.ctx.font = "20px sans-serif";
-        this.ctx.fillText("back", 930, 55);
     }
 
     drawPlayerBulletColor() {
