@@ -17,7 +17,7 @@ h1 {
 }
 
 body {
-    height: 350vh;
+    height: 450vh;
     margin: 0;
     padding: 0;
     display: flex;
@@ -33,4 +33,24 @@ body {
     width: 900px; 
     color: #ff9e01;
     line-height: 1.6; 
+}
+
+ul.demo {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.customization-section {
+    display: flex;
+    justify-content: space-between; 
+}
+
+.customization-column {
+    flex: 1; 
+    padding: 10px; 
+}
+
+li.space {
+    margin-bottom: 20px; 
 }

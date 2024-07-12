@@ -15,12 +15,12 @@ canvas.width = 1000;
 canvas.height = 600;
 
 
-// menu háttér
+// menu background
 const background = new Image();
 background.src = "images/background/space.png";
 background.onload = menu;
 
-// Játék hátterének különválasztása
+// game background separated
 const gameBackground = new Image();
 gameBackground.src = "images/background/space.png";
 
@@ -102,8 +102,8 @@ function drawGames() {
 }
 
 function drawLevelField(x, y, width, height, radius, playX, playY, level, challenge) {
-    // Sárga négyzet
-    ctx.strokeStyle = "#FFFF00"; // Sárga
+    // yellow square
+    ctx.strokeStyle = "#FFFF00"; // yellow
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(x + radius, y);
@@ -117,7 +117,7 @@ function drawLevelField(x, y, width, height, radius, playX, playY, level, challe
     ctx.arcTo(x, y, x + radius, y, radius);
     ctx.stroke();
 
-    // play gomb
+    // play button
     const buttonWidth = 50;
     const buttonHeight = 30;
     
@@ -128,14 +128,13 @@ function drawLevelField(x, y, width, height, radius, playX, playY, level, challe
     ctx.font = "20px sans-serif";
     ctx.fillText("Play", playX + 25, playY + 20);
 
-    // Szövegmezők
+    // text fields
     ctx.fillStyle = "white";
     ctx.font = "20px sans-serif";
     ctx.fillText("Level:" + level, x + 70, y + 30);
     ctx.font = "16px sans-serif";
     ctx.fillText("Challenge: " + challenge, x + 70, y + 50);
-    // csillagok, a nehézségi szinthez kötve
-    // money + 50, + 100 ha teljesíti
+    // money + 50, + 100 if plyaer completed level
 
     level = level % 5;
 
@@ -193,8 +192,6 @@ function menu() {
     ctx.fillStyle = "#39FF14";
     ctx.textAlign = "center";
 
-//    drawGames();
-
 const clickHandler = (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -203,18 +200,6 @@ const clickHandler = (event) => {
     if (x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 350 && y <= 400) {
         canvas.removeEventListener('mousemove', mouseMoveHandler);
         drawGames();
-
-/*        if(x >= 920 && x <= 970 && y >= 70 && y <= 100){
-
-        }
-*/
-/*
-        startGame();
-        canvas.removeEventListener('mousemove', mouseMoveHandler);
-        if(isGameOver){
-            restartGame();
-        }
-*/
     }
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 400 && y <= 450){
         description.draw();
@@ -246,7 +231,7 @@ const mouseMoveHandler = (event) => {
             ctx.fillRect(button.x, button.y, button.width, button.height);
             ctx.strokeStyle = "red";
             ctx.strokeRect(button.x, button.y, button.width, button.height);
-            ctx.fillStyle = "#000000"; // szövegszín fekete
+            ctx.fillStyle = "#000000"; // black
             ctx.font = "30px sans-serif";
             ctx.fillText(button.text, button.x + 125, button.y + button.height / 2 + 10);
         } else {
@@ -261,6 +246,15 @@ canvas.addEventListener('click', clickHandler);
 drawMenuButtons();
 
 }
+
+const heartImage = new Image();
+heartImage.src = "images/ikon/redHeart.png";
+
+const scoreImage = new Image();
+scoreImage.src = "images/ikon/score.png";
+
+const timerImage = new Image();
+timerImage.src = "images/ikon/timer.png";
 
 
 function startGame() {
@@ -279,17 +273,26 @@ function game() {
 
         settings();
 
-        ctx.fillStyle = "white";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Score: " + enemyController.score, 125, 23);
-
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
+        ctx.fillText("Score: " + enemyController.score, 125, 23);
+        if (scoreImage.complete) {
+            ctx.drawImage(scoreImage, 185, 2, 25, 25);
+        }
+
+        ctx.fillStyle = "white";
+        ctx.font = "20px sans-serif";
         ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        if (timerImage.complete) {
+            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+        }
 
         ctx.fillStyle = "red";
         ctx.font = "20px sans-serif";
         ctx.fillText("Life: " + life, canvas.width - 125, 23);
+        if (heartImage.complete) {
+            ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
+        }
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'r' || event.key === 'Escape') {
@@ -449,5 +452,6 @@ function drawButtonBack() {
     buttonImage.onload = () => {
         ctx.drawImage(buttonImage, 910, 10, 64, 64);
     };
+
 
 }

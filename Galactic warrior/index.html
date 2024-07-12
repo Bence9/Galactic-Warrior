@@ -16,12 +16,16 @@
     <script type="module" src="index.js"></script>
 
     <div id="description">
+
+        
         <h2>Controls:</h2>
         <ul>
             <li>Movement: Arrow keys</li>
             <li>Shoot: Spacebar</li>
             <li>Restart game: R</li>
         </ul>
+
+
         <h2>Rules:</h2>
         <p>
             Embark on an epic space adventure in Galactic Warrior, inspired by the classic Space Invaders.
@@ -31,6 +35,7 @@
             Customize your gameplay in the menus, wisely choose your battlefield and spacecraft.
             Get ready for an adrenaline-filled journey in the Galactic Warrior universe!
         </p>
+
         <p>
             During the game, the player has 3 lives. Using the left and right arrow keys,
             they must dodge incoming projectiles aimed towards them. Additionally,
@@ -42,12 +47,13 @@
             With gift1, you gain +1 life (<img src="images/drop/gift2.png" alt="gift2"  width="32" height="32" style="vertical-align: middle">).
             Acquiring gift2 grants +200 points.
         </p>
+
         <p>
-            How to earn score?
+            <img src="images/ikon/score.png" alt="score"  width="32" height="32" style="vertical-align: middle"> How to earn score? <img src="images/ikon/score.png" alt="score"  width="32" height="32" style="vertical-align: middle">
             <ul>
                 <li>
                     Shooting enemy:
-                    <ul>
+                    <ul class="demo">
                         <li>+ 10 points (<img src="images/enemy/enemy1.png" alt="enemy1" width="60" height="33" style="vertical-align: middle">)</li>
                         <li>+ 20 points (<img src="images/enemy/enemy2.png" alt="enemy2" width="60" height="33" style="vertical-align: middle">)</li>
                         <li>+ 30 points (<img src="images/enemy/enemy3.png" alt="enemy3" width="60" height="33" style="vertical-align: middle">)</li>
@@ -57,19 +63,52 @@
                 </li>
                 <li>
                     Picking up drops:
-                    <ul>
+                    <ul class="demo">
                         <li>+ 200 points (<img src="images/drop/gift2.png" alt="gift2"  width="32" height="32" style="vertical-align: middle">) </li>
                     </ul>
                 </li>
                 <li>
-                    Hold more life:
-                    <ul>
-                        <li>Each life + 50 pont at the end of the game, so lets collect them (<img src="images/drop/gift1.png" alt="gift2"  width="32" height="32" style="vertical-align: middle">) </li>
+                    Extra life bonuses:
+                    <ul class="demo">
+                        <li>+ Each life is worth an additional 50 points at the end of the game, so collect them (<img src="images/ikon/redHeart.png" alt="gift2"  width="32" height="32" style="vertical-align: middle">) </li>
                     </ul>
                 </li>
             </ul>
         </p>
 
+        <p>
+            The DESCRIPTION section provides a historical overview of the Galactic Warrior game. It details the Space Invaders game, released in 1978, which became an iconic arcade game known for its addictive gameplay and pixelated graphics. The description explains how Space Invaders inspired the development of Galactic Warrior, showcasing its origins and the various levels and challenges within the game.
+        </p>
+
+        <p>
+            The SOUND section allows players to toggle the game sound on and off, as well as adjust the volume. Players can easily manage the sound settings to customize their gaming experience.
+        </p>
+
+        <p>
+            In the COSTUMIZATION menu, players can customize their gaming experience. Here, they have the option to choose the colors of their player's and enemy's lasers, as well as the spaceship they want to play with. Additionally, they can select different battle fields to make the game even more thrilling.
+        </p>
+
+        <div class="customization-section">
+            <div class="customization-column">
+                <p>Choosable ships:</p>
+                <ul>
+                    <li class="space">Azure Vortex <img src="images/player/player1.png" alt="player1" width="60" height="60" style="vertical-align: middle"></li>
+                    <li class="space">Emerald Wing <img src="images/player/player2.png" alt="player2" width="60" height="60" style="vertical-align: middle"></li>
+                    <li class="space">Titanium Dragon <img src="images/player/player3.png" alt="player3" width="60" height="60" style="vertical-align: middle"></li>
+                    <li class="space">Scarlet Phoenix <img src="images/player/player4.png" alt="player4" width="60" height="60" style="vertical-align: middle"></li>
+                </ul>
+            </div>
+            <div class="customization-column">
+                <p>Choosable fields:</p>
+                <ul>
+                    <li class="space">Cosmic: <img src="images/background/cosmic.png" alt="cosmic" width="80" height="60" style="vertical-align: middle"></li>
+                    <li class="space">Desert: <img src="images/background/desert.png" alt="desert" width="80" height="60" style="vertical-align: middle"></li>
+                    <li class="space">Space: <img src="images/background/space.png" alt="space" width="80" height="60" style="vertical-align: middle"></li>
+                    <li class="space">Universe: <img src="images/background/universe.png" alt="universe" width="80" height="60" style="vertical-align: middle"></li>
+                </ul>
+            </div>
+        </div>
+        
 
         <h2>Browser compatibility:</h2>
         <ul>
@@ -79,6 +118,7 @@
             <li>Safari (mac): </li>
             <li>Edge: </li>
         </ul>
+
     </div>
 </body>
 </html>
