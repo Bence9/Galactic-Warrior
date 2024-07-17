@@ -37,76 +37,74 @@ export default class Sound {
         this.canvas.addEventListener('click', clickHandler);
     }
     
-    draw() {
-        this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
+draw() {
+    this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.fillStyle = "white";
-        this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("Sound", 500, 80);
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "50px sans-serif";
+    this.ctx.fillText("Sound", 500, 80);
     
-        this.drawButtonBack();
-        this.drawSoundButton();
-        this.drawVolumeButton()
+    this.drawButtonBack();
+    this.drawSoundButton();
+    this.drawVolumeButton()
 
-        this.ctx.fillStyle = "white";
-        this.ctx.font = "40px sans-serif";
-        this.ctx.fillText("Sound: ", 270, 220);
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "40px sans-serif";
+    this.ctx.fillText("Sound: ", 270, 220);
     
-        this.ctx.fillStyle = "white";
-        this.ctx.font = "35px sans-serif";
-        this.ctx.fillText("Volume: " + this.volume + " %", 600, 220);
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "35px sans-serif";
+    this.ctx.fillText("Volume: " + this.volume + " %", 600, 220);
 
-        const image = new Image();
-        image.src = "images/ikon/sound.png";
-        image.onload = () => {
-        this.ctx.drawImage(image, 370, 320, 240, 240);
-        };
-    }
+    const image = new Image();
+    image.src = "images/ikon/sound.png";
+    image.onload = () => {
+    this.ctx.drawImage(image, 370, 320, 240, 240);
+    };
+}
 
-    drawVolumeButton() {
-        // Volume növelése gomb
-        this.ctx.fillStyle = "yellow";
-        this.ctx.fillRect(750, 150, 50, 50);
-        this.ctx.fillStyle = "black";
-        this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("+", 775, 195);
+drawVolumeButton() {
+    // Volume növelése gomb
+    this.ctx.fillStyle = "yellow";
+    this.ctx.fillRect(750, 150, 50, 50);
+    this.ctx.fillStyle = "black";
+    this.ctx.font = "50px sans-serif";
+    this.ctx.fillText("+", 775, 195);
 
-        // Volume csökkentése gomb
-        this.ctx.fillStyle = "yellow";
-        this.ctx.fillRect(750, 220, 50, 50);
-        this.ctx.fillStyle = "black";
-        this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("-", 775, 260);
-    }
+    // Volume csökkentése gomb
+    this.ctx.fillStyle = "yellow";
+    this.ctx.fillRect(750, 220, 50, 50);
+    this.ctx.fillStyle = "black";
+    this.ctx.font = "50px sans-serif";
+    this.ctx.fillText("-", 775, 260);
+}
 
-    drawSoundButton() {
-        this.ctx.fillStyle = this.soundOn ? "green" : "red";
-        this.ctx.fillRect(350, 180, 50, 50);
+drawSoundButton() {
+    this.ctx.fillStyle = this.soundOn ? "green" : "red";
+    this.ctx.fillRect(350, 180, 50, 50);
 
-        this.ctx.fillStyle = "white";
-        this.ctx.font = "25px sans-serif";
-        this.ctx.fillText(this.soundOn ? "On" : "Off", 370, 215);
-    }
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "25px sans-serif";
+    this.ctx.fillText(this.soundOn ? "On" : "Off", 370, 215);
+}
 
-    // Hang be/kikapcsolás
-    toggleSound() {
-        this.soundOn = !this.soundOn;
-    }
+// Hang be/kikapcsolás
+toggleSound() {
+    this.soundOn = !this.soundOn;
+}
 
-    increaseVolume() {
-        const maxVolume = 100;
-    
-        this.volume = Math.min(this.volume + 10, maxVolume);
-    }
+increaseVolume() {
+    const maxVolume = 100;    
+    this.volume = Math.min(this.volume + 10, maxVolume);
+}
 
-    decreaseVolume() {
-        const minVolume = 0;
+decreaseVolume() {
+    const minVolume = 0;
+    this.volume = Math.max(this.volume - 10, minVolume);
+}
 
-        this.volume = Math.max(this.volume - 10, minVolume);
-    }
-
-    drawButtonBack() {
-        this.ctx.drawImage(this.buttonImage, 910, 10, 64, 64);
-    }
+drawButtonBack() {
+    this.ctx.drawImage(this.buttonImage, 910, 10, 64, 64);
+}
     
 }

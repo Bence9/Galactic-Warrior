@@ -1,11 +1,11 @@
 export default class Costumization {
-    constructor(canvas, ctx, menuCallback) {
+    constructor(canvas, ctx, menuCallback, rubin) {
         this.canvas = canvas;
         this.ctx = ctx;
         this.background = new Image(); 
         this.background.src="images/background/space.png";
-//        this.background = background;
         this.menuCallback = menuCallback; 
+        this.rubin = rubin;
         this.buttonImage = new Image();
         this.buttonImage.src = "images/ikon/back.png";
         this.playerBulletColor = "red";
@@ -28,6 +28,7 @@ export default class Costumization {
             // Visszalépés a menube
             if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
                 this.menuCallback();
+                this.stopRubyAnimation();
             }
         
             // Player bullet color beállítása
@@ -114,171 +115,239 @@ export default class Costumization {
     this.canvas.addEventListener('click', clickHandler);
 
 }
+
+updateRubin(newRubin) {
+    this.rubin = newRubin;
+}
     
-    draw() {
-        this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
+draw() {
+    this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.fillStyle = "white";
-        this.ctx.font = "50px sans-serif";
-        this.ctx.fillText("Costumizaton", 500, 80);
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "50px sans-serif";
+    this.ctx.fillText("Costumizaton", 500, 80);
 
-        this.drawButtonBack();
-        this.drawPlayerBulletColor();
-        this.drawEnemyBulletColor();
-        this.drawPlayers();
-        this.drawFields();
+    this.drawButtonBack();
+    this.drawPlayerBulletColor();
+    this.drawEnemyBulletColor();
+    this.drawPlayers();
+    this.drawFields();
     
-        this.ctx.fillStyle = this.playerBulletColor;
-        this.ctx.font = "30px sans-serif";
-        this.ctx.fillText("Player bullet color: ", 300, 155);
+    this.ctx.fillStyle = this.playerBulletColor;
+    this.ctx.font = "30px sans-serif";
+    this.ctx.fillText("Player bullet color: ", 300, 155);
 
-        this.ctx.fillStyle = this.enemyBulletColor;
-        this.ctx.font = "30px sans-serif";
-        this.ctx.fillText("Enemy bullet color: ", 300, 255);
+    this.ctx.fillStyle = this.enemyBulletColor;
+    this.ctx.font = "30px sans-serif";
+    this.ctx.fillText("Enemy bullet color: ", 300, 255);
 
-        this.ctx.fillStyle = "orange";
-        this.ctx.font = "30px sans-serif";
-        this.ctx.fillText("Choose player: ", 150, 310);
+    this.ctx.fillStyle = "orange";
+    this.ctx.font = "30px sans-serif";
+    this.ctx.fillText("Choose player: ", 150, 310);
 
-        this.ctx.fillStyle = "orange";
-        this.ctx.font = "25px sans-serif";
-        this.ctx.fillText(this.playerName + " selected", 150, 350);
+    this.ctx.fillStyle = "orange";
+    this.ctx.font = "25px sans-serif";
+    this.ctx.fillText(this.playerName + " selected", 150, 350);
 
-        this.ctx.fillStyle = "orange";
-        this.ctx.font = "30px sans-serif";
-        this.ctx.fillText("Choose field: ", 800, 300);
+    this.ctx.fillStyle = "orange";
+    this.ctx.font = "30px sans-serif";
+    this.ctx.fillText("Choose field: ", 800, 300);
 
-        this.ctx.fillStyle = "orange";
-        this.ctx.font = "25px sans-serif";
-        this.ctx.fillText(this.fieldName + " selected", 800, 330);
+    this.ctx.fillStyle = "orange";
+    this.ctx.font = "25px sans-serif";
+    this.ctx.fillText(this.fieldName + " selected", 800, 330);
 
-        const image = new Image();
-        image.src = "images/ikon/costumize.png";
-        image.onload = () => {
-        this.ctx.drawImage(image, 380, 340, 220, 220);
-        };
+    const image = new Image();
+    image.src = "images/ikon/costumize.png";
+    image.onload = () => {
+    this.ctx.drawImage(image, 380, 340, 220, 220);
+    };
 
-    }
+    this.animateRuby();
 
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "30px sans-serif";
+    this.ctx.fillText("x" + this.rubin, 810, 177);
+    this.ctx.strokeStyle = "white";
+    this.ctx.lineWidth = 4;
+    this.ctx.strokeRect(755, 142, 150, 50);
+    this.ctx.lineWidth = 1;
 
-    drawPlayers(){
-        const image1 = new Image();
-        this.ctx.strokeStyle = "red";
-        this.ctx.strokeRect(25, 380, 90, 90);
-        image1.src = "images/player/player1.png";
-        image1.onload = () => {
-        this.ctx.drawImage(image1, 30, 380, 80, 80);
-        };
-
-        const image2 = new Image();
-        this.ctx.strokeStyle = "red";
-        this.ctx.strokeRect(125, 380, 90, 90);
-        image2.src = "images/player/player2.png";
-        image2.onload = () => {
-        this.ctx.drawImage(image2, 130, 380, 80, 80);
-        };
-
-        const image3 = new Image();
-        this.ctx.strokeStyle = "red";
-        this.ctx.strokeRect(25, 480, 90, 90);
-        image3.src = "images/player/player3.png";
-        image3.onload = () => {
-        this.ctx.drawImage(image3, 30, 480, 80, 80);
-        };
-
-        const image4 = new Image();
-        this.ctx.strokeStyle = "red";
-        this.ctx.strokeRect(125, 480, 90, 90);
-        image4.src = "images/player/player4.png";
-        image4.onload = () => {
-        this.ctx.drawImage(image4, 130, 480, 80, 80);
-        };
-
-    }
+}
 
 
-    drawFields(){
+animateRuby() {
+    const spriteWidth = 24;
+    const spriteHeight = 24;
+    const xPos = 850;
+    const yPos = 150;
+    const scale = 1.5;
+    let frameIndex = 0;
+    let count = 0;
 
-        const image5 = new Image();
-        this.ctx.strokeStyle = "yellow";
-        this.ctx.strokeRect(700, 350, 100, 100);
-        image5.src = "images/background/desert.png";
-        image5.onload = () => {
-        this.ctx.drawImage(image5, 700, 350, 100, 100);
-        };
+    const spriteSheet = new Image();
+    spriteSheet.src = "images/ikon/ruby.png";
 
-        const image6 = new Image();
-        this.ctx.strokeStyle = "yellow";
-        this.ctx.strokeRect(820, 350, 100, 100);
-        image6.src = "images/background/space.png";
-        image6.onload = () => {
-        this.ctx.drawImage(image6, 820, 350, 100, 100);
-        };
+    const animate = () => {
+        this.ctx.drawImage(
+            spriteSheet,
+            frameIndex * spriteWidth,
+            0,
+            spriteWidth,
+            spriteHeight,
+            xPos,
+            yPos,
+            spriteWidth * scale,
+            spriteHeight * scale
+        );
 
-        const image7 = new Image();
-        this.ctx.strokeStyle = "yellow";
-        this.ctx.strokeRect(700, 470, 100, 100);
-        image7.src = "images/background/cosmic.png";
-        image7.onload = () => {
-        this.ctx.drawImage(image7, 700, 470, 100, 100);
-        };
+        count++;
+
+        if (count >= 14) {
+            frameIndex++;
+            count = 0;
+        }
+
+        if (frameIndex > 6) {
+             frameIndex = 0;
+        }
+    };
+
+    const frame = () => {
+        if (this.animationRun) {
+            animate();
+            requestAnimationFrame(frame);
+        }
+    };
+
+    spriteSheet.onload = () => {
+        this.animationRun = true;
+        frame();
+    };
+    
+}
+
+stopRubyAnimation() {
+    this.animationRun = false;
+}
+
+
+drawPlayers(){
+    const image1 = new Image();
+    this.ctx.strokeStyle = "red";
+    this.ctx.strokeRect(25, 380, 90, 90);
+    image1.src = "images/player/player1.png";
+    image1.onload = () => {
+    this.ctx.drawImage(image1, 30, 380, 80, 80);
+    };
+
+    const image2 = new Image();
+    this.ctx.strokeStyle = "red";
+    this.ctx.strokeRect(125, 380, 90, 90);
+    image2.src = "images/player/player2.png";
+    image2.onload = () => {
+    this.ctx.drawImage(image2, 130, 380, 80, 80);
+    };
+
+    const image3 = new Image();
+    this.ctx.strokeStyle = "red";
+    this.ctx.strokeRect(25, 480, 90, 90);
+    image3.src = "images/player/player3.png";
+    image3.onload = () => {
+    this.ctx.drawImage(image3, 30, 480, 80, 80);
+    };
+
+    const image4 = new Image();
+    this.ctx.strokeStyle = "red";
+    this.ctx.strokeRect(125, 480, 90, 90);
+    image4.src = "images/player/player4.png";
+    image4.onload = () => {
+    this.ctx.drawImage(image4, 130, 480, 80, 80);
+    };
+
+}
+
+
+drawFields(){
+
+    const image5 = new Image();
+    this.ctx.strokeStyle = "yellow";
+    this.ctx.strokeRect(700, 350, 100, 100);
+    image5.src = "images/background/desert.png";
+    image5.onload = () => {
+    this.ctx.drawImage(image5, 700, 350, 100, 100);
+    };
+
+    const image6 = new Image();
+    this.ctx.strokeStyle = "yellow";
+    this.ctx.strokeRect(820, 350, 100, 100);
+    image6.src = "images/background/space.png";
+    image6.onload = () => {
+    this.ctx.drawImage(image6, 820, 350, 100, 100);
+    };
+
+    const image7 = new Image();
+    this.ctx.strokeStyle = "yellow";
+    this.ctx.strokeRect(700, 470, 100, 100);
+    image7.src = "images/background/cosmic.png";
+    image7.onload = () => {
+    this.ctx.drawImage(image7, 700, 470, 100, 100);
+    };
         
-        const image8 = new Image();
-        this.ctx.strokeStyle = "yellow";
-        this.ctx.strokeRect(820, 470, 100, 100);
-        image8.src = "images/background/universe.png";
-        image8.onload = () => {
-        this.ctx.drawImage(image8, 820, 470, 100, 100);
-        };
+    const image8 = new Image();
+    this.ctx.strokeStyle = "yellow";
+    this.ctx.strokeRect(820, 470, 100, 100);
+    image8.src = "images/background/universe.png";
+    image8.onload = () => {
+    this.ctx.drawImage(image8, 820, 470, 100, 100);
+    };
 
-    }
+}
 
 
-    drawButtonBack() {
+drawButtonBack() {
+    this.ctx.drawImage(this.buttonImage, 910, 10, 64, 64);
+}
 
-        this.ctx.drawImage(this.buttonImage, 910, 10, 64, 64);
-
-    }
-
-    drawPlayerBulletColor() {
-        this.ctx.fillStyle = "blue";
-        this.ctx.fillRect(450, 130, this.squareSize, this.squareSize);
+drawPlayerBulletColor() {
+    this.ctx.fillStyle = "blue";
+    this.ctx.fillRect(450, 130, this.squareSize, this.squareSize);
     
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(450 + this.squareSize + this.squareGap, 130, this.squareSize, this.squareSize);
+    this.ctx.fillStyle = "red";
+    this.ctx.fillRect(450 + this.squareSize + this.squareGap, 130, this.squareSize, this.squareSize);
     
-        this.ctx.fillStyle = "#39FF14";
-        this.ctx.fillRect(450 + 2 * (this.squareSize + this.squareGap), 130, this.squareSize, this.squareSize);
+    this.ctx.fillStyle = "#39FF14";
+    this.ctx.fillRect(450 + 2 * (this.squareSize + this.squareGap), 130, this.squareSize, this.squareSize);
     
-        this.ctx.fillStyle = "yellow";
-        this.ctx.fillRect(450 + 3 * (this.squareSize + this.squareGap), 130, this.squareSize, this.squareSize);
+    this.ctx.fillStyle = "yellow";
+    this.ctx.fillRect(450 + 3 * (this.squareSize + this.squareGap), 130, this.squareSize, this.squareSize);
     
-        this.ctx.fillStyle = "#e01fd0";
-        this.ctx.fillRect(450 + 4 * (this.squareSize + this.squareGap), 130, this.squareSize, this.squareSize);
+    this.ctx.fillStyle = "#e01fd0";
+    this.ctx.fillRect(450 + 4 * (this.squareSize + this.squareGap), 130, this.squareSize, this.squareSize);
 
-        this.ctx.fillStyle = "white";
-        this.ctx.fillRect(450 + 5 * (this.squareSize + this.squareGap), 130, this.squareSize, this.squareSize);
-    }
+    this.ctx.fillStyle = "white";
+    this.ctx.fillRect(450 + 5 * (this.squareSize + this.squareGap), 130, this.squareSize, this.squareSize);
+}
 
-    drawEnemyBulletColor() {
-        this.ctx.fillStyle = "blue";
-        this.ctx.fillRect(450, 230, this.squareSize, this.squareSize);
+drawEnemyBulletColor() {
+    this.ctx.fillStyle = "blue";
+    this.ctx.fillRect(450, 230, this.squareSize, this.squareSize);
     
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(450 + this.squareSize + this.squareGap, 230, this.squareSize, this.squareSize);
+    this.ctx.fillStyle = "red";
+    this.ctx.fillRect(450 + this.squareSize + this.squareGap, 230, this.squareSize, this.squareSize);
     
-        this.ctx.fillStyle = "#39FF14";
-        this.ctx.fillRect(450 + 2 * (this.squareSize + this.squareGap), 230, this.squareSize, this.squareSize);
+    this.ctx.fillStyle = "#39FF14";
+    this.ctx.fillRect(450 + 2 * (this.squareSize + this.squareGap), 230, this.squareSize, this.squareSize);
     
-        this.ctx.fillStyle = "yellow";
-        this.ctx.fillRect(450 + 3 * (this.squareSize + this.squareGap), 230, this.squareSize, this.squareSize);
+    this.ctx.fillStyle = "yellow";
+    this.ctx.fillRect(450 + 3 * (this.squareSize + this.squareGap), 230, this.squareSize, this.squareSize);
     
-        this.ctx.fillStyle = "#e01fd0";
-        this.ctx.fillRect(450 + 4 * (this.squareSize + this.squareGap), 230, this.squareSize, this.squareSize);
+    this.ctx.fillStyle = "#e01fd0";
+    this.ctx.fillRect(450 + 4 * (this.squareSize + this.squareGap), 230, this.squareSize, this.squareSize);
 
-        this.ctx.fillStyle = "white";
-        this.ctx.fillRect(450 + 5 * (this.squareSize + this.squareGap), 230 , this.squareSize, this.squareSize);
-    }
+    this.ctx.fillStyle = "white";
+    this.ctx.fillRect(450 + 5 * (this.squareSize + this.squareGap), 230 , this.squareSize, this.squareSize);
+}
 
     
 }

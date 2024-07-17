@@ -4,10 +4,14 @@ export default class MeteorController {
     meteors = [];
     timeTillNextMeteorAllowed = 10;
 
-    constructor(canvas, maxMeteorsAtTime) {
+    constructor(canvas, maxMeteorsAtTime, soundEnabled) {
 
         this.canvas = canvas;
         this.maxMeteorssAtTime = maxMeteorsAtTime;
+        this.soundEnabled = soundEnabled;
+
+        this.shootSound = new Audio("sounds/meteorbum.mp3");
+        this.shootSound.volume = 1;
 
     }
 
@@ -38,6 +42,10 @@ export default class MeteorController {
 
         if (MeteorThatHitSpriteIndex >= 0) {
             this.meteors.splice(MeteorThatHitSpriteIndex, 1);
+            if(this.soundEnabled){
+                this.shootSound.currentTime = 0;
+                this.shootSound.play();
+            }
             return true;
         } else {
             return false;

@@ -28,18 +28,23 @@ const logoImage = new Image();
 logoImage.src = "images/ikon/welcomeIcon.png";
 logoImage.onload = menu;
 
-let animationRunning = true;
+
 let rubin = 100;
+let level1Complete = false;
+let level2Complete = false;
+let level3Complete = false;
+let level4Complete = false;
+let level5Complete = false;
 
 const description = new Description(canvas, ctx, background, menu);
 const sound = new Sound(canvas, ctx, background, menu);
-const costumization = new Costumization(canvas, ctx, menu);
+const costumization = new Costumization(canvas, ctx, menu, rubin);
 
 const enemyBulletController = new BulletController(canvas, 5, "white", true);
 const playerBulletController = new BulletController(canvas, 10, "red", true);
 const giftController = new GiftController(canvas, 1);
 const gift2Controller = new Gift2Controller(canvas, 1);
-const meteorController = new MeteorController(canvas, 2);
+const meteorController = new MeteorController(canvas, 2, true);
 const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const player = new Player(canvas, 3, playerBulletController);
 
@@ -51,50 +56,11 @@ let seconds = 0;
 let gameInterval;
 
 
-const spriteWidth = 24;
-const spriteHeight = 24;
-const xPos = 170;
-const yPos = 280;
-const scale = 1;
-let frameIndex = 0;
-let count = 0;
-
-// Ruby sprite betöltése
-const spriteSheet = new Image();
-spriteSheet.src = "images/ikon/ruby.png";
-
-function animate() {
-  ctx.drawImage(
-    spriteSheet,
-    frameIndex * spriteWidth,
-    0,
-    spriteWidth,
-    spriteHeight,
-    xPos,
-    yPos,
-    spriteWidth * scale,
-    spriteHeight * scale
-  );
-
-  count++;
-  if (count >= 100) {
-    frameIndex++;
-    count = 0;
-  }
-
-  if (frameIndex > 6) {
-    frameIndex = 0;
-  }
-
-}
-
-function frame() {
-    if (animationRunning) {
-        ctx.clearRect(background, xPos, yPos, spriteWidth * scale); // Clear animtionzone (xPos, yPos)
-
-        animate();
-      }
-      requestAnimationFrame(frame);
+function increaseRubin(amount) {
+    console.log(`Adding ${amount} to rubin`);
+    rubin += amount;
+    console.log(`New rubin value: ${rubin}`);
+    costumization.updateRubin(rubin);
 }
 
 
@@ -131,12 +97,20 @@ function drawLevelField(x, y, width, height, radius, playX, playY, level, challe
     ctx.fillText("Level:" + level, x + 70, y + 30);
     ctx.font = "16px sans-serif";
     ctx.fillText("Challenge: " + challenge, x + 70, y + 50);
+    let rubinAmount = 25 + (level * 25);
+    ctx.fillText("+" + rubinAmount, x + 60, y + 72);
 
-    // money + 50, + 100 if player completed level
     level = level % 5;
     if(level == 0){
         level = 5;
     }
+
+    const rubinImage = new Image();
+    rubinImage.src = `images/ikon/rubyPic.png`;
+
+    rubinImage.onload = () => {
+        ctx.drawImage(rubinImage, x + 80, y + 55, 24, 24);
+    };
 
     const enemyImage = new Image();
     enemyImage.src = `images/enemy/enemy${level}.png`;
@@ -147,31 +121,24 @@ function drawLevelField(x, y, width, height, radius, playX, playY, level, challe
 
 }
 
-/*
-function drawRubin(){
-    ctx.fillStyle = "white";
-    ctx.font = "22px sans-serif";
-    ctx.fillText("x" + rubin, 140, 300);
-}
-*/
 
 function drawGames() {
-    const buttonImage = new Image();
-    buttonImage.src = "images/ikon/play.png";
+    const imagePlay = new Image();
+    imagePlay.src = "images/ikon/play.png";
 
-    buttonImage.onload = () => {
-        ctx.drawImage(buttonImage, 580, 345, 50, 50);
+    imagePlay.onload = () => {
+        ctx.drawImage(imagePlay, 580, 345, 50, 50);
     };
 
     ctx.strokeStyle = "red";
     ctx.lineWidth = 2; 
     ctx.strokeRect(625, 10, 360, 580);
 
-    const buttonImage1 = new Image();
-    buttonImage1.src = "images/ikon/back.png";
+    const buttonBack = new Image();
+    buttonBack.src = "images/ikon/back.png";
 
-    buttonImage1.onload = () => {
-        ctx.drawImage(buttonImage1, 940, 15, 40, 40);
+    buttonBack.onload = () => {
+        ctx.drawImage(buttonBack, 940, 15, 40, 40);
     };
 
     drawLevelField(630, 60, 350, 90, 10, 920, 80, 1, "Easy"); // + 105 px (y, playY)
@@ -180,18 +147,7 @@ function drawGames() {
     drawLevelField(630, 375, 350, 90, 10, 920, 395, 4, "Medium");
     drawLevelField(630, 480, 350, 90, 10, 920, 500, 5, "Hard");
 
-    // Refresh button
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(160, 320, 50, 30);
-    ctx.strokeStyle = "red";
-    ctx.strokeRect(160, 320, 50, 30);
-    ctx.fillStyle = "#39ff14";
-    ctx.font = "14px sans-serif";
-    ctx.fillText("Refresh", 185, 340);
-
     canvas.addEventListener('click', clickHandler);
-
-//    drawRubin();
 
     function clickHandler(event) {
         const rect = canvas.getBoundingClientRect();
@@ -200,41 +156,27 @@ function drawGames() {
 
         if (x >= 920 && x <= 970 && y >= 80 && y <= 110) {
             startGame();
-            animationRunning = false;
+//          costumization.animationRun = false;
             if(isGameOver){
                 restartGame();
             }
         }
         if (x >= 920 && x <= 970 && y >= 185 && y <= 215) {
-            // animationRunning = false;
             // startGame2()
         }
         if (x >= 920 && x <= 970 && y >= 290 && y <= 320) {
-            // animationRunning = false;
             // startGame3()
         }
         if (x >= 920 && x <= 970 && y >= 395 && y <= 425) {
-            // animationRunning = false;
             // startGame4()
         }
         if (x >= 920 && x <= 970 && y >= 500 && y <= 530) {
-            // animationRunning = false;
             // startGame5()
-        }
-        if( x >= 160 && x <= 210 && y >= 320 && y <= 350){
-            animationRunning = true;
-//          rubin += 10;
-//          drawRubin();
         }
     }
 
 }
 
-spriteSheet.onload = function() {
-    frame();
-};
-
-frame();
 
 function makeButton(text, xPos, yPos, width, height) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
@@ -276,6 +218,7 @@ function menu() {
     ctx.fillStyle = "#39FF14";
     ctx.textAlign = "center";
 
+
 const clickHandler = (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -288,19 +231,15 @@ const clickHandler = (event) => {
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 400 && y <= 450){
         description.draw();
         canvas.removeEventListener('mousemove', mouseMoveHandler);
-        animationRunning = false;
     }
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 450 && y <= 500){
         sound.draw();
         canvas.removeEventListener('mousemove', mouseMoveHandler);
-        animationRunning = false;
     }
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 500 && y <= 550){
         costumization.draw();
         canvas.removeEventListener('mousemove', mouseMoveHandler);
-        animationRunning = false;
     }
-
 };
 
 const mouseMoveHandler = (event) => {
@@ -308,9 +247,10 @@ const mouseMoveHandler = (event) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+//    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(logoImage, canvas.width / 3 - logoImage.width / 2, canvas.height / 4 - logoImage.height / 2 - 75, 350, 300);
+
 
     for (const button of buttons) {
         if (x >= button.x && x <= button.x + button.width && y >= button.y && y <= button.y + button.height) {
@@ -334,6 +274,9 @@ drawMenuButtons();
 
 }
 
+///////////////////// THE GAME /////////////////////////
+
+
 const heartImage = new Image();
 heartImage.src = "images/ikon/redHeart.png";
 
@@ -346,12 +289,12 @@ timerImage.src = "images/ikon/timer.png";
 
 function startGame() {
     clearInterval(gameInterval);
-    gameInterval = setInterval(game, 100 / 70);
+    gameInterval = setInterval(game1, 100 / 70);
     gameBackground.src = costumization.field;
 }
 
 
-function game() {
+function game1() {
     checkGameOver();
     collideWithObject();
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
@@ -406,10 +349,12 @@ function settings(){
     enemyController.soundEnabled = sound.soundOn;
     playerBulletController.soundEnabled = sound.soundOn;
     enemyBulletController.soundEnabled = sound.soundOn;
+    meteorController.soundEnabled = sound.soundOn;
 
     enemyController.enemyDeathSound.volume = (sound.volume / 100);
     playerBulletController.shootSound.volume = (sound.volume / 100);
     enemyBulletController.shootSound.volume = (sound.volume / 100);
+    meteorController.shootSound.volume = (sound.volume / 100);
 
     playerBulletController.bulletColor = costumization.playerBulletColor;
     enemyBulletController.bulletColor = costumization.enemyBulletColor;
@@ -418,6 +363,12 @@ function settings(){
 function displayGameOver(){
     if(isGameOver) {
         let text = didwin ? "You win" : "Game Over";
+        level1Complete = didwin ? true : false;
+
+        if(level1Complete == true){
+            increaseRubin(100);
+        }
+
 
         drawButtonBack();
 
@@ -445,7 +396,6 @@ function displayGameOver(){
                 restartGame();
             }
             else if (event.key === "Escape"){
-                animationRunning = true;
                 menu();
             }
         });
@@ -457,7 +407,6 @@ function displayGameOver(){
             const y = event.clientY - rect.top;
             
             if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
-                animationRunning = true;
                 menu();
             }
         };
