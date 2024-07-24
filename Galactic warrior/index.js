@@ -54,7 +54,7 @@ let didwin = false;
 let life = 3;
 let seconds = 0;
 let gameInterval;
-
+let isStartButtonActive = false;
 
 function increaseRubin(amount) {
     console.log(`Adding ${amount} to rubin`);
@@ -155,26 +155,92 @@ function drawGames() {
         const y = event.y - rect.top;
 
         if (x >= 920 && x <= 970 && y >= 80 && y <= 110) {
+            stopAnimation();
             startGame();
-//          costumization.animationRun = false;
-            if(isGameOver){
+            if (isGameOver) {
                 restartGame();
             }
         }
         if (x >= 920 && x <= 970 && y >= 185 && y <= 215) {
+            stopAnimation();
             // startGame2()
         }
         if (x >= 920 && x <= 970 && y >= 290 && y <= 320) {
+            stopAnimation();
             // startGame3()
         }
         if (x >= 920 && x <= 970 && y >= 395 && y <= 425) {
+            stopAnimation();
             // startGame4()
         }
         if (x >= 920 && x <= 970 && y >= 500 && y <= 530) {
+            stopAnimation();
             // startGame5()
+        }
+        if(x >= 940 && x <= 980 && y >= 15 && y <= 55){
+            stopAnimation();
+            isStartButtonActive = false;
         }
     }
 
+    // Enemy configuration
+    const enemyImages = [];
+    const enemyWidths = [60, 60, 60, 60, 60];
+    const enemyHeights = [33, 33, 33, 33, 33];
+    const enemySources = ["images/enemy/enemy1.png", "images/enemy/enemy2.png", "images/enemy/enemy3.png", "images/enemy/enemy4.png", "images/enemy/enemy5.png"];
+    for (let i = 0; i < enemySources.length; i++) {
+        const img = new Image();
+        img.src = enemySources[i];
+        enemyImages.push(img);
+    }
+    
+    let angles = [0, 0, 0, 0, 0];
+    const angularSpeeds = [0.015, -0.014, 0.011, -0.012, 0.01];
+    const orbitRadii = [70, 100, 100, 130, 130];
+    const xPos = 150;
+    const yPos = 220;
+    const scale = 1;
+
+    function drawEnemies() {
+        drawBackground(0, 0, 300, 600);
+        for (let i = 0; i < enemyImages.length; i++) {
+            const enemyX = xPos + orbitRadii[i] * Math.cos(angles[i]) - enemyWidths[i] / 2;
+            const enemyY = yPos + orbitRadii[i] * Math.sin(angles[i]) - enemyHeights[i] / 2;
+            ctx.drawImage(
+                enemyImages[i],
+                enemyX,
+                enemyY,
+                enemyWidths[i] * scale,
+                enemyHeights[i] * scale
+            );
+            angles[i] += angularSpeeds[i];
+        }
+    }
+
+    function drawBackground(x, y, width, height) {
+        // Itt rajzoljuk újra a hátteret a megadott koordinátákon és méretben
+        const background = new Image();
+        background.src = "images/background/space.png";
+        background.onload = () => {
+            ctx.drawImage(background, x, y, width, height, x, y, width, height);
+        };
+    }
+
+    let animationFrameId;
+
+    function frame() {
+        drawEnemies();
+        animationFrameId = requestAnimationFrame(frame);
+    }
+
+    function stopAnimation() {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+    }
+
+    // Start the animation
+    frame();
 }
 
 
@@ -220,6 +286,7 @@ function menu() {
 
 
 const clickHandler = (event) => {
+    if (isStartButtonActive) return;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -227,6 +294,7 @@ const clickHandler = (event) => {
     if (x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 350 && y <= 400) {
         canvas.removeEventListener('mousemove', mouseMoveHandler);
         drawGames();
+        isStartButtonActive = true;
     }
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 400 && y <= 450){
         description.draw();
@@ -243,6 +311,7 @@ const clickHandler = (event) => {
 };
 
 const mouseMoveHandler = (event) => {
+    if (isStartButtonActive) return;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -366,7 +435,7 @@ function displayGameOver(){
         level1Complete = didwin ? true : false;
 
         if(level1Complete == true){
-            increaseRubin(100);
+            increaseRubin(50);
         }
 
 
@@ -396,6 +465,7 @@ function displayGameOver(){
                 restartGame();
             }
             else if (event.key === "Escape"){
+                isStartButtonActive = false;
                 menu();
             }
         });
@@ -407,6 +477,7 @@ function displayGameOver(){
             const y = event.clientY - rect.top;
             
             if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
+                isStartButtonActive = false;
                 menu();
             }
         };
