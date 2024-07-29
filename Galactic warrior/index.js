@@ -1,4 +1,4 @@
-import EnemyController from "./EnemyController.js";
+import EnemyHandler from "./EnemyHandler.js";
 import Player from "./Player.js";
 import BulletController from "./BulletController.js";
 import Description from "./Description.js";
@@ -45,7 +45,7 @@ const playerBulletController = new BulletController(canvas, 10, "red", true);
 const giftController = new GiftController(canvas, 1);
 const gift2Controller = new Gift2Controller(canvas, 1);
 const meteorController = new MeteorController(canvas, 2, true);
-const enemyController = new EnemyController(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
+const enemyHandler = new EnemyHandler(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const player = new Player(canvas, 3, playerBulletController);
 
 
@@ -183,53 +183,121 @@ function drawGames() {
         }
     }
 
-    // Enemy configuration
-    const enemyImages = [];
-    const enemyWidths = [60, 60, 60, 60, 60];
-    const enemyHeights = [33, 33, 33, 33, 33];
-    const enemySources = ["images/enemy/enemy1.png", "images/enemy/enemy2.png", "images/enemy/enemy3.png", "images/enemy/enemy4.png", "images/enemy/enemy5.png"];
-    for (let i = 0; i < enemySources.length; i++) {
-        const img = new Image();
-        img.src = enemySources[i];
-        enemyImages.push(img);
-    }
-    
-    let angles = [0, 0, 0, 0, 0];
-    const angularSpeeds = [0.015, -0.014, 0.011, -0.012, 0.01];
-    const orbitRadii = [70, 100, 100, 130, 130];
-    const xPos = 150;
-    const yPos = 220;
-    const scale = 1;
+// Enemy animation
+const enemyImages = [];
+const enemyWidths = [60, 60, 60, 60, 60];
+const enemyHeights = [33, 33, 33, 33, 33];
+const enemySources = [
+    "images/enemy/enemy1.png",
+    "images/enemy/enemy2.png",
+    "images/enemy/enemy3.png",
+    "images/enemy/enemy4.png",
+    "images/enemy/enemy5.png"
+];
 
-    function drawEnemies() {
-        drawBackground(0, 0, 300, 600);
-        for (let i = 0; i < enemyImages.length; i++) {
-            const enemyX = xPos + orbitRadii[i] * Math.cos(angles[i]) - enemyWidths[i] / 2;
-            const enemyY = yPos + orbitRadii[i] * Math.sin(angles[i]) - enemyHeights[i] / 2;
-            ctx.drawImage(
-                enemyImages[i],
-                enemyX,
-                enemyY,
-                enemyWidths[i] * scale,
-                enemyHeights[i] * scale
-            );
-            angles[i] += angularSpeeds[i];
+for (let i = 0; i < enemySources.length; i++) {
+    const img = new Image();
+    img.src = enemySources[i];
+    enemyImages.push(img);
+}
+
+let angles = [0, 0, 0, 0];
+let angles1 = [60, 60, 60, 60];
+let angles2 = [120, 120, 120, 120];
+let angles3 = [180, 180, 180, 180];
+let angles4 = [240, 240, 240, 240];
+let angles5 = [300, 300, 300, 300];
+
+const angularSpeeds = [0.3, 0.3, 0.3, 0.3];
+const orbitRadii = [40, 70, 100, 130];
+const xPos = 160;
+const yPos = 300;
+const scale = 1;
+let rotationAngle = 0;
+
+const background = new Image();
+background.src = "images/background/space.png";
+let backgroundLoaded = false;
+
+background.onload = () => {
+    backgroundLoaded = true;
+};
+
+function drawBackground(x, y, width, height) {
+    if (backgroundLoaded) {
+        ctx.drawImage(background, x, y, width, height);
+    }
+}
+
+function drawEnemySet(angles) {
+    for (let i = 0; i < enemyImages.length - 1; i++) {
+        const enemyX = xPos + orbitRadii[i] * Math.cos(angles[i] * Math.PI / 180) - enemyWidths[i + 1] / 2;
+        const enemyY = yPos + orbitRadii[i] * Math.sin(angles[i] * Math.PI / 180) - enemyHeights[i + 1] / 2;
+        ctx.drawImage(
+            enemyImages[i + 1],
+            enemyX,
+            enemyY,
+            enemyWidths[i + 1] * scale,
+            enemyHeights[i + 1] * scale
+        );
+        angles[i] += angularSpeeds[i];
+    }
+}
+
+function drawRotatingEnemy() {
+    const centerX = xPos;
+    const centerY = yPos;
+    const img = enemyImages[0];
+
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(rotationAngle * Math.PI / 180);
+    ctx.drawImage(img, -enemyWidths[0] / 2, -enemyHeights[0] / 2, enemyWidths[0] * scale, enemyHeights[0] * scale);
+    ctx.restore();
+
+    rotationAngle += 0.3;
+}
+
+function drawEnemies() {
+    drawBackground(0, 0, 320, 600);
+    drawRotatingEnemy();
+    drawEnemySet(angles);
+    drawEnemySet(angles1);
+    drawEnemySet(angles2);
+    drawEnemySet(angles3);
+    drawEnemySet(angles4);
+    drawEnemySet(angles5);
+}
+
+// Player animation
+const playerImage = new Image();
+playerImage.src = "images/player/player1.png";
+let playerX = 10;
+let playerY = 500;
+let playerSpeed = 1;
+let playerDirection = 1;
+let waveAmplitude = 10;  // hullámzás magassága (wave)
+let waveFrequency = 0.05;  // hullámzás frekvenciája (wave)
+
+function drawPlayer() {
+    if (playerImage.complete) {
+        // hullámzó mozgás
+        playerY = 500 + waveAmplitude * Math.sin(playerX * waveFrequency);
+
+        ctx.drawImage(playerImage, playerX, playerY, 50, 50);
+        playerX += playerSpeed * playerDirection;
+
+        if (playerX >= 250 || playerX <= 10) {
+            playerDirection *= -1;
         }
     }
-
-    function drawBackground(x, y, width, height) {
-        // Itt rajzoljuk újra a hátteret a megadott koordinátákon és méretben
-        const background = new Image();
-        background.src = "images/background/space.png";
-        background.onload = () => {
-            ctx.drawImage(background, x, y, width, height, x, y, width, height);
-        };
-    }
+}
 
     let animationFrameId;
 
     function frame() {
         drawEnemies();
+        drawPlayer();
         animationFrameId = requestAnimationFrame(frame);
     }
 
@@ -345,7 +413,6 @@ drawMenuButtons();
 
 ///////////////////// THE GAME /////////////////////////
 
-
 const heartImage = new Image();
 heartImage.src = "images/ikon/redHeart.png";
 
@@ -367,14 +434,14 @@ function game1() {
     checkGameOver();
     collideWithObject();
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
-    displayGameOver();
+    let level = 1;
+    displayGameOver(level);
     if (!isGameOver) {
 
         settings();
-
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
-        ctx.fillText("Score: " + enemyController.score, 125, 23);
+        ctx.fillText("Score: " + enemyHandler.score, 125, 23);
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
         }
@@ -404,40 +471,38 @@ function game1() {
     }
 }
 
-// All things that user choose from sound and costumization menu
-function settings(){
-    player.image.src = costumization.selectedPlayer;
-    player.draw(ctx);
-    enemyController.draw(ctx);
-    playerBulletController.draw(ctx);
-    enemyBulletController.draw(ctx);
-    giftController.draw(ctx);
-    gift2Controller.draw(ctx);
-    meteorController.draw(ctx);
 
-    enemyController.soundEnabled = sound.soundOn;
-    playerBulletController.soundEnabled = sound.soundOn;
-    enemyBulletController.soundEnabled = sound.soundOn;
-    meteorController.soundEnabled = sound.soundOn;
-
-    enemyController.enemyDeathSound.volume = (sound.volume / 100);
-    playerBulletController.shootSound.volume = (sound.volume / 100);
-    enemyBulletController.shootSound.volume = (sound.volume / 100);
-    meteorController.shootSound.volume = (sound.volume / 100);
-
-    playerBulletController.bulletColor = costumization.playerBulletColor;
-    enemyBulletController.bulletColor = costumization.enemyBulletColor;
-}
-
-function displayGameOver(){
+function displayGameOver(level){
     if(isGameOver) {
         let text = didwin ? "You win" : "Game Over";
-        level1Complete = didwin ? true : false;
-
-        if(level1Complete == true){
-            increaseRubin(50);
+        let actualLevel = level;
+        
+        if (actualLevel == 1) {
+            level1Complete = didwin ? true : false;
+            if (level1Complete) {
+                increaseRubin(50);
+            }
+        } else if (actualLevel == 2) {
+            level2Complete = didwin ? true : false;
+            if (level2Complete) {
+                increaseRubin(75);
+            }
+        } else if (actualLevel == 3) {
+            level3Complete = didwin ? true : false;
+            if (level3Complete) {
+                increaseRubin(100);
+            }
+        } else if (actualLevel == 4) {
+            level4Complete = didwin ? true : false;
+            if (level4Complete) {
+                increaseRubin(125);
+            }
+        } else if (actualLevel == 5) {
+            level5Complete = didwin ? true : false;
+            if (level5Complete) {
+                increaseRubin(150);
+            }
         }
-
 
         drawButtonBack();
 
@@ -448,10 +513,10 @@ function displayGameOver(){
         ctx.fillStyle = "#39ff14";
         ctx.font = "25px Arial";
         let addScore = life * 50; // remaining life added to score
-        enemyController.score += addScore;
+        enemyHandler.score += addScore;
         ctx.fillText("(+ " + addScore + " point added from remaining life)", canvas.width / 2, 340);
         ctx.font = "30px Arial";
-        ctx.fillText("Total Score: " + enemyController.score, canvas.width / 2, 380);
+        ctx.fillText("Total Score: " + enemyHandler.score, canvas.width / 2, 380);
         ctx.fillText("Time: " + updateTime(), canvas.width / 2, 420);
 
         ctx.fillStyle = "#39ff14";
@@ -487,16 +552,42 @@ function displayGameOver(){
     }
 }
 
+// All things that user choose from sound and costumization menu
+function settings(){
+    player.image.src = costumization.selectedPlayer;
+    player.draw(ctx);
+    enemyHandler.draw(ctx);
+    playerBulletController.draw(ctx);
+    enemyBulletController.draw(ctx);
+    giftController.draw(ctx);
+    gift2Controller.draw(ctx);
+    meteorController.draw(ctx);
+
+    enemyHandler.soundEnabled = sound.soundOn;
+    playerBulletController.soundEnabled = sound.soundOn;
+    enemyBulletController.soundEnabled = sound.soundOn;
+    meteorController.soundEnabled = sound.soundOn;
+
+    enemyHandler.enemyDeathSound.volume = (sound.volume / 100);
+    playerBulletController.shootSound.volume = (sound.volume / 100);
+    enemyBulletController.shootSound.volume = (sound.volume / 100);
+    meteorController.shootSound.volume = (sound.volume / 100);
+
+    playerBulletController.bulletColor = costumization.playerBulletColor;
+    enemyBulletController.bulletColor = costumization.enemyBulletColor;
+}
+
+
 function restartGame() {
     seconds = 0;
     isGameOver = false;
     didwin = false;
-    enemyController.score = 0;
+    enemyHandler.score = 0;
     life = 3;
     clearInterval(gameInterval);
     player.x = canvas.width / 2 ;
     player.y = canvas.height - 75;
-    enemyController.createEnemies();
+    enemyHandler.createEnemies();
     startGame();
     enemyBulletController.clearBullets();
     playerBulletController.clearBullets();
@@ -506,12 +597,11 @@ function restartGame() {
 }
 
 function collideWithObject(){
-
     if(enemyBulletController.collideWith(player)){
         life--;
     }
 
-    if(enemyController.collideWith(player)){
+    if(enemyHandler.collideWith(player)){
         life--;
     }
 
@@ -520,7 +610,7 @@ function collideWithObject(){
     }
 
     if(gift2Controller.collideWith(player)){
-        enemyController.score += 200;
+        enemyHandler.score += 200;
     }
 
     if(meteorController.collideWith(player)){
@@ -534,7 +624,7 @@ function checkGameOver(){
         isGameOver = true;
     }
 
-    if(enemyController.enemyRows.length === 0){
+    if(enemyHandler.enemyRows.length === 0){
         didwin = true;
         isGameOver = true;
     }
@@ -561,6 +651,4 @@ function drawButtonBack() {
     buttonImage.onload = () => {
         ctx.drawImage(buttonImage, 910, 10, 64, 64);
     };
-
-
 }
