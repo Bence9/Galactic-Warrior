@@ -1,15 +1,15 @@
 import Enemy from "./Enemy.js";
 import MovingDirection from "./MovingDirection.js";
 
-export default class EnemyHandler {
+export default class EnemyHandler2 {
 
     enemyMap = [
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-        [2, 4, 4, 4, 4, 4, 4, 4, 4, 2],
-        [2, 2, 2, 3, 3, 3, 3, 2, 2, 2],
-        [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 5, 0, 5, 0, 5, 0, 5, 0, 5],
+        [4, 0, 4, 0, 4, 0, 4, 0, 4, 0],
+        [0, 3, 0, 3, 0, 3, 0, 3, 0, 3],
+        [2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
     ];
 
     enemyRows = [];
@@ -17,8 +17,8 @@ export default class EnemyHandler {
     currentDirection = MovingDirection.right;
     xVelocity = 0;
     yVelocity = 0;
-    defaultXVelocity = 1;
-    defaultYVelocity = 1;
+    defaultXVelocity = 2;
+    defaultYVelocity = 0.5;
     moveDownTimerDefault = 30;
     moveDownTimer = this.moveDownTimerDefault;
     fireBulletTimerDefault = 100;
@@ -52,7 +52,6 @@ export default class EnemyHandler {
         this.fireBullet();
         this.dropGift();
         this.dropMeteor();
-
     }
 
     collisionDetection(){
@@ -110,9 +109,8 @@ export default class EnemyHandler {
             if (this.currentDirection === MovingDirection.right) {
                 this.xVelocity = this.defaultXVelocity;
                 this.yVelocity = 0;
-                const rightMostEnemies = enemyRow[enemyRow.length - 1];
-                if ( rightMostEnemies.x + rightMostEnemies.width >= this.canvas.width )
-                {
+                const rightMostEnemy = enemyRow[enemyRow.length - 1];
+                if (rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width) {
                     this.currentDirection = MovingDirection.downLeft;
                     break;
                 }
