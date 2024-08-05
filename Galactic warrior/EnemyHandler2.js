@@ -21,7 +21,7 @@ export default class EnemyHandler2 {
     defaultYVelocity = 0.5;
     moveDownTimerDefault = 30;
     moveDownTimer = this.moveDownTimerDefault;
-    fireBulletTimerDefault = 100;
+    fireBulletTimerDefault = 70;
     fireBulletTimer = this.fireBulletTimerDefault;
     dropGiftTimer = 700;
     dropMeteorTimer = 300;
@@ -228,5 +228,11 @@ export default class EnemyHandler2 {
         }
     }
 
+    resetGame() {
+        this.currentDirection = MovingDirection.right;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.moveDownTimer = this.moveDownTimerDefault;
+    }
 
 }

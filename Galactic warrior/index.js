@@ -7,8 +7,8 @@ import Costumization from "./Costumization.js";
 import GiftController from "./GiftController.js";
 import Gift2Controller from "./Gift2Controller.js";
 import MeteorController from "./MeteorController.js";
-
 import EnemyHandler2 from "./EnemyHandler2.js";
+import EnemyHandler3 from "./EnemyHandler3.js";
 
 const canvas = document.getElementById("menu");
 const ctx = canvas.getContext("2d");
@@ -42,15 +42,16 @@ const description = new Description(canvas, ctx, background, menu);
 const sound = new Sound(canvas, ctx, background, menu);
 const costumization = new Costumization(canvas, ctx, menu, rubin);
 
-const enemyBulletController = new BulletController(canvas, 5, "white", true);
-const playerBulletController = new BulletController(canvas, 10, "red", true);
+const enemyBulletController = new BulletController(canvas, 5, "red", true);
+const playerBulletController = new BulletController(canvas, 10, "white", true);
 const giftController = new GiftController(canvas, 1);
 const gift2Controller = new Gift2Controller(canvas, 1);
 const meteorController = new MeteorController(canvas, 2, true);
 const enemyHandler = new EnemyHandler(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const player = new Player(canvas, 3, playerBulletController);
-
 const enemyHandler2 = new EnemyHandler2(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
+const enemyHandler3 = new EnemyHandler3(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
+
 
 
 let isGameOver = false;
@@ -61,9 +62,8 @@ let gameInterval;
 let isStartButtonActive = false;
 
 function increaseRubin(amount) {
-    console.log(`Adding ${amount} to rubin`);
     rubin += amount;
-    console.log(`New rubin value: ${rubin}`);
+//    console.log(`New rubin value: ${rubin}`);
     costumization.updateRubin(rubin);
 }
 
@@ -176,7 +176,11 @@ function drawGames() {
         }
         if (x >= 920 && x <= 970 && y >= 290 && y <= 320) {
             stopAnimation();
-            // startGame3()
+            startGame3();
+            let level = 3;
+            if (isGameOver) {
+                restartGame(level);
+            }
         }
         if (x >= 920 && x <= 970 && y >= 395 && y <= 425) {
             stopAnimation();
@@ -533,6 +537,56 @@ function game2() {
 
 ///////////////////// end of Game2 /////////////////////////////
 
+///////////////////// Game3 /////////////////////////////
+function startGame3() {
+    clearInterval(gameInterval);
+    gameInterval = setInterval(game3, 100 / 70);
+    gameBackground.src = costumization.field;
+}
+
+function game3() {
+    let level = 3;
+    checkGameOver(level);
+    collideWithObject();
+    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
+    displayGameOver(level);
+    if (!isGameOver) {
+
+        settings(level);
+        ctx.fillStyle = "yellow";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Score: " + enemyHandler3.score, 125, 23);
+        if (scoreImage.complete) {
+            ctx.drawImage(scoreImage, 185, 2, 25, 25);
+        }
+
+        ctx.fillStyle = "white";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        if (timerImage.complete) {
+            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+        }
+
+        ctx.fillStyle = "red";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Life: " + life, canvas.width - 125, 23);
+        if (heartImage.complete) {
+            ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'r' || event.key === 'Escape') {
+                event.preventDefault();
+            }
+        });
+
+    } else {
+        clearInterval(gameInterval); 
+    }
+}
+
+///////////////////// end of Game3 /////////////////////////////
+
 function displayGameOver(level){
     if(isGameOver) {
         let text = didwin ? "You win" : "Game Over";
@@ -557,6 +611,8 @@ function displayGameOver(level){
                 increaseRubin(75);
             }
         } else if (actualLevel === 3) {
+            enemyHandler3.score += addScore;
+            ctx.fillText("Total Score: " + enemyHandler3.score, canvas.width / 2, 380);
             level3Complete = didwin ? true : false;
             if (level3Complete) {
                 increaseRubin(100);
@@ -640,6 +696,11 @@ function settings(level){
         enemyHandler2.soundEnabled = sound.soundOn;
         enemyHandler2.enemyDeathSound.volume = (sound.volume / 100);
     }
+    else if(actualLevel === 3){
+        enemyHandler3.draw(ctx);
+        enemyHandler3.soundEnabled = sound.soundOn;
+        enemyHandler3.enemyDeathSound.volume = (sound.volume / 100);
+    }
 
     playerBulletController.soundEnabled = sound.soundOn;
     enemyBulletController.soundEnabled = sound.soundOn;
@@ -673,12 +734,20 @@ function restartGame(level) {
     if(actualLevel === 1){
         enemyHandler.score = 0;
         enemyHandler.createEnemies();
+        enemyHandler.resetGame();
         startGame();
     }
     else if(actualLevel === 2){
         enemyHandler2.score = 0;
         enemyHandler2.createEnemies();
+        enemyHandler2.resetGame();
         startGame2();
+    }
+    else if(actualLevel === 3){
+        enemyHandler3.score = 0;
+        enemyHandler3.createEnemies();
+        enemyHandler3.resetGame();
+        startGame3();
     }
 
 }
@@ -700,6 +769,12 @@ function checkGameOver(level){
         didwin = true;
         isGameOver = true;
     }
+
+    if(enemyHandler3.enemyRows.length === 0 && actualLevel === 3 && !enemyHandler3.boss1 && !enemyHandler3.boss2 ){
+        didwin = true;
+        isGameOver = true;
+    }
+
 }
 
 function collideWithObject(){
@@ -715,6 +790,10 @@ function collideWithObject(){
         life--;
     }
 
+    if(enemyHandler3.collideWith(player)){
+        life--;
+    }
+
     if (giftController.collideWith(player)) {
         life++;
     }
@@ -722,6 +801,7 @@ function collideWithObject(){
     if(gift2Controller.collideWith(player)){
         enemyHandler.score += 200;
         enemyHandler2.score += 200;
+        enemyHandler3.score += 200;
     }
 
     if(meteorController.collideWith(player)){

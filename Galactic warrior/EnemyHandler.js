@@ -230,5 +230,11 @@ export default class EnemyHandler {
         }
     }
 
+    resetGame() {
+        this.currentDirection = MovingDirection.right;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.moveDownTimer = this.moveDownTimerDefault;
+    }
 
 }

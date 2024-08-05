@@ -8,8 +8,8 @@ export default class Costumization {
         this.rubin = rubin;
         this.buttonImage = new Image();
         this.buttonImage.src = "images/ikon/back.png";
-        this.playerBulletColor = "red";
-        this.enemyBulletColor = "white";
+        this.playerBulletColor = "white";
+        this.enemyBulletColor = "red";
         this.selectedPlayer = "images/player/player1.png";
         this.playerName = "Azure Vortex";
         this.field = "images/background/space.png";
