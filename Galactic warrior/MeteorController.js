@@ -26,12 +26,12 @@ export default class MeteorController {
         }
     }
 
-    drop(x, y, Yvelocity, timeTillNextGiftAllowed) {
+    drop(x, y, Yvelocity, timeTillNextMeteorsAllowed) {
         if (this.timeTillNextMeteorAllowed <= 0 && this.meteors.length < this.maxMeteorssAtTime) {
             const meteor = new Meteor(this.canvas, x, y, Yvelocity);
             this.meteors.push(meteor);
 
-            this.timeTillNextMeteorAllowed = timeTillNextGiftAllowed;
+            this.timeTillNextMeteorAllowed = timeTillNextMeteorsAllowed;
         }
     }
 

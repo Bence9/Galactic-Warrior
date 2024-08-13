@@ -2,7 +2,7 @@ import Enemy from "./Enemy.js";
 import MovingDirection from "./MovingDirection.js";
 import MiniBoss from "./MiniBoss.js";
 
-export default class EnemyHandler {
+export default class EnemyHandler3 {
 
     enemyMap = [
         [3, 3, 3, 1, 3, 3, 2, 3, 3, 3],
@@ -17,11 +17,11 @@ export default class EnemyHandler {
     currentDirection = MovingDirection.down;
     xVelocity = 0;
     yVelocity = 0;
-    defaultXVelocity = 1; // enemy gyorsasag
+    defaultXVelocity = 2; // enemy gyorsasag
     defaultYVelocity = 1;
     moveDownTimerDefault = 30;
     moveDownTimer = this.moveDownTimerDefault;
-    fireBulletTimerDefault = 10; // lovedek folytonossaganak gyorsasaga
+    fireBulletTimerDefault = 30; // lovedek folytonossaganak gyorsasaga
     fireBulletTimer = this.fireBulletTimerDefault;
     dropGiftTimer = 700;
     dropMeteorTimer = 300;
@@ -42,8 +42,8 @@ export default class EnemyHandler {
 
         this.createEnemies();
 
-        this.boss1 = new MiniBoss(90, 66, 6, 10); // enemy6 , 10 life
-        this.boss2 = new MiniBoss(315, 66, 6, 10);
+        this.boss1 = new MiniBoss(85, 60, 6, 10);
+        this.boss2 = new MiniBoss(310, 60, 6, 10);
     }
 
     draw(ctx) {
@@ -278,6 +278,10 @@ fireBullet() {
         if (this.boss1 && this.boss1.collideWith(sprite)) {
             collisionDetected = true;
         }
+
+        if (this.boss2 && this.boss2.collideWith(sprite)) {
+            collisionDetected = true;
+        }
     
         return collisionDetected;
     }
@@ -288,8 +292,8 @@ fireBullet() {
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.moveDownTimer = this.moveDownTimerDefault;
-        this.boss1 = new MiniBoss(90, 66, 6, 10);
-        this.boss2 = new MiniBoss(290, 66, 6, 10);
+        this.boss1 = new MiniBoss(85, 60, 6, 10);
+        this.boss2 = new MiniBoss(310, 60, 6, 10);
     }
 
 }

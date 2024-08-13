@@ -9,6 +9,8 @@ import Gift2Controller from "./Gift2Controller.js";
 import MeteorController from "./MeteorController.js";
 import EnemyHandler2 from "./EnemyHandler2.js";
 import EnemyHandler3 from "./EnemyHandler3.js";
+import EnemyHandler4 from "./EnemyHandler4.js";
+import EnemyHandler5 from "./EnemyHandler5.js";
 
 const canvas = document.getElementById("menu");
 const ctx = canvas.getContext("2d");
@@ -51,7 +53,8 @@ const enemyHandler = new EnemyHandler(canvas, enemyBulletController, playerBulle
 const player = new Player(canvas, 3, playerBulletController);
 const enemyHandler2 = new EnemyHandler2(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const enemyHandler3 = new EnemyHandler3(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
-
+const enemyHandler4 = new EnemyHandler4(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
+const enemyHandler5 = new EnemyHandler5(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 
 
 let isGameOver = false;
@@ -160,7 +163,7 @@ function drawGames() {
 
         if (x >= 920 && x <= 970 && y >= 80 && y <= 110) {
             stopAnimation();
-            startGame();
+            startGame1();
             let level = 1;
             if (isGameOver) {
                 restartGame(level);
@@ -184,11 +187,19 @@ function drawGames() {
         }
         if (x >= 920 && x <= 970 && y >= 395 && y <= 425) {
             stopAnimation();
-            // startGame4()
+            startGame4();
+            let level = 4;
+            if (isGameOver) {
+                restartGame(level);
+            }
         }
         if (x >= 920 && x <= 970 && y >= 500 && y <= 530) {
             stopAnimation();
-            // startGame5()
+            startGame5();
+            let level = 5;
+            if (isGameOver) {
+                restartGame(level);
+            }
         }
         if(x >= 940 && x <= 980 && y >= 15 && y <= 55){
             stopAnimation();
@@ -320,7 +331,7 @@ function drawPlayer() {
         }
     }
 
-    // Start the animation
+    // Start animation
     frame();
 }
 
@@ -437,7 +448,7 @@ timerImage.src = "images/ikon/timer.png";
 
 ///////////////////// Game1 /////////////////////////////
 
-function startGame() {
+function startGame1() {
     clearInterval(gameInterval);
     gameInterval = setInterval(game1, 100 / 70);
     gameBackground.src = costumization.field;
@@ -587,6 +598,106 @@ function game3() {
 
 ///////////////////// end of Game3 /////////////////////////////
 
+///////////////////// Game4 /////////////////////////////
+function startGame4() {
+    clearInterval(gameInterval);
+    gameInterval = setInterval(game4, 100 / 70);
+    gameBackground.src = costumization.field;
+}
+
+function game4() {
+    let level = 4;
+    checkGameOver(level);
+    collideWithObject();
+    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
+    displayGameOver(level);
+    if (!isGameOver) {
+
+        settings(level);
+        ctx.fillStyle = "yellow";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Score: " + enemyHandler4.score, 125, 23);
+        if (scoreImage.complete) {
+            ctx.drawImage(scoreImage, 185, 2, 25, 25);
+        }
+
+        ctx.fillStyle = "white";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        if (timerImage.complete) {
+            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+        }
+
+        ctx.fillStyle = "red";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Life: " + life, canvas.width - 125, 23);
+        if (heartImage.complete) {
+            ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'r' || event.key === 'Escape') {
+                event.preventDefault();
+            }
+        });
+
+    } else {
+        clearInterval(gameInterval); 
+    }
+}
+
+///////////////////// end of Game4 /////////////////////////////
+
+///////////////////// Game5 /////////////////////////////
+function startGame5() {
+    clearInterval(gameInterval);
+    gameInterval = setInterval(game5, 100 / 70);
+    gameBackground.src = costumization.field;
+}
+
+function game5() {
+    let level = 5;
+    checkGameOver(level);
+    collideWithObject();
+    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
+    displayGameOver(level);
+    if (!isGameOver) {
+
+        settings(level);
+        ctx.fillStyle = "yellow";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Score: " + enemyHandler5.score, 125, 23);
+        if (scoreImage.complete) {
+            ctx.drawImage(scoreImage, 185, 2, 25, 25);
+        }
+
+        ctx.fillStyle = "white";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        if (timerImage.complete) {
+            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+        }
+
+        ctx.fillStyle = "red";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Life: " + life, canvas.width - 125, 23);
+        if (heartImage.complete) {
+            ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'r' || event.key === 'Escape') {
+                event.preventDefault();
+            }
+        });
+
+    } else {
+        clearInterval(gameInterval); 
+    }
+}
+///////////////////// end of Game5 /////////////////////////////
+
+
 function displayGameOver(level){
     if(isGameOver) {
         let text = didwin ? "You win" : "Game Over";
@@ -618,11 +729,15 @@ function displayGameOver(level){
                 increaseRubin(100);
             }
         } else if (actualLevel === 4) {
+            enemyHandler4.score += addScore;
+            ctx.fillText("Total Score: " + enemyHandler4.score, canvas.width / 2, 380);
             level4Complete = didwin ? true : false;
             if (level4Complete) {
                 increaseRubin(125);
             }
         } else if (actualLevel === 5) {
+            enemyHandler5.score += addScore;
+            ctx.fillText("Total Score: " + enemyHandler5.score, canvas.width / 2, 380);
             level5Complete = didwin ? true : false;
             if (level5Complete) {
                 increaseRubin(150);
@@ -637,6 +752,9 @@ function displayGameOver(level){
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "25px Arial";
+        if(addScore <= 0){
+            addScore = 0;
+        }
         ctx.fillText("(+ " + addScore + " point added from remaining life)", canvas.width / 2, 340);
         
         ctx.fillText("Time: " + updateTime(), canvas.width / 2, 420);
@@ -701,6 +819,16 @@ function settings(level){
         enemyHandler3.soundEnabled = sound.soundOn;
         enemyHandler3.enemyDeathSound.volume = (sound.volume / 100);
     }
+    else if(actualLevel === 4){
+        enemyHandler4.draw(ctx);
+        enemyHandler4.soundEnabled = sound.soundOn;
+        enemyHandler4.enemyDeathSound.volume = (sound.volume / 100);
+    }
+    else if(actualLevel === 5){
+        enemyHandler5.draw(ctx);
+        enemyHandler5.soundEnabled = sound.soundOn;
+        enemyHandler5.enemyDeathSound.volume = (sound.volume / 100);
+    }
 
     playerBulletController.soundEnabled = sound.soundOn;
     enemyBulletController.soundEnabled = sound.soundOn;
@@ -735,7 +863,7 @@ function restartGame(level) {
         enemyHandler.score = 0;
         enemyHandler.createEnemies();
         enemyHandler.resetGame();
-        startGame();
+        startGame1();
     }
     else if(actualLevel === 2){
         enemyHandler2.score = 0;
@@ -748,6 +876,18 @@ function restartGame(level) {
         enemyHandler3.createEnemies();
         enemyHandler3.resetGame();
         startGame3();
+    }
+    else if(actualLevel === 4){
+        enemyHandler4.score = 0;
+        enemyHandler4.createEnemies();
+        enemyHandler4.resetGame();
+        startGame4();
+    }
+    else if(actualLevel === 5){
+        enemyHandler5.score = 0;
+        enemyHandler5.createEnemies();
+        enemyHandler5.resetGame();
+        startGame5();
     }
 
 }
@@ -775,6 +915,16 @@ function checkGameOver(level){
         isGameOver = true;
     }
 
+    if(enemyHandler4.enemyRows.length === 0 && actualLevel === 4){
+        didwin = true;
+        isGameOver = true;
+    }
+
+    if(enemyHandler5.enemyRows.length === 0 && actualLevel === 5){
+        didwin = true;
+        isGameOver = true;
+    }
+
 }
 
 function collideWithObject(){
@@ -794,6 +944,10 @@ function collideWithObject(){
         life--;
     }
 
+    if(enemyHandler4.collideWith(player)){
+        life--;
+    }
+
     if (giftController.collideWith(player)) {
         life++;
     }
@@ -802,6 +956,8 @@ function collideWithObject(){
         enemyHandler.score += 200;
         enemyHandler2.score += 200;
         enemyHandler3.score += 200;
+        enemyHandler4.score += 200;
+        enemyHandler5.score += 200;
     }
 
     if(meteorController.collideWith(player)){
@@ -832,4 +988,3 @@ function drawButtonBack() {
         ctx.drawImage(buttonImage, 910, 10, 64, 64);
     };
 }
-
