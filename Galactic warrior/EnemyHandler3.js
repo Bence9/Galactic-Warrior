@@ -1,6 +1,7 @@
 import Enemy from "./Enemy.js";
 import MovingDirection from "./MovingDirection.js";
 import MiniBoss from "./MiniBoss.js";
+import MeteorStand from "./MeteorStand.js";
 
 export default class EnemyHandler3 {
 
@@ -39,11 +40,15 @@ export default class EnemyHandler3 {
 
         this.enemyDeathSound = new Audio("sounds/enemy-death.wav");
         this.enemyDeathSound.volume = 0.5;
+        this.explosionSound = new Audio("sounds/explosion.wav");
+        this.explosionSound.volume = 0.5;
 
         this.createEnemies();
 
         this.boss1 = new MiniBoss(85, 60, 6, 10);
         this.boss2 = new MiniBoss(310, 60, 6, 10);
+        this.meteor1 = new MeteorStand(200, 300, 0, 7);
+        this.meteor2 = new MeteorStand(700, 300, 0, 7);
     }
 
     draw(ctx) {
@@ -56,6 +61,7 @@ export default class EnemyHandler3 {
         this.fireBullet();
         this.dropGift();
         this.dropMeteor();
+        this.drawMeteors(ctx);
     }
 
     drawBosses(ctx) {
@@ -66,6 +72,15 @@ export default class EnemyHandler3 {
         if (this.boss2) {
             this.boss2.move(this.xVelocity, this.yVelocity);
             this.boss2.draw(ctx);
+        }
+    }
+
+    drawMeteors(ctx){
+        if(this.meteor1){
+            this.meteor1.draw(ctx);
+        }
+        if(this.meteor2){
+            this.meteor2.draw(ctx);
         }
     }
 
@@ -183,6 +198,26 @@ export default class EnemyHandler3 {
                 }
             }
         }
+        if(this.meteor1 && this.playerBulletController.collideWith(this.meteor1)){
+            this.meteor1.life -= 1;
+            if(this.meteor1.life <= 0){
+                if(this.soundEnabled){
+                    this.explosionSound.play();
+                }
+                this.meteorController.drop(200, 300, -5, 10);
+                this.meteor1 = null;
+            }
+        }
+        if(this.meteor2 && this.playerBulletController.collideWith(this.meteor2)){
+            this.meteor2.life -= 1;
+            if(this.meteor2.life <= 0){
+                if(this.soundEnabled){
+                    this.explosionSound.play();
+                }
+                this.meteorController.drop(700, 300, -5, 10);
+                this.meteor2 = null;
+            }
+        }
     }
 
 fireBullet() {
@@ -294,6 +329,8 @@ fireBullet() {
         this.moveDownTimer = this.moveDownTimerDefault;
         this.boss1 = new MiniBoss(85, 60, 6, 10);
         this.boss2 = new MiniBoss(310, 60, 6, 10);
+        this.meteor1 = new MeteorStand(200, 300, 0, 7);
+        this.meteor2 = new MeteorStand(700, 300, 0, 7);
     }
 
 }

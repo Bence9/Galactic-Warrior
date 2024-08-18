@@ -1,22 +1,36 @@
 import Enemy from "./Enemy.js";
 import MovingDirection from "./MovingDirection.js";
+import MeteorStand from "./MeteorStand.js";
 
 export default class EnemyHandler2 {
 
-    enemyMap = [
-        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-        [0, 5, 0, 5, 0, 5, 0, 5, 0, 5],
-        [4, 0, 4, 0, 4, 0, 4, 0, 4, 0],
-        [0, 3, 0, 3, 0, 3, 0, 3, 0, 3],
-        [2, 0, 2, 0, 2, 0, 2, 0, 2, 0],
-        [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    enemyMap1 = [
+        [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ];
 
-    enemyRows = [];
+    enemyMap2 = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 3, 0, 3, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0]
+    ];
 
-    currentDirection = MovingDirection.right;
-    xVelocity = 0;
-    yVelocity = 0;
+    enemyRows1 = [];
+    enemyRows2 = [];
+
+    currentDirection1 = MovingDirection.right;
+    currentDirection2 = MovingDirection.left;
+    xVelocity1 = 2;
+    yVelocity1 = 0.5;
+    xVelocity2 = 2;
+    yVelocity2 = 0.5;
     defaultXVelocity = 2;
     defaultYVelocity = 0.5;
     moveDownTimerDefault = 30;
@@ -38,8 +52,13 @@ export default class EnemyHandler2 {
 
         this.enemyDeathSound = new Audio("sounds/enemy-death.wav");
         this.enemyDeathSound.volume = 0.5;
+        this.explosionSound = new Audio("sounds/explosion.wav");
+        this.explosionSound.volume = 0.5;
 
         this.createEnemies();
+        this.createEnemies2();
+
+        this.meteor1 = new MeteorStand(450, 300, 0, 5);
 
     }
 
@@ -52,10 +71,18 @@ export default class EnemyHandler2 {
         this.fireBullet();
         this.dropGift();
         this.dropMeteor();
+        this.drawMeteors(ctx);
+        this.drawEnemies2(ctx);
+    }
+
+    drawMeteors(ctx){
+        if(this.meteor1){
+            this.meteor1.draw(ctx);
+        }
     }
 
     collisionDetection(){
-        this.enemyRows.forEach((enemyRow)=>{
+        this.enemyRows1.forEach((enemyRow)=>{
             enemyRow.forEach((enemy, enemyIndex)=>{
             if(this.playerBulletController.collideWith(enemy)){
 
@@ -72,19 +99,68 @@ export default class EnemyHandler2 {
 
             }
         });
-    });
-        this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0);
+        });
+        this.enemyRows1 = this.enemyRows1.filter((enemyRow) => enemyRow.length > 0);
+
+        this.enemyRows2.forEach((enemyRow)=>{
+            enemyRow.forEach((enemy, enemyIndex)=>{
+            if(this.playerBulletController.collideWith(enemy)){
+
+                const enemyValue = enemy.value; 
+
+                this.addScore(enemyValue);
+
+                if(this.soundEnabled){
+                    this.enemyDeathSound.currentTime = 0;
+                    this.enemyDeathSound.play();
+                }
+
+                enemyRow.splice(enemyIndex, 1);
+
+            }
+        });
+        });
+        this.enemyRows2 = this.enemyRows2.filter((enemyRow) => enemyRow.length > 0);
+
+        if(this.meteor1 && this.playerBulletController.collideWith(this.meteor1)){
+            this.meteor1.life -= 1;
+            if(this.meteor1.life <= 0){
+                if(this.soundEnabled){
+                    this.explosionSound.play();
+                }
+                this.meteorController.drop(450, 300, -5, 10);
+                this.meteor1 = null;
+            }
+        }
     }
 
 
-    fireBullet(){
+    fireBullet() {
         this.fireBulletTimer--;
-        if(this.fireBulletTimer <= 0){
+        if (this.fireBulletTimer <= 0) {
             this.fireBulletTimer = this.fireBulletTimerDefault;
-            const allEnemies = this.enemyRows.flat();
-            const enemyIndex = Math.floor(Math.random() * allEnemies.length);
-            const enemy = allEnemies[enemyIndex];
-            this.enemyBulletController.shoot(enemy.x + enemy.width/2, enemy.y, -3);
+            const Enemies1 = this.enemyRows1.flat();
+
+            if (Enemies1.length > 0) {
+                const enemyIndex = Math.floor(Math.random() * Enemies1.length);
+                const enemy = Enemies1[enemyIndex];
+                
+                if (enemy) {
+                    this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3);
+                }
+            }
+
+            const Enemies2 = this.enemyRows2.flat();
+
+            if (Enemies2.length > 0) {
+                const enemyIndex = Math.floor(Math.random() * Enemies2.length);
+                const enemy = Enemies2[enemyIndex];
+                
+                if (enemy) {
+                    this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3);
+                }
+            }
+
         }
     }
 
@@ -96,67 +172,130 @@ export default class EnemyHandler2 {
     }
 
     decrementMoveDownTimer() {
-        if (
-            this.currentDirection === MovingDirection.downLeft ||
-            this.currentDirection === MovingDirection.downRight
-        ) {
+        if (this.currentDirection1 === MovingDirection.downLeft || this.currentDirection1 === MovingDirection.downRight ||
+            this.currentDirection2 === MovingDirection.downLeft || this.currentDirection2 === MovingDirection.downRight) {
             this.moveDownTimer--;
         }
     }
 
     updateVelocityAndDirection() {
-        for (const enemyRow of this.enemyRows) {
-            if (this.currentDirection === MovingDirection.right) {
-                this.xVelocity = this.defaultXVelocity;
-                this.yVelocity = 0;
-                const rightMostEnemy = enemyRow[enemyRow.length - 1];
+        // EnemyMap1 mozgatása
+        for (const enemyRow of this.enemyRows1) {
+            const validEnemies = enemyRow.filter(enemy => enemy !== 0);
+    
+            if (validEnemies.length === 0) {
+                continue;
+            }
+    
+            if (this.currentDirection1 === MovingDirection.right) {
+                this.xVelocity1 = this.defaultXVelocity;
+                this.yVelocity1 = 0;
+                const rightMostEnemy = validEnemies[validEnemies.length - 1];
                 if (rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width) {
-                    this.currentDirection = MovingDirection.downLeft;
+                    this.currentDirection1 = MovingDirection.downLeft;
                     break;
                 }
-            } else if (this.currentDirection === MovingDirection.downLeft) {
-                if (this.moveDown(MovingDirection.left)) {
+            } else if (this.currentDirection1 === MovingDirection.downLeft) {
+                if (this.moveDown(MovingDirection.left)) { 
+                    this.currentDirection1 = MovingDirection.left;
                     break;
                 }
-            } else if (this.currentDirection === MovingDirection.left) {
-                this.xVelocity = -this.defaultXVelocity;
-                this.yVelocity = 0;
-                const leftMostEnemy = enemyRow[0];
+            } else if (this.currentDirection1 === MovingDirection.left) {
+                this.xVelocity1 = -this.defaultXVelocity;
+                this.yVelocity1 = 0;
+                const leftMostEnemy = validEnemies[0];
                 if (leftMostEnemy.x <= 0) {
-                    this.currentDirection = MovingDirection.downRight;
+                    this.currentDirection1 = MovingDirection.downRight;
                     break;
                 }
-            } else if (this.currentDirection === MovingDirection.downRight) {
+            } else if (this.currentDirection1 === MovingDirection.downRight) {
                 if (this.moveDown(MovingDirection.right)) {
+                    this.currentDirection1 = MovingDirection.right;
                     break;
                 }
             }
         }
+
+         // EnemyMap2 mozgatása
+    for (const enemyRow of this.enemyRows2) {
+        const validEnemies = enemyRow.filter(enemy => enemy !== 0);
+
+        if (validEnemies.length === 0) {
+            continue;
+        }
+
+        if (this.currentDirection2 === MovingDirection.left) {
+            this.xVelocity2 = -this.defaultXVelocity;
+            this.yVelocity2 = 0;
+            const leftMostEnemy = validEnemies[0];
+            if (leftMostEnemy.x <= 0) {
+                this.currentDirection2 = MovingDirection.downRight;
+                break;
+            }
+        } else if (this.currentDirection2 === MovingDirection.downRight) {
+            if (this.moveDown2(MovingDirection.right)) { 
+                this.currentDirection2 = MovingDirection.right; 
+                break;
+            }
+        } else if (this.currentDirection2 === MovingDirection.right) {
+            this.xVelocity2 = this.defaultXVelocity;
+            this.yVelocity2 = 0;
+            const rightMostEnemy = validEnemies[validEnemies.length - 1];
+            if (rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width) {
+                this.currentDirection2 = MovingDirection.downLeft;
+                break;
+            }
+        } else if (this.currentDirection2 === MovingDirection.downLeft) {
+            if (this.moveDown2(MovingDirection.left)) { 
+                this.currentDirection2 = MovingDirection.left;
+                break;
+            }
+        }
     }
+    
+    }
+    
 
     moveDown(newDirection) {
-        this.xVelocity = 0;
-        this.yVelocity = this.defaultYVelocity;
+        this.xVelocity1 = 0;
+        this.yVelocity1 = this.defaultYVelocity;
         if (this.moveDownTimer === 0) {
-            this.currentDirection = newDirection;
+            this.currentDirection1 = newDirection;
+            return true;
+        }
+        return false;
+    }
+
+    moveDown2(newDirection) {
+        this.xVelocity2 = 0;
+        this.yVelocity2 = this.defaultYVelocity;
+        if (this.moveDownTimer === 0) {
+            this.currentDirection2 = newDirection;
             return true;
         }
         return false;
     }
 
     drawEnemies(ctx) {
-        this.enemyRows.flat().forEach((enemy) => {
-                enemy.move(this.xVelocity, this.yVelocity);
+        this.enemyRows1.flat().forEach((enemy) => {
+                enemy.move(this.xVelocity1, this.yVelocity1);
+                enemy.draw(ctx);
+        });
+    }
+
+    drawEnemies2(ctx) {
+        this.enemyRows2.flat().forEach((enemy) => {
+                enemy.move(this.xVelocity2, this.yVelocity2);
                 enemy.draw(ctx);
         });
     }
 
     createEnemies() {
-        this.enemyMap.forEach((row, rowIndex) => {
-            this.enemyRows[rowIndex] = [];
+        this.enemyMap1.forEach((row, rowIndex) => {
+            this.enemyRows1[rowIndex] = [];
             row.forEach((enemyNumber, enemyIndex) => {
                 if (enemyNumber > 0) {
-                    this.enemyRows[rowIndex].push(
+                    this.enemyRows1[rowIndex].push(
                         new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
                     );
                 }
@@ -164,9 +303,29 @@ export default class EnemyHandler2 {
         });
     }
 
-    collideWith(sprite){
-        const collisionDetected = this.enemyRows.flat().some((enemy)=>enemy.collideWith(sprite));
-        return collisionDetected;
+    createEnemies2() {
+        this.enemyMap2.forEach((row, rowIndex) => {
+            this.enemyRows2[rowIndex] = [];
+            row.forEach((enemyNumber, enemyIndex) => {
+                if (enemyNumber > 0) {
+                    this.enemyRows2[rowIndex].push(
+                        new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
+                    );
+                }
+            });
+        });
+    }
+
+    collideWith(sprite) {
+        // Ellenőrizd mindkét enemyRows csoportot az ütközéshez
+        const collisionDetected1 = this.enemyRows1.flat().some((enemy) => enemy !== 0 && enemy.collideWith(sprite));
+        const collisionDetected2 = this.enemyRows2.flat().some((enemy) => enemy !== 0 && enemy.collideWith(sprite));
+        
+        if(collisionDetected1 || collisionDetected2){
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -229,10 +388,14 @@ export default class EnemyHandler2 {
     }
 
     resetGame() {
-        this.currentDirection = MovingDirection.right;
-        this.xVelocity = 0;
-        this.yVelocity = 0;
+        this.currentDirection1 = MovingDirection.right;
+        this.currentDirection2 = MovingDirection.left;
+        this.xVelocity1 = 2;
+        this.yVelocity1 = 0.5;
+        this.xVelocity2 = 2;
+        this.yVelocity2 = 0.5;
         this.moveDownTimer = this.moveDownTimerDefault;
+        this.meteor1 = new MeteorStand(450, 300, 0, 5);
     }
 
 }

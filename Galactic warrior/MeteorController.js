@@ -10,8 +10,8 @@ export default class MeteorController {
         this.maxMeteorssAtTime = maxMeteorsAtTime;
         this.soundEnabled = soundEnabled;
 
-        this.shootSound = new Audio("sounds/meteorbum.mp3");
-        this.shootSound.volume = 1;
+        this.meteorBoom = new Audio("sounds/meteorbum.mp3");
+        this.meteorBoom.volume = 1;
 
     }
 
@@ -43,8 +43,8 @@ export default class MeteorController {
         if (MeteorThatHitSpriteIndex >= 0) {
             this.meteors.splice(MeteorThatHitSpriteIndex, 1);
             if(this.soundEnabled){
-                this.shootSound.currentTime = 0;
-                this.shootSound.play();
+                this.meteorBoom.currentTime = 0;
+                this.meteorBoom.play();
             }
             return true;
         } else {

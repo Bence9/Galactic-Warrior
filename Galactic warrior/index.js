@@ -692,7 +692,7 @@ function game5() {
         });
 
     } else {
-        clearInterval(gameInterval); 
+        clearInterval(gameInterval);
     }
 }
 ///////////////////// end of Game5 /////////////////////////////
@@ -836,7 +836,7 @@ function settings(level){
     
     playerBulletController.shootSound.volume = (sound.volume / 100);
     enemyBulletController.shootSound.volume = (sound.volume / 100);
-    meteorController.shootSound.volume = (sound.volume / 100);
+    meteorController.meteorBoom.volume = (sound.volume / 100);
 
     playerBulletController.bulletColor = costumization.playerBulletColor;
     enemyBulletController.bulletColor = costumization.enemyBulletColor;
@@ -868,6 +868,7 @@ function restartGame(level) {
     else if(actualLevel === 2){
         enemyHandler2.score = 0;
         enemyHandler2.createEnemies();
+        enemyHandler2.createEnemies2();
         enemyHandler2.resetGame();
         startGame2();
     }
@@ -886,6 +887,8 @@ function restartGame(level) {
     else if(actualLevel === 5){
         enemyHandler5.score = 0;
         enemyHandler5.createEnemies();
+        enemyHandler5.createEnemies2();
+        enemyHandler5.createEnemies3();
         enemyHandler5.resetGame();
         startGame5();
     }
@@ -905,7 +908,7 @@ function checkGameOver(level){
         isGameOver = true;
     }
 
-    if(enemyHandler2.enemyRows.length === 0 && actualLevel === 2){
+    if(enemyHandler2.enemyRows1.length === 0 && enemyHandler2.enemyRows2.length === 0 && actualLevel === 2){
         didwin = true;
         isGameOver = true;
     }
@@ -920,7 +923,7 @@ function checkGameOver(level){
         isGameOver = true;
     }
 
-    if(enemyHandler5.enemyRows.length === 0 && actualLevel === 5){
+    if(enemyHandler5.enemyRows1.length === 0 && enemyHandler5.enemyRows2.length === 0 && enemyHandler5.enemyRows3.length === 0 && actualLevel === 5  && !enemyHandler5.boss){
         didwin = true;
         isGameOver = true;
     }
