@@ -1,7 +1,7 @@
 import Enemy from "./Enemy.js";
 import MovingDirection from "./MovingDirection.js";
 
-export default class EnemyHandler {
+export default class EnemyHandler1 {
 
     enemyMap = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],

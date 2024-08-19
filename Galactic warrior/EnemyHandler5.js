@@ -30,8 +30,8 @@ export default class EnemyHandler5 {
     enemyRows2 = [];
     enemyRows3 = [];
     currentDirection = MovingDirection.right;
-    xVelocity = 0;
-    yVelocity = 0;
+    xVelocity = 1;
+    yVelocity = 1;
     xVelocity2 = 3;
     yVelocity2 = 1;
     xVelocity3 = -3;
@@ -46,11 +46,13 @@ export default class EnemyHandler5 {
     dropMeteorTimer = 300;
     score = 0;
     initialYPosition = 0;
+    bossInitialYPosition = 0;
 
-    constructor(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, soundEnabled) {
+    constructor(canvas, enemyBulletController, playerBulletController, bossBulletController, giftController, gift2Controller, meteorController, soundEnabled) {
         this.canvas = canvas;
         this.enemyBulletController = enemyBulletController;
         this.playerBulletController = playerBulletController;
+        this.bossBulletController = bossBulletController;
         this.giftController = giftController;
         this.gift2Controller = gift2Controller;
         this.meteorController = meteorController;
@@ -65,7 +67,7 @@ export default class EnemyHandler5 {
         this.createEnemies2();
         this.createEnemies3();
 
-        this.boss = new Boss(180, 30, 6, 5);
+        this.boss = new Boss(180, 30, 6, 30, this.bossBulletController);
         this.meteor1 = new MeteorStand(150, 300, 0, 10);
         this.meteor2 = new MeteorStand(450, 250, 0, 10);
         this.meteor3 = new MeteorStand(750, 300, 0, 10);
@@ -84,6 +86,8 @@ export default class EnemyHandler5 {
         this.drawMeteors(ctx);
         this.drawEnemies2(ctx);
         this.drawEnemies3(ctx);
+        this.bossBulletController.draw(ctx);
+        this.boss.fireDiagonalBullets();
     }
 
     drawBoss(ctx) {
@@ -109,35 +113,51 @@ export default class EnemyHandler5 {
         let rightMostX = Math.max(...this.enemyRows1.flat().map(enemy => enemy.x + enemy.width));
         let leftMostX = Math.min(...this.enemyRows1.flat().map(enemy => enemy.x));
 
+        // EnemyRows1 mozgatása
         if (this.currentDirection === MovingDirection.right) {
             this.xVelocity = this.defaultXVelocity;
             this.yVelocity = 0;
             if (rightMostX >= this.canvas.width) {
                 this.currentDirection = MovingDirection.down;
                 this.initialYPosition += 30;
-           }
+            }
         } else if (this.currentDirection === MovingDirection.left) {
             this.xVelocity = -this.defaultXVelocity;
             this.yVelocity = 0;
-            if (leftMostX <= 0) {
-                this.currentDirection = MovingDirection.right;
-                this.initialYPosition += 30; 
-            }
+        if (leftMostX <= 0) {
+            this.currentDirection = MovingDirection.right;
+            this.initialYPosition += 30; 
+        }
         } else if (this.currentDirection === MovingDirection.down) {
             this.xVelocity = 0;
             this.yVelocity = this.defaultYVelocity;
-            if (this.enemyRows1[0] && this.enemyRows1[0][0] && this.enemyRows1[0][0].y >= this.initialYPosition + 30) {
+        if (this.enemyRows1[0] && this.enemyRows1[0][0] && this.enemyRows1[0][0].y >= this.initialYPosition + 30) {
                 this.currentDirection = MovingDirection.left;
             }
         }
 
-        // Mozgás frissítése enemyRows számára
         this.enemyRows1.flat().forEach(enemy => {
             enemy.move(this.xVelocity, this.yVelocity);
         });
 
         // Boss mozgása
         if (this.boss) {
+            if (this.currentDirection === MovingDirection.right) {
+                if (this.boss.x + this.boss.width >= this.canvas.width) {
+                    this.currentDirection = MovingDirection.down;
+                    this.bossInitialYPosition += 30;
+                }
+            } else if (this.currentDirection === MovingDirection.left) {
+                if (this.boss.x <= 0) {
+                    this.currentDirection = MovingDirection.right;
+                    this.bossInitialYPosition += 30;
+                }
+            } else if (this.currentDirection === MovingDirection.down) {
+        if (this.boss.y >= this.bossInitialYPosition) {
+            this.currentDirection = (this.boss.x <= this.canvas.width / 2) ? MovingDirection.right : MovingDirection.left;
+            }
+        }
+
             this.boss.move(this.xVelocity, this.yVelocity);
         }
     
@@ -157,7 +177,7 @@ export default class EnemyHandler5 {
             enemy.move(this.xVelocity2, this.yVelocity2);
         });
 
-        // 3. Átlós mozgás enemyRows3
+        // Átlós mozgás enemyRows3
         let rightMostX3 = Math.max(...this.enemyRows3.flat().map(enemy => enemy.x + enemy.width));
         let leftMostX3 = Math.min(...this.enemyRows3.flat().map(enemy => enemy.x));
 
@@ -289,15 +309,25 @@ export default class EnemyHandler5 {
 
         if (this.boss && this.playerBulletController.collideWith(this.boss)) {
             this.boss.life -= 1;
+
+            if(this.boss.life === 20){ 
+                this.boss.changeImage(`images/enemy/Boss2.png`);
+            }
+            if(this.boss.life === 10){ 
+                this.boss.changeImage(`images/enemy/Boss3.png`);
+            }
+        
             if (this.boss.life <= 0) {
                 this.boss = null;
                 this.addScore("boss");
+        
                 if (this.soundEnabled) {
                     this.enemyDeathSound.currentTime = 0;
                     this.enemyDeathSound.play();
                 }
             }
         }
+
         if(this.meteor1 && this.playerBulletController.collideWith(this.meteor1)){
             this.meteor1.life -= 1;
             if(this.meteor1.life <= 0){
@@ -352,7 +382,7 @@ export default class EnemyHandler5 {
                 const enemy = Enemies2[enemyIndex];
                 
                 if (enemy) {
-                    this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3);
+                    this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3, 10);
                 }
             }
 
@@ -363,7 +393,7 @@ export default class EnemyHandler5 {
                 const enemy = Enemies3[enemyIndex];
                 
                 if (enemy) {
-                    this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3);
+                    this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3, 10);
                 }
             }
 
@@ -453,10 +483,10 @@ export default class EnemyHandler5 {
     resetGame() {
         this.currentDirection = MovingDirection.right;
         this.initialYPosition = 0;
-        this.xVelocity = 0;
-        this.yVelocity = 0;
+        this.xVelocity = 1;
+        this.yVelocity = 1;
         this.moveDownTimer = this.moveDownTimerDefault;
-        this.boss = new Boss(185, 30, 6, 20);
+        this.boss = new Boss(180, 30, 6, 30, this.bossBulletController);
         this.meteor1 = new MeteorStand(150, 300, 0, 10);
         this.meteor2 = new MeteorStand(450, 250, 0, 10);
         this.meteor3 = new MeteorStand(750, 300, 0, 10);

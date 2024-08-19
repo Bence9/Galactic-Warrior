@@ -1,4 +1,5 @@
 import Bullet from "./Bullet.js";
+import BossBullet from "./BossBullet.js";
 
 export default class BulletController {
     bullets = [];
@@ -28,6 +29,34 @@ export default class BulletController {
         if (this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime) {
             const bullet = new Bullet(this.canvas, x, y, velocity, this.bulletColor);
             this.bullets.push(bullet);
+
+            if (this.soundEnabled) {
+                this.shootSound.currentTime = 0;
+                this.shootSound.play();
+            }
+
+            this.timeTillNextBulletAllowed = timeTillNextBulletAllowed;
+        }
+    }
+
+    BossShoot(x, y, velocity, timeTillNextBulletAllowed = 0) {
+        const bullet = new Bullet(this.canvas, x, y, velocity, this.bulletColor);
+        this.bullets.push(bullet);
+    
+        if (this.soundEnabled) {
+            this.shootSound.currentTime = 0;
+            this.shootSound.play();
+        }
+    
+        this.timeTillNextBulletAllowed = timeTillNextBulletAllowed;
+    }
+
+    SpecialShoot(x, y, velocities, timeTillNextBulletAllowed = 0) {
+        if (this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime) {
+            velocities.forEach(velocity => {
+                const bossBullet = new BossBullet(this.canvas, x, y, velocity.x, velocity.y, this.bulletColor);
+                this.bullets.push(bossBullet);
+            });
 
             if (this.soundEnabled) {
                 this.shootSound.currentTime = 0;

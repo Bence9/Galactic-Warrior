@@ -1,9 +1,9 @@
 export default class Bullet{
-    constructor(canvas, x, y, velocity, bulletColor){
+    constructor(canvas, x, y, Yvelocity, bulletColor){
         this.canvas = canvas;
         this.x = x;
         this.y = y;
-        this.velocity = velocity;
+        this.Yvelocity = Yvelocity;
         this.bulletColor = bulletColor;
 
         this.width = 5;
@@ -11,7 +11,7 @@ export default class Bullet{
     }
 
     draw(ctx){
-        this.y -= this.velocity;
+        this.y -= this.Yvelocity;
         ctx.fillStyle = this.bulletColor;
         ctx.fillRect(this.x,this.y,this.width,this.height);
     }

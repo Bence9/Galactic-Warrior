@@ -1,4 +1,4 @@
-import EnemyHandler from "./EnemyHandler.js";
+import EnemyHandler1 from "./EnemyHandler.js";
 import Player from "./Player.js";
 import BulletController from "./BulletController.js";
 import Description from "./Description.js";
@@ -46,15 +46,16 @@ const costumization = new Costumization(canvas, ctx, menu, rubin);
 
 const enemyBulletController = new BulletController(canvas, 5, "red", true);
 const playerBulletController = new BulletController(canvas, 10, "white", true);
+const bossBulletController = new BulletController(canvas, 5, "red", true);
 const giftController = new GiftController(canvas, 1);
 const gift2Controller = new Gift2Controller(canvas, 1);
 const meteorController = new MeteorController(canvas, 2, true);
-const enemyHandler = new EnemyHandler(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
+const enemyHandler1 = new EnemyHandler1(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const player = new Player(canvas, 3, playerBulletController);
 const enemyHandler2 = new EnemyHandler2(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const enemyHandler3 = new EnemyHandler3(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const enemyHandler4 = new EnemyHandler4(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
-const enemyHandler5 = new EnemyHandler5(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
+const enemyHandler5 = new EnemyHandler5(canvas, enemyBulletController, playerBulletController, bossBulletController, giftController, gift2Controller, meteorController, true);
 
 
 let isGameOver = false;
@@ -466,7 +467,7 @@ function game1() {
         settings(level);
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
-        ctx.fillText("Score: " + enemyHandler.score, 125, 23);
+        ctx.fillText("Score: " + enemyHandler1.score, 125, 23);
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
         }
@@ -708,8 +709,8 @@ function displayGameOver(level){
         ctx.font = "30px Arial";
         
         if (actualLevel === 1) {
-            enemyHandler.score += addScore;
-            ctx.fillText("Total Score: " + enemyHandler.score, canvas.width / 2, 380);
+            enemyHandler1.score += addScore;
+            ctx.fillText("Total Score: " + enemyHandler1.score, canvas.width / 2, 380);
             level1Complete = didwin ? true : false;
             if (level1Complete) {
                 increaseRubin(50);
@@ -798,6 +799,7 @@ function settings(level){
     player.draw(ctx);
     playerBulletController.draw(ctx);
     enemyBulletController.draw(ctx);
+    bossBulletController.draw(ctx);
     giftController.draw(ctx);
     gift2Controller.draw(ctx);
     meteorController.draw(ctx);
@@ -805,9 +807,9 @@ function settings(level){
     let actualLevel = level;
 
     if(actualLevel === 1){
-        enemyHandler.draw(ctx);
-        enemyHandler.soundEnabled = sound.soundOn;
-        enemyHandler.enemyDeathSound.volume = (sound.volume / 100);
+        enemyHandler1.draw(ctx);
+        enemyHandler1.soundEnabled = sound.soundOn;
+        enemyHandler1.enemyDeathSound.volume = (sound.volume / 100);
     }
     else if(actualLevel === 2){
         enemyHandler2.draw(ctx);
@@ -832,14 +834,17 @@ function settings(level){
 
     playerBulletController.soundEnabled = sound.soundOn;
     enemyBulletController.soundEnabled = sound.soundOn;
+    bossBulletController.soundEnabled = sound.soundOn;
     meteorController.soundEnabled = sound.soundOn;
     
     playerBulletController.shootSound.volume = (sound.volume / 100);
     enemyBulletController.shootSound.volume = (sound.volume / 100);
+    bossBulletController.shootSound.volume = (sound.volume / 100);
     meteorController.meteorBoom.volume = (sound.volume / 100);
 
     playerBulletController.bulletColor = costumization.playerBulletColor;
     enemyBulletController.bulletColor = costumization.enemyBulletColor;
+    bossBulletController.bulletColor = costumization.enemyBulletColor;
 }
 
 
@@ -853,6 +858,7 @@ function restartGame(level) {
     player.y = canvas.height - 75;
     enemyBulletController.clearBullets();
     playerBulletController.clearBullets();
+    bossBulletController.clearBullets();
     giftController.clearGifts();
     gift2Controller.clearGifts();
     meteorController.clearMeteors();
@@ -860,9 +866,9 @@ function restartGame(level) {
     let actualLevel = level;
 
     if(actualLevel === 1){
-        enemyHandler.score = 0;
-        enemyHandler.createEnemies();
-        enemyHandler.resetGame();
+        enemyHandler1.score = 0;
+        enemyHandler1.createEnemies();
+        enemyHandler1.resetGame();
         startGame1();
     }
     else if(actualLevel === 2){
@@ -903,7 +909,7 @@ function checkGameOver(level){
         isGameOver = true;
     }
 
-    if(enemyHandler.enemyRows.length === 0 && actualLevel === 1){
+    if(enemyHandler1.enemyRows.length === 0 && actualLevel === 1){
         didwin = true;
         isGameOver = true;
     }
@@ -935,7 +941,7 @@ function collideWithObject(){
         life--;
     }
 
-    if(enemyHandler.collideWith(player)){
+    if(enemyHandler1.collideWith(player)){
         life--;
     }
 
@@ -951,12 +957,20 @@ function collideWithObject(){
         life--;
     }
 
+    if(enemyHandler5.collideWith(player)){
+        life--;
+    }
+
+    if(enemyHandler5.boss && enemyHandler5.boss.bulletController.collideWith(player)){
+        life--;
+    }
+
     if (giftController.collideWith(player)) {
         life++;
     }
 
     if(gift2Controller.collideWith(player)){
-        enemyHandler.score += 200;
+        enemyHandler1.score += 200;
         enemyHandler2.score += 200;
         enemyHandler3.score += 200;
         enemyHandler4.score += 200;
