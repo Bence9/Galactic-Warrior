@@ -14,6 +14,15 @@ export default class Costumization {
         this.playerName = "Azure Vortex";
         this.field = "images/background/space.png";
         this.fieldName = "Space";
+
+        this.player1Bought = true;
+        this.player2Bought = false;
+        this.player3Bought = false;
+        this.player4Bought = false;
+        this.field1Bought = false;
+        this.field2Bought = true;
+        this.field3Bought = false;
+        this.field4Bought = false;
     
         // Négyzetek méretei és az eltolás mértéke
         this.squareSize = 30; 
@@ -73,39 +82,90 @@ export default class Costumization {
                 this.draw();
             }
 
+            // Player buyer
+            if (x >= 20 && x <= 70 && y >= 420 && y <= 440 && this.player1Bought === false) {
+                this.player1Bought = true;
+                // player1 = free ship
+                this.draw(); 
+            } else if (x >= 190 && x <= 240 && y >= 420 && y <= 440 && this.player2Bought === false) {
+                if (this.canAfford(50)) {
+                    this.player2Bought = true;
+                    this.decreaseRubin(50);
+                    this.draw();
+                }
+            } else if (x >= 20 && x <= 70 && y >= 520 && y <= 540 && this.player3Bought === false) {
+                if (this.canAfford(75)) {
+                    this.player3Bought = true;
+                    this.decreaseRubin(75);
+                    this.draw();
+                }
+            } else if (x >= 190 && x <= 240 && y >= 520 && y <= 540 && this.player4Bought === false) {
+                if (this.canAfford(100)) {
+                    this.player4Bought = true;
+                    this.decreaseRubin(100);
+                    this.draw();
+                }
+            }
+
             // Player selector
-            if (x >= 25 && x <= 115 && y >= 380 && y <= 470) {
+            if (x >= 20 && x <= 70 && y >= 445 && y <= 465 && this.player1Bought) {
                 this.selectedPlayer = "images/player/player1.png";
                 this.playerName = "Azure Vortex";
                 this.draw(); 
-            } else if (x >= 125 && x <= 215 && y >= 380 && y <= 470) {
+            } else if (x >= 190 && x <= 240 && y >= 445 && y <= 465 && this.player2Bought) {
                 this.selectedPlayer = "images/player/player2.png";
                 this.playerName = "Emerald Wing";
                 this.draw(); 
-            } else if (x >= 25 && x <= 115 && y >= 480 && y <= 570) {
+            } else if (x >= 20 && x <= 70 && y >= 545 && y <= 565 && this.player3Bought) {
                 this.selectedPlayer = "images/player/player3.png";
                 this.playerName = "Titanium Dragon";
                 this.draw(); 
-            } else if (x >= 125 && x <= 215 && y >= 480 && y <= 570) {
+            } else if (x >= 190 && x <= 240 && y >= 545 && y <= 565 && this.player4Bought) {
                 this.selectedPlayer = "images/player/player4.png";
                 this.playerName = "Scarlet Phoenix";
                 this.draw(); 
             }
 
-            // Background selector
-            if (x >= 700 && x <= 800 && y >= 350 && y <= 450) {
+
+            // Field buyer
+            if (x >= 645 && x <= 695 && y >= 400 && y <= 420 && this.field1Bought === false) {
+                if (this.canAfford(50)) {
+                    this.field1Bought = true;
+                    this.decreaseRubin(50);
+                    this.draw();
+                }
+            } else if (x >= 835 && x <= 885 && y >= 400 && y <= 420 && this.field2Bought === false) {
+                    this.field2Bought = true;
+                    // field2 is free
+                    this.draw();
+            } else if (x >= 645 && x <= 695 && y >= 520 && y <= 540 && this.field3Bought === false) {
+                if (this.canAfford(100)) {
+                    this.field3Bought = true;
+                    this.decreaseRubin(100);
+                    this.draw();
+                }
+            } else if (x >= 835 && x <= 885 && y >= 520 && y <= 540 && this.field4Bought === false) {
+                if (this.canAfford(150)) {
+                    this.field4Bought = true;
+                    this.decreaseRubin(150);
+                    this.draw();
+                }
+            }
+
+            // Field selector
+            if (x >= 645 && x <= 695 && y >= 425 && y <= 445 && this.field1Bought) {
                 this.field = "images/background/desert.png";
                 this.fieldName = "Desert";
                 this.draw();
-            } else if (x >= 820 && x <= 920 && y >= 350 && y <= 450) {
+            } else if (x >= 835 && x <= 885 && y >= 425 && y <= 445 && this.field2Bought) {
                 this.field = "images/background/space.png";
                 this.fieldName = "Space";
                 this.draw();
-            } else if (x >= 700 && x <= 800 && y >= 470 && y <= 570) {
+            } else if (x >= 645 && x <= 695 && y >= 545 && y <= 565 && this.field3Bought) {
                 this.field = "images/background/cosmic.png";
                 this.fieldName = "Cosmic";
                 this.draw();
-            } else if (x >= 820 && x <= 920 && y >= 470 && y <= 570) {
+            } else if (x >= 835 && x <= 885 && y >= 545 && y <= 565 && this.field4Bought) {
                 this.field = "images/background/universe.png";
                 this.fieldName = "Universe";
                 this.draw();
@@ -116,10 +176,20 @@ export default class Costumization {
 
 }
 
+// Ellenőrzi, hogy a rendelkezünk-e elegendő rubinnal a vásárláshoz
+canAfford(amount) {
+    return this.rubin >= amount;
+}
+
 updateRubin(newRubin) {
     this.rubin = newRubin;
 }
-    
+
+decreaseRubin(amount) {
+    this.rubin -= amount;
+    this.updateRubin(this.rubin);
+}
+
 draw() {
     this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
 
@@ -132,6 +202,9 @@ draw() {
     this.drawEnemyBulletColor();
     this.drawPlayers();
     this.drawFields();
+    this.drawBuyButtons();
+    this.drawSelectButtons();
+    this.DrawRubyImage();
     
     this.ctx.fillStyle = this.playerBulletColor;
     this.ctx.font = "30px sans-serif";
@@ -235,38 +308,140 @@ stopRubyAnimation() {
 drawPlayers(){
     const image1 = new Image();
     this.ctx.strokeStyle = "red";
-    this.ctx.strokeRect(25, 380, 90, 90);
+    this.ctx.strokeRect(75, 380, 90, 90);
     image1.src = "images/player/player1.png";
     image1.onload = () => {
-    this.ctx.drawImage(image1, 30, 380, 80, 80);
+    this.ctx.drawImage(image1, 80, 380, 80, 80);
     };
 
     const image2 = new Image();
     this.ctx.strokeStyle = "red";
-    this.ctx.strokeRect(125, 380, 90, 90);
+    this.ctx.strokeRect(245, 380, 90, 90);
     image2.src = "images/player/player2.png";
     image2.onload = () => {
-    this.ctx.drawImage(image2, 130, 380, 80, 80);
+    this.ctx.drawImage(image2, 250, 380, 80, 80);
     };
 
     const image3 = new Image();
     this.ctx.strokeStyle = "red";
-    this.ctx.strokeRect(25, 480, 90, 90);
+    this.ctx.strokeRect(75, 480, 90, 90);
     image3.src = "images/player/player3.png";
     image3.onload = () => {
-    this.ctx.drawImage(image3, 30, 480, 80, 80);
+    this.ctx.drawImage(image3, 80, 480, 80, 80);
     };
 
     const image4 = new Image();
     this.ctx.strokeStyle = "red";
-    this.ctx.strokeRect(125, 480, 90, 90);
+    this.ctx.strokeRect(245, 480, 90, 90);
     image4.src = "images/player/player4.png";
     image4.onload = () => {
-    this.ctx.drawImage(image4, 130, 480, 80, 80);
+    this.ctx.drawImage(image4, 250, 480, 80, 80);
     };
 
 }
 
+drawBuyButtons() {
+    this.ctx.font = "14px Arial";
+
+    const buttonWidth = 50;
+    const buttonHeight = 20;
+
+    // BUY gombok a Player képekhez
+    this.drawMiniButton(20, 420, buttonWidth, buttonHeight, "BUY", "green");
+    this.drawMiniButton(190, 420, buttonWidth, buttonHeight, "BUY", "green");
+    this.drawMiniButton(20, 520, buttonWidth, buttonHeight, "BUY", "green");
+    this.drawMiniButton(190, 520, buttonWidth, buttonHeight, "BUY", "green");
+
+    if (this.player1Bought) {
+        this.drawMiniButton(20, 420, buttonWidth, buttonHeight, "Bought", "#f05107"); // narancssárga
+    }
+    if (this.player2Bought) {
+        this.drawMiniButton(190, 420, buttonWidth, buttonHeight, "Bought", "#f05107");
+    }
+    if (this.player3Bought) {
+        this.drawMiniButton(20, 520, buttonWidth, buttonHeight, "Bought", "#f05107");
+    }
+    if (this.player4Bought) {
+        this.drawMiniButton(190, 520, buttonWidth, buttonHeight, "Bought", "#f05107");
+    }
+
+    // BUY gombok a Field képekhez
+    this.drawMiniButton(645, 400, buttonWidth, buttonHeight, "BUY", "green");
+    this.drawMiniButton(835, 400, buttonWidth, buttonHeight, "BUY", "green");
+    this.drawMiniButton(645, 520, buttonWidth, buttonHeight, "BUY", "green");
+    this.drawMiniButton(835, 520, buttonWidth, buttonHeight, "BUY", "green");
+
+    if (this.field1Bought) {
+        this.drawMiniButton(645, 400, buttonWidth, buttonHeight, "Bought", "#f05107");
+    }
+    if (this.field2Bought) {
+        this.drawMiniButton(835, 400, buttonWidth, buttonHeight, "Bought", "#f05107");
+    }
+    if (this.field3Bought) {
+        this.drawMiniButton(645, 520, buttonWidth, buttonHeight, "Bought", "#f05107");
+    }
+    if (this.field4Bought) {
+        this.drawMiniButton(835, 520, buttonWidth, buttonHeight, "Bought", "#f05107");
+    }
+}
+
+
+drawSelectButtons() {
+    this.ctx.font = "12px Arial";
+
+    const buttonWidth = 50;
+    const buttonHeight = 20;
+
+    // Select gombok a player képekhez
+    this.drawMiniButton(20, 445, buttonWidth, buttonHeight, "SELECT", "#1b71c2"); // blue color
+    this.drawMiniButton(190, 445, buttonWidth, buttonHeight, "SELECT", "#1b71c2");
+    this.drawMiniButton(20, 545, buttonWidth, buttonHeight, "SELECT", "#1b71c2");
+    this.drawMiniButton(190, 545, buttonWidth, buttonHeight, "SELECT", "#1b71c2");
+
+    if(this.player1Bought === false){
+        this.drawMiniButton(20, 445, buttonWidth, buttonHeight, "SELECT", "grey");
+    }
+    if(this.player2Bought === false){
+        this.drawMiniButton(190, 445, buttonWidth, buttonHeight, "SELECT", "grey");
+    }
+    if(this.player3Bought === false){
+        this.drawMiniButton(20, 545, buttonWidth, buttonHeight, "SELECT", "grey");
+    }
+    if(this.player4Bought === false){
+        this.drawMiniButton(190, 545, buttonWidth, buttonHeight, "SELECT", "grey");
+    }
+
+    // SELECT gombok a Field képekhez
+    this.drawMiniButton(645, 425, buttonWidth, buttonHeight, "SELECT", "#1b71c2");
+    this.drawMiniButton(835, 425, buttonWidth, buttonHeight, "SELECT", "#1b71c2");
+    this.drawMiniButton(645, 545, buttonWidth, buttonHeight, "SELECT", "#1b71c2");
+    this.drawMiniButton(835, 545, buttonWidth, buttonHeight, "SELECT", "#1b71c2");
+
+    if (this.field1Bought === false) {
+        this.drawMiniButton(645, 425, buttonWidth, buttonHeight, "SELECT", "grey");
+    }
+    if (this.field2Bought === false) {
+        this.drawMiniButton(835, 425, buttonWidth, buttonHeight, "SELECT", "grey");
+    }
+    if (this.field3Bought === false) {
+        this.drawMiniButton(645, 545, buttonWidth, buttonHeight, "SELECT", "grey");
+    }
+    if (this.field4Bought === false) {
+         this.drawMiniButton(835, 545, buttonWidth, buttonHeight, "SELECT", "grey");
+    }
+
+}
+
+drawMiniButton(x, y, width, height, text, color) {
+    this.ctx.fillStyle = color;
+    this.ctx.strokeStyle = "black";
+
+    this.ctx.fillRect(x, y, width, height);
+    this.ctx.strokeRect(x, y, width, height);
+
+    this.ctx.fillStyle = "white";
+    this.ctx.fillText(text, x + width / 2, y + height / 2 + 5);
+}
 
 drawFields(){
 
@@ -280,10 +455,10 @@ drawFields(){
 
     const image6 = new Image();
     this.ctx.strokeStyle = "yellow";
-    this.ctx.strokeRect(820, 350, 100, 100);
+    this.ctx.strokeRect(890, 350, 100, 100);
     image6.src = "images/background/space.png";
     image6.onload = () => {
-    this.ctx.drawImage(image6, 820, 350, 100, 100);
+    this.ctx.drawImage(image6, 890, 350, 100, 100);
     };
 
     const image7 = new Image();
@@ -296,10 +471,10 @@ drawFields(){
         
     const image8 = new Image();
     this.ctx.strokeStyle = "yellow";
-    this.ctx.strokeRect(820, 470, 100, 100);
+    this.ctx.strokeRect(890, 470, 100, 100);
     image8.src = "images/background/universe.png";
     image8.onload = () => {
-    this.ctx.drawImage(image8, 820, 470, 100, 100);
+    this.ctx.drawImage(image8, 890, 470, 100, 100);
     };
 
 }
@@ -347,6 +522,35 @@ drawEnemyBulletColor() {
 
     this.ctx.fillStyle = "white";
     this.ctx.fillRect(450 + 5 * (this.squareSize + this.squareGap), 230 , this.squareSize, this.squareSize);
+}
+
+DrawRubyImage() {
+    const rubyImage = new Image();
+    rubyImage.src = "images/ikon/rubyPic.png";
+
+    rubyImage.onload = () => {
+        // player
+        this.drawRubyWithText(50, 420, "x0", rubyImage, 10);
+        this.drawRubyWithText(220, 420, "x50", rubyImage, 15);
+        this.drawRubyWithText(50, 520, "x75", rubyImage, 22);
+        this.drawRubyWithText(220, 520, "x100", rubyImage, 22);
+        // field
+        this.drawRubyWithText(675, 400, "x50", rubyImage, 15);
+        this.drawRubyWithText(865, 400, "x0", rubyImage, 10);
+        this.drawRubyWithText(675, 520, "x100", rubyImage, 22);
+        this.drawRubyWithText(865, 520, "x150", rubyImage, 22);
+    };
+}
+
+drawRubyWithText(x, y, text, image, distance) {
+    const imageWidth = 24;
+    const imageHeight = 24;
+
+    this.ctx.drawImage(image, x, y - imageHeight - 5, imageWidth, imageHeight); // 5 pixellel a gomb fölé
+
+    this.ctx.fillStyle = "white";  
+    this.ctx.font = "22px Arial";
+    this.ctx.fillText(text, x - distance, y - imageHeight / 2);
 }
 
     

@@ -87,7 +87,9 @@ export default class EnemyHandler5 {
         this.drawEnemies2(ctx);
         this.drawEnemies3(ctx);
         this.bossBulletController.draw(ctx);
-        this.boss.fireDiagonalBullets();
+        if(this.boss){
+            this.boss.fireDiagonalBullets();
+        }
     }
 
     drawBoss(ctx) {
