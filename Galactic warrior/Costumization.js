@@ -6,8 +6,8 @@ export default class Costumization {
         this.background.src="images/background/space.png";
         this.menuCallback = menuCallback; 
         this.rubin = rubin;
-        this.buttonImage = new Image();
-        this.buttonImage.src = "images/ikon/back.png";
+        this.buttonBackImage = new Image();
+        this.buttonBackImage.src = "images/ikon/back.png";
         this.playerBulletColor = "white";
         this.enemyBulletColor = "red";
         this.selectedPlayer = "images/player/player1.png";
@@ -204,7 +204,7 @@ draw() {
     this.drawFields();
     this.drawBuyButtons();
     this.drawSelectButtons();
-    this.DrawRubyImage();
+    this.DrawRubyText();
     
     this.ctx.fillStyle = this.playerBulletColor;
     this.ctx.font = "30px sans-serif";
@@ -236,7 +236,7 @@ draw() {
     this.ctx.drawImage(image, 380, 340, 220, 220);
     };
 
-    this.animateRuby();
+    this.drawAnimatedRuby();
 
     this.ctx.fillStyle = "white";
     this.ctx.font = "30px sans-serif";
@@ -249,12 +249,9 @@ draw() {
 }
 
 
-animateRuby() {
+animateRuby(xPos, yPos, scale) {
     const spriteWidth = 24;
     const spriteHeight = 24;
-    const xPos = 850;
-    const yPos = 150;
-    const scale = 1.5;
     let frameIndex = 0;
     let count = 0;
 
@@ -276,7 +273,7 @@ animateRuby() {
 
         count++;
 
-        if (count >= 14) {
+        if (count >= 16) { // animáció gyorsasága itt beállítható
             frameIndex++;
             count = 0;
         }
@@ -297,7 +294,6 @@ animateRuby() {
         this.animationRun = true;
         frame();
     };
-    
 }
 
 stopRubyAnimation() {
@@ -481,7 +477,7 @@ drawFields(){
 
 
 drawButtonBack() {
-    this.ctx.drawImage(this.buttonImage, 910, 10, 64, 64);
+    this.ctx.drawImage(this.buttonBackImage, 910, 10, 64, 64);
 }
 
 drawPlayerBulletColor() {
@@ -524,33 +520,41 @@ drawEnemyBulletColor() {
     this.ctx.fillRect(450 + 5 * (this.squareSize + this.squareGap), 230 , this.squareSize, this.squareSize);
 }
 
-DrawRubyImage() {
-    const rubyImage = new Image();
-    rubyImage.src = "images/ikon/rubyPic.png";
+drawAnimatedRuby(){
+    // A megszerzett rubint jelző animáció
+    this.animateRuby(850, 150, 1.5);
 
-    rubyImage.onload = () => {
-        // player
-        this.drawRubyWithText(50, 420, "x0", rubyImage, 10);
-        this.drawRubyWithText(220, 420, "x50", rubyImage, 15);
-        this.drawRubyWithText(50, 520, "x75", rubyImage, 22);
-        this.drawRubyWithText(220, 520, "x100", rubyImage, 22);
-        // field
-        this.drawRubyWithText(675, 400, "x50", rubyImage, 15);
-        this.drawRubyWithText(865, 400, "x0", rubyImage, 10);
-        this.drawRubyWithText(675, 520, "x100", rubyImage, 22);
-        this.drawRubyWithText(865, 520, "x150", rubyImage, 22);
-    };
+    // player choose melletti animációk
+    this.animateRuby(50, 390, 1);
+    this.animateRuby(220, 390, 1);
+    this.animateRuby(50, 490, 1);
+    this.animateRuby(220, 490, 1);
+
+    // field choose meletti animációk
+    this.animateRuby(675, 370, 1);
+    this.animateRuby(865, 370, 1);
+    this.animateRuby(675, 490, 1); 
+    this.animateRuby(865, 490, 1);
 }
 
-drawRubyWithText(x, y, text, image, distance) {
-    const imageWidth = 24;
-    const imageHeight = 24;
+DrawRubyText() {
+    // player
+    this.drawTextToRuby(50, 410, "x0", 10);
+    this.drawTextToRuby(220, 410, "x50", 15);
+    this.drawTextToRuby(50, 510, "x75", 22);
+    this.drawTextToRuby(220, 510, "x100", 22);
 
-    this.ctx.drawImage(image, x, y - imageHeight - 5, imageWidth, imageHeight); // 5 pixellel a gomb fölé
+    // field
+    this.drawTextToRuby(675, 390, "x50", 15);
+    this.drawTextToRuby(865, 390, "x0", 10);
+    this.drawTextToRuby(675, 510, "x100", 22);
+    this.drawTextToRuby(865, 510, "x150", 22);  
+}
 
+drawTextToRuby(x, y, text, distance) {
     this.ctx.fillStyle = "white";  
     this.ctx.font = "22px Arial";
-    this.ctx.fillText(text, x - distance, y - imageHeight / 2);
+    this.ctx.fillText(text, x - distance, y);
 }
 
     

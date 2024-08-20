@@ -268,7 +268,7 @@ fireBullet() {
                 scoreToAdd = 50;
                 break;
             case 6:
-                scoreToAdd = 20;
+                scoreToAdd = 50;
                 break;
             case "miniboss":
                 scoreToAdd = 200;

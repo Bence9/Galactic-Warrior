@@ -104,7 +104,7 @@ function drawLevelField(x, y, width, height, radius, playX, playY, level, challe
     ctx.font = "20px sans-serif";
     ctx.fillText("Level:" + level, x + 70, y + 30);
     ctx.font = "16px sans-serif";
-    ctx.fillText("Challenge: " + challenge, x + 70, y + 50);
+    ctx.fillText("Challenge: " + challenge, x + 75, y + 50);
     let rubinAmount = 25 + (level * 25);
     ctx.fillText("+" + rubinAmount, x + 60, y + 72);
 
@@ -150,10 +150,10 @@ function drawGames() {
     };
 
     drawLevelField(630, 60, 350, 90, 10, 920, 80, 1, "Easy"); // + 105 px (y, playY)
-    drawLevelField(630, 165, 350, 90, 10, 920, 185, 2, "Easy");
-    drawLevelField(630, 270, 350, 90, 10, 920, 290, 3, "Medium");
-    drawLevelField(630, 375, 350, 90, 10, 920, 395, 4, "Medium");
-    drawLevelField(630, 480, 350, 90, 10, 920, 500, 5, "Hard");
+    drawLevelField(630, 165, 350, 90, 10, 920, 185, 2, "Normal");
+    drawLevelField(630, 270, 350, 90, 10, 920, 290, 3, "Normal");
+    drawLevelField(630, 375, 350, 90, 10, 920, 395, 4, "Hard");
+    drawLevelField(630, 480, 350, 90, 10, 920, 500, 5, "Extreme");
 
     canvas.addEventListener('click', clickHandler);
 

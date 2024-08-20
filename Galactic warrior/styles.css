@@ -17,7 +17,7 @@ h1 {
 }
 
 body {
-    height: 450vh;
+    height: 500vh;
     margin: 0;
     padding: 0;
     display: flex;
@@ -53,4 +53,25 @@ ul.demo {
 
 li.space {
     margin-bottom: 20px; 
+}
+
+.enemy-points-list {
+    display: flex;
+}
+
+.points-column {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.points-column li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.points-column img {
+    margin-left: 10px;
 }
