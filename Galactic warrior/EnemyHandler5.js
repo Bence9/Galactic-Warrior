@@ -90,6 +90,7 @@ export default class EnemyHandler5 {
         if(this.boss){
             this.boss.fireDiagonalBullets();
         }
+
     }
 
     drawBoss(ctx) {

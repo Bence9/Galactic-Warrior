@@ -29,7 +29,8 @@ draw() {
 
     this.drawButtonBack();
 
-    var text = "Space Invaders, released in 1978, is an iconic arcade game known for its addictive gameplay and pixelated graphics. Players control a laser cannon at the bottom of the screen, tasked with defending Earth from descending waves of alien invaders. As the game progresses, the aliens move faster and descend more aggressively, adding to the challenge. Despite its simplicity, Space Invaders has had a significant cultural impact, inspiring numerous adaptations and homages across various media. Its enduring popularity is a testament to its timeless appeal and status as a classic in video game history.";
+    var text="Galactic Warrior is a thrilling arcade game where players pilot a spaceship, dodging waves of enemy fire and hazardous meteors. As the game intensifies, enemies grow fiercer, demanding swift reflexes and precise shooting. The game features customizable ships and battlefields, offering a tailored and challenging adventure. Players can gather Rubies, the in-game currency, to unlock special features and deepen their gameplay experience. With its captivating mechanics and strategic elements, Galactic Warrior stands out as a premier title in the modern space arcade genre.";
+
     var maxWidth = 400;
     var lineHeight = 30;
     var x = 500;

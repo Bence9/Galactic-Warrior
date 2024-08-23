@@ -166,8 +166,8 @@ export default class Costumization {
                 this.fieldName = "Cosmic";
                 this.draw();
             } else if (x >= 835 && x <= 885 && y >= 545 && y <= 565 && this.field4Bought) {
-                this.field = "images/background/universe.png";
-                this.fieldName = "Universe";
+                this.field = "images/background/earth.jpg";
+                this.fieldName = "Earth";
                 this.draw();
             }
     };
@@ -468,7 +468,7 @@ drawFields(){
     const image8 = new Image();
     this.ctx.strokeStyle = "yellow";
     this.ctx.strokeRect(890, 470, 100, 100);
-    image8.src = "images/background/universe.png";
+    image8.src = "images/background/earth.jpg";
     image8.onload = () => {
     this.ctx.drawImage(image8, 890, 470, 100, 100);
     };

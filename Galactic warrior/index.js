@@ -65,6 +65,14 @@ let seconds = 0;
 let gameInterval;
 let isStartButtonActive = false;
 
+let gameSound = new Audio("sounds/battleTheme.mp3");
+gameSound.volume = 0.5;
+gameSound.loop = true;
+
+let bossSound = new Audio("sounds/bossSound.wav");
+bossSound.volume = 0.7;
+bossSound.loop = true;
+
 function increaseRubin(amount) {
     rubin += amount;
 //    console.log(`New rubin value: ${rubin}`);
@@ -169,6 +177,9 @@ function drawGames() {
             if (isGameOver) {
                 restartGame(level);
             }
+/*            if(enemyHandler1.soundEnabled){
+                gameSound.play();
+            } */
         }
         if (x >= 920 && x <= 970 && y >= 185 && y <= 215) {
             stopAnimation();
@@ -450,7 +461,10 @@ timerImage.src = "images/ikon/timer.png";
 ///////////////////// Game1 /////////////////////////////
 
 function startGame1() {
-    clearInterval(gameInterval);
+    if (gameInterval !== null) {
+        clearInterval(gameInterval);
+    }
+    stopAllMusic();
     gameInterval = setInterval(game1, 100 / 70);
     gameBackground.src = costumization.field;
 }
@@ -462,7 +476,17 @@ function game1() {
     collideWithObject();
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
+
     if (!isGameOver) {
+        if (enemyHandler1.soundEnabled) {
+            if (gameSound.paused) {
+                gameSound.play(); // Csak akkor játszd le a zenét, ha még nincs lejátszásban
+            }
+        } else {
+            if (!gameSound.paused) {
+                gameSound.pause(); // Némítsd el a zenét, ha a soundEnabled hamis
+            }
+        }
 
         settings(level);
         ctx.fillStyle = "yellow";
@@ -474,9 +498,9 @@ function game1() {
 
         ctx.fillStyle = "white";
         ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
         if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
         }
 
         ctx.fillStyle = "red";
@@ -486,14 +510,15 @@ function game1() {
             ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
         }
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'r' || event.key === 'Escape') {
                 event.preventDefault();
             }
         });
 
     } else {
-        clearInterval(gameInterval); 
+        clearInterval(gameInterval);
+        gameSound.pause();
     }
 }
 
@@ -501,7 +526,10 @@ function game1() {
 
 ///////////////////// Game2 /////////////////////////////
 function startGame2() {
-    clearInterval(gameInterval);
+    if (gameInterval !== null) {
+        clearInterval(gameInterval);
+    }
+    stopAllMusic();
     gameInterval = setInterval(game2, 100 / 70);
     gameBackground.src = costumization.field;
 }
@@ -513,6 +541,16 @@ function game2() {
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
     if (!isGameOver) {
+
+        if (enemyHandler2.soundEnabled) {
+            if (gameSound.paused) {
+                gameSound.play();
+            }
+        } else {
+            if (!gameSound.paused) {
+                gameSound.pause();
+            }
+        }
 
         settings(level);
         ctx.fillStyle = "yellow";
@@ -544,6 +582,7 @@ function game2() {
 
     } else {
         clearInterval(gameInterval); 
+        gameSound.pause();
     }
 }
 
@@ -551,7 +590,10 @@ function game2() {
 
 ///////////////////// Game3 /////////////////////////////
 function startGame3() {
-    clearInterval(gameInterval);
+    if (gameInterval !== null) {
+        clearInterval(gameInterval);
+    }
+    stopAllMusic();
     gameInterval = setInterval(game3, 100 / 70);
     gameBackground.src = costumization.field;
 }
@@ -563,6 +605,16 @@ function game3() {
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
     if (!isGameOver) {
+
+        if (enemyHandler3.soundEnabled) {
+            if (gameSound.paused) {
+                gameSound.play();
+            }
+        } else {
+            if (!gameSound.paused) {
+                gameSound.pause();
+            }
+        }
 
         settings(level);
         ctx.fillStyle = "yellow";
@@ -594,6 +646,7 @@ function game3() {
 
     } else {
         clearInterval(gameInterval); 
+        gameSound.pause();
     }
 }
 
@@ -601,7 +654,10 @@ function game3() {
 
 ///////////////////// Game4 /////////////////////////////
 function startGame4() {
-    clearInterval(gameInterval);
+    if (gameInterval !== null) {
+        clearInterval(gameInterval);
+    }
+    stopAllMusic();
     gameInterval = setInterval(game4, 100 / 70);
     gameBackground.src = costumization.field;
 }
@@ -613,6 +669,16 @@ function game4() {
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
     if (!isGameOver) {
+
+        if (enemyHandler4.soundEnabled) {
+            if (gameSound.paused) {
+                gameSound.play();
+            }
+        } else {
+            if (!gameSound.paused) {
+                gameSound.pause();
+            }
+        }
 
         settings(level);
         ctx.fillStyle = "yellow";
@@ -644,6 +710,7 @@ function game4() {
 
     } else {
         clearInterval(gameInterval); 
+        gameSound.pause();
     }
 }
 
@@ -651,7 +718,10 @@ function game4() {
 
 ///////////////////// Game5 /////////////////////////////
 function startGame5() {
-    clearInterval(gameInterval);
+    if (gameInterval !== null) {
+        clearInterval(gameInterval);
+    }
+    stopAllMusic();
     gameInterval = setInterval(game5, 100 / 70);
     gameBackground.src = costumization.field;
 }
@@ -663,6 +733,16 @@ function game5() {
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
     if (!isGameOver) {
+
+        if (enemyHandler5.soundEnabled) {
+            if (bossSound.paused) {
+                bossSound.play();
+            }
+        } else {
+            if (!bossSound.paused) {
+                bossSound.pause();
+            }
+        }
 
         settings(level);
         ctx.fillStyle = "yellow";
@@ -694,6 +774,7 @@ function game5() {
 
     } else {
         clearInterval(gameInterval);
+        bossSound.pause();
     }
 }
 ///////////////////// end of Game5 /////////////////////////////
@@ -869,6 +950,10 @@ function restartGame(level) {
         enemyHandler1.score = 0;
         enemyHandler1.createEnemies();
         enemyHandler1.resetGame();
+        if (enemyHandler1.soundEnabled) {
+            gameSound.currentTime = 0;
+            gameSound.play();
+        } 
         startGame1();
     }
     else if(actualLevel === 2){
@@ -876,18 +961,30 @@ function restartGame(level) {
         enemyHandler2.createEnemies();
         enemyHandler2.createEnemies2();
         enemyHandler2.resetGame();
+        if (enemyHandler2.soundEnabled) {
+            gameSound.currentTime = 0;
+            gameSound.play();
+        } 
         startGame2();
     }
     else if(actualLevel === 3){
         enemyHandler3.score = 0;
         enemyHandler3.createEnemies();
         enemyHandler3.resetGame();
+        if (enemyHandler3.soundEnabled) {
+            gameSound.currentTime = 0;
+            gameSound.play();
+        } 
         startGame3();
     }
     else if(actualLevel === 4){
         enemyHandler4.score = 0;
         enemyHandler4.createEnemies();
         enemyHandler4.resetGame();
+        if (enemyHandler4.soundEnabled) {
+            gameSound.currentTime = 0;
+            gameSound.play();
+        } 
         startGame4();
     }
     else if(actualLevel === 5){
@@ -896,6 +993,10 @@ function restartGame(level) {
         enemyHandler5.createEnemies2();
         enemyHandler5.createEnemies3();
         enemyHandler5.resetGame();
+        if (enemyHandler5.soundEnabled) {
+            bossSound.currentTime = 0;
+            bossSound.play();
+        } 
         startGame5();
     }
 
@@ -1004,4 +1105,9 @@ function drawButtonBack() {
     buttonImage.onload = () => {
         ctx.drawImage(buttonImage, 910, 10, 64, 64);
     };
+}
+
+function stopAllMusic() {
+    gameSound.pause();   
+    bossSound.pause();   
 }
