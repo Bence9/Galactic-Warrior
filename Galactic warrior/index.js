@@ -50,8 +50,8 @@ const bossBulletController = new BulletController(canvas, 5, "red", true);
 const giftController = new GiftController(canvas, 1);
 const gift2Controller = new Gift2Controller(canvas, 1);
 const meteorController = new MeteorController(canvas, 2, true);
-const enemyHandler1 = new EnemyHandler1(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const player = new Player(canvas, 3, playerBulletController);
+const enemyHandler1 = new EnemyHandler1(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const enemyHandler2 = new EnemyHandler2(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const enemyHandler3 = new EnemyHandler3(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
 const enemyHandler4 = new EnemyHandler4(canvas, enemyBulletController, playerBulletController, giftController, gift2Controller, meteorController, true);
@@ -177,9 +177,6 @@ function drawGames() {
             if (isGameOver) {
                 restartGame(level);
             }
-/*            if(enemyHandler1.soundEnabled){
-                gameSound.play();
-            } */
         }
         if (x >= 920 && x <= 970 && y >= 185 && y <= 215) {
             stopAnimation();
@@ -219,7 +216,7 @@ function drawGames() {
         }
     }
 
-// Enemy animation
+// Moving animation
 const enemyImages = [];
 const enemyWidths = [60, 60, 60, 60, 60];
 const enemyHeights = [33, 33, 33, 33, 33];
@@ -245,7 +242,7 @@ let angles4 = [240, 240, 240, 240];
 let angles5 = [300, 300, 300, 300];
 
 const angularSpeeds = [0.3, 0.3, 0.3, 0.3];
-const orbitRadii = [40, 70, 100, 130];
+const orbitRadius = [40, 70, 100, 130];
 const xPos = 160;
 const yPos = 300;
 const scale = 1;
@@ -267,8 +264,8 @@ function drawBackground(x, y, width, height) {
 
 function drawEnemySet(angles) {
     for (let i = 0; i < enemyImages.length - 1; i++) {
-        const enemyX = xPos + orbitRadii[i] * Math.cos(angles[i] * Math.PI / 180) - enemyWidths[i + 1] / 2;
-        const enemyY = yPos + orbitRadii[i] * Math.sin(angles[i] * Math.PI / 180) - enemyHeights[i + 1] / 2;
+        const enemyX = xPos + orbitRadius[i] * Math.cos(angles[i] * Math.PI / 180) - enemyWidths[i + 1] / 2;
+        const enemyY = yPos + orbitRadius[i] * Math.sin(angles[i] * Math.PI / 180) - enemyHeights[i + 1] / 2;
         ctx.drawImage(
             enemyImages[i + 1],
             enemyX,
@@ -420,7 +417,6 @@ const mouseMoveHandler = (event) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-//    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(logoImage, canvas.width / 3 - logoImage.width / 2, canvas.height / 4 - logoImage.height / 2 - 75, 350, 300);
 
@@ -448,7 +444,6 @@ drawMenuButtons();
 }
 
 ///////////////////// THE GAME /////////////////////////////////////////
-
 const heartImage = new Image();
 heartImage.src = "images/ikon/redHeart.png";
 
@@ -459,7 +454,6 @@ const timerImage = new Image();
 timerImage.src = "images/ikon/timer.png";
 
 ///////////////////// Game1 /////////////////////////////
-
 function startGame1() {
     if (gameInterval !== null) {
         clearInterval(gameInterval);
@@ -521,7 +515,6 @@ function game1() {
         gameSound.pause();
     }
 }
-
 ///////////////////// end of Game1 /////////////////////////////
 
 ///////////////////// Game2 /////////////////////////////
@@ -585,7 +578,6 @@ function game2() {
         gameSound.pause();
     }
 }
-
 ///////////////////// end of Game2 /////////////////////////////
 
 ///////////////////// Game3 /////////////////////////////
@@ -649,7 +641,6 @@ function game3() {
         gameSound.pause();
     }
 }
-
 ///////////////////// end of Game3 /////////////////////////////
 
 ///////////////////// Game4 /////////////////////////////
@@ -713,7 +704,6 @@ function game4() {
         gameSound.pause();
     }
 }
-
 ///////////////////// end of Game4 /////////////////////////////
 
 ///////////////////// Game5 /////////////////////////////
@@ -874,7 +864,7 @@ function displayGameOver(level){
     }
 }
 
-// All things that user choose from sound and costumization menu
+// All things to set that user choose from sound and costumization menu
 function settings(level){
     player.image.src = costumization.selectedPlayer;
     player.draw(ctx);
@@ -1003,7 +993,6 @@ function restartGame(level) {
 }
 
 function checkGameOver(level){
-
     let actualLevel = level;
 
     if(life === 0){
@@ -1042,25 +1031,13 @@ function collideWithObject(){
         life--;
     }
 
-    if(enemyHandler1.collideWith(player)){
-        life--;
-    }
+    const enemyHandlers = [enemyHandler1, enemyHandler2, enemyHandler3, enemyHandler4, enemyHandler5];
 
-    if(enemyHandler2.collideWith(player)){
-        life--;
-    }
-
-    if(enemyHandler3.collideWith(player)){
-        life--;
-    }
-
-    if(enemyHandler4.collideWith(player)){
-        life--;
-    }
-
-    if(enemyHandler5.collideWith(player)){
-        life--;
-    }
+    enemyHandlers.forEach(handler => {
+        if (handler.collideWith(player)) {
+            life--;
+        }
+    });
 
     if(enemyHandler5.boss && enemyHandler5.boss.bulletController.collideWith(player)){
         life--;

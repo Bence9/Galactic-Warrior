@@ -2,7 +2,7 @@ export default class MiniBoss {
     constructor(x, y, imageNumber, life) {
         this.x = x;
         this.y = y;
-        this.width = 70;
+        this.width = 75;
         this.height = 55;
 
         this.value = imageNumber;

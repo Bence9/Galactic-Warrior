@@ -1,4 +1,4 @@
-export default class BossBullet {
+export default class PlayerBullet {
     constructor(canvas, x, y, xVelocity, yVelocity, bulletColor) {
         this.canvas = canvas;
         this.x = x;
@@ -11,7 +11,7 @@ export default class BossBullet {
     }
 
     draw(ctx) {
-        ctx.fillStyle = this.bulletColor;
+        ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
         this.move();
     }

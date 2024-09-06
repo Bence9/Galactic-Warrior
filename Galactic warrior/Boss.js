@@ -18,8 +18,6 @@ export default class Boss {
 
     draw(ctx) {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-//        this.BossFire();
-//        this.fireDiagonalBullets();
     }
 
     move(xVelocity, yVelocity) {

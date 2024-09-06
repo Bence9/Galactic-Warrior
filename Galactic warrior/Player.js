@@ -39,9 +39,37 @@ export default class Player {
     }
 
     handleShooting() {
-        if (this.shootPressed) {
-            this.bulletController.shoot(this.x + this.width / 2, this.y, 4, 10);
+        
+        if (this.image.src.includes("player1.png")) {
+            if (this.shootPressed) {
+                this.bulletController.shoot(this.x + this.width / 2, this.y, 3, 15);
+            }
         }
+    
+        if (this.image.src.includes("player2.png")) {
+            if (this.shootPressed) {
+                this.bulletController.shoot(this.x + this.width / 2, this.y, 4, 10);
+            }
+        }
+
+        if (this.image.src.includes("player3.png")) {
+            if (this.shootPressed) {
+                this.bulletController.shoot2(this.x + 10, this.y, this.x + this.width -10, this.y, 4, 15);
+            }
+        }
+
+        if (this.image.src.includes("player4.png")) {
+            if (this.shootPressed) {
+                const velocities = [
+                    { x: -1, y: -3 },  // balra fel
+                    { x: 0, y: -4 }, // egyenesen fel
+                    { x: 1, y: -3 }, // jobbra fel
+                ];
+        
+                this.bulletController.shoot3(this.x + this.width / 2, this.y, velocities, 10);
+            }
+        }
+
     }
 
     handleKeyDown = (event) => {

@@ -39,6 +39,40 @@ export default class BulletController {
         }
     }
 
+    // Two shoot in same time
+    shoot2(x1, y1, x2, y2, velocity, timeTillNextBulletAllowed = 0) {
+        if (this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime) {
+            const bullet1 = new Bullet(this.canvas, x1, y1, velocity, this.bulletColor);
+            const bullet2 = new Bullet(this.canvas, x2, y2, velocity, this.bulletColor);
+            this.bullets.push(bullet1);
+            this.bullets.push(bullet2);
+            
+            if (this.soundEnabled) {
+                this.shootSound.currentTime = 0;
+                this.shootSound.play();
+            }
+    
+            this.timeTillNextBulletAllowed = timeTillNextBulletAllowed;
+        }
+    }
+
+    // 3 shot in half round
+    shoot3(x, y, velocities, timeTillNextBulletAllowed = 0){
+        if (this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime) {
+            velocities.forEach(velocity => {
+                const bullet = new BossBullet(this.canvas, x, y, velocity.x, velocity.y, this.bulletColor);
+                this.bullets.push(bullet);
+            });
+
+            if (this.soundEnabled) {
+                this.shootSound.currentTime = 0;
+                this.shootSound.play();
+            }
+
+            this.timeTillNextBulletAllowed = timeTillNextBulletAllowed;
+        }
+    }
+
     BossShoot(x, y, velocity, timeTillNextBulletAllowed = 0) {
         const bullet = new Bullet(this.canvas, x, y, velocity, this.bulletColor);
         this.bullets.push(bullet);
@@ -51,6 +85,7 @@ export default class BulletController {
         this.timeTillNextBulletAllowed = timeTillNextBulletAllowed;
     }
 
+    // félkör alapú lövés
     SpecialShoot(x, y, velocities, timeTillNextBulletAllowed = 0) {
         if (this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime) {
             velocities.forEach(velocity => {

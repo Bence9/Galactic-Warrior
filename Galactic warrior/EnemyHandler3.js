@@ -8,7 +8,7 @@ export default class EnemyHandler3 {
     enemyMap = [
         [3, 3, 3, 1, 3, 3, 2, 3, 3, 3],
         [5, 0, 6, 0, 0, 0, 0, 6, 0, 5],
-        [4, 0, 0, 0, 5, 0, 0, 0, 0, 4],
+        [4, 0, 0, 0, 5, 5, 0, 0, 0, 4],
         [3, 0, 0, 0, 0, 0, 0, 0, 0, 3],
         [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -22,7 +22,7 @@ export default class EnemyHandler3 {
     defaultYVelocity = 1;
     moveDownTimerDefault = 30;
     moveDownTimer = this.moveDownTimerDefault;
-    fireBulletTimerDefault = 30; // lovedek folytonossaganak gyorsasaga
+    fireBulletTimerDefault = 40; // lovedek folytonossaganak gyorsasaga
     fireBulletTimer = this.fireBulletTimerDefault;
     dropGiftTimer = 700;
     dropMeteorTimer = 300;

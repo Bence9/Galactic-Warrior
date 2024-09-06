@@ -222,8 +222,8 @@ export default class EnemyHandler1 {
         this.dropMeteorTimer--;
         if (this.dropMeteorTimer <= 0) {
             this.dropMeteorTimer = Math.floor(Math.random() * (1200 - 600)) + 600; //Véletlenszerű időpontokban ledobás (600 - 1200 ms)
-            const x = Math.random() * this.canvas.width; // Véletlenszerű x pozíció a vászon szélességének tartományából
-            const y = 0; // A vászon teteje
+            const x = Math.random() * this.canvas.width;
+            const y = 0;
             const Yvelocity = -4; // Sebesség (4), lefelé esés (-)
             const timeTillNextMeteorAllowed = 10;
             this.meteorController.drop(x, y, Yvelocity, timeTillNextMeteorAllowed);
