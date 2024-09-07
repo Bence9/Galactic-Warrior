@@ -14,15 +14,24 @@ export default class Boss {
         this.bulletController = bulletController;
         this.fireBulletTimerDefault = 200;
         this.fireBulletTimer = this.fireBulletTimerDefault;
+
+        this.radius = 1;
+        this.speed = 0.02;
+        this.angle = 1;
+    }
+
+    
+    waveMove(xVelocity, yVelocity) {
+        this.x += xVelocity;
+
+        // Hullámzó mozgás
+        this.angle += this.speed;
+        const circularY = this.radius * Math.sin(this.angle);
+        this.y += yVelocity + circularY;
     }
 
     draw(ctx) {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    }
-
-    move(xVelocity, yVelocity) {
-        this.x += xVelocity;
-        this.y += yVelocity;
     }
 
     changeImage(imagePath) {
@@ -37,23 +46,6 @@ export default class Boss {
             this.y < sprite.y + sprite.height
         );
     }
-
-/*
-    BossFire() {
-        if (this.fireBulletTimer <= 0) {
-
-            this.bulletController.BossShoot(this.x + this.width / 2, this.y + this.height, -5.5, 5);
-    
-            this.bulletController.BossShoot(this.x + this.width / 2 - 20, this.y + this.height, -5, 10);
-    
-            this.bulletController.BossShoot(this.x + this.width / 2 + 20, this.y + this.height, -5, 5);
-
-            this.fireBulletTimer = this.fireBulletTimerDefault;
-        } else {
-            this.fireBulletTimer--;
-        }
-    }
-*/
 
     fireDiagonalBullets() {
         if (this.fireBulletTimer <= 0) {

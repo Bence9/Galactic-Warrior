@@ -6,8 +6,8 @@ import MeteorStand from "./MeteorStand.js";
 export default class EnemyHandler5 {
     
     enemyMap1 = [
-        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [5, 3, 0, 0, 1, 0, 0, 0, 3, 5],
+        [4, 3, 0, 0, 1, 0, 0, 0, 3, 4],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
@@ -95,7 +95,7 @@ export default class EnemyHandler5 {
 
     drawBoss(ctx) {
         if (this.boss) {
-            this.boss.move(this.xVelocity, this.yVelocity);
+            this.boss.waveMove(this.xVelocity, 0);
             this.boss.draw(ctx);
         }
     }
@@ -147,21 +147,17 @@ export default class EnemyHandler5 {
         if (this.boss) {
             if (this.currentDirection === MovingDirection.right) {
                 if (this.boss.x + this.boss.width >= this.canvas.width) {
-                    this.currentDirection = MovingDirection.down;
-                    this.bossInitialYPosition += 30;
+                    this.currentDirection = MovingDirection.left;
+                    this.xVelocity = this.defaultXVelocity;
                 }
             } else if (this.currentDirection === MovingDirection.left) {
                 if (this.boss.x <= 0) {
                     this.currentDirection = MovingDirection.right;
-                    this.bossInitialYPosition += 30;
+                    this.xVelocity = this.defaultXVelocity;
                 }
-            } else if (this.currentDirection === MovingDirection.down) {
-        if (this.boss.y >= this.bossInitialYPosition) {
-            this.currentDirection = (this.boss.x <= this.canvas.width / 2) ? MovingDirection.right : MovingDirection.left;
             }
-        }
-
-            this.boss.move(this.xVelocity, this.yVelocity);
+        
+            this.boss.waveMove(this.xVelocity, this.bossInitialYPosition);
         }
     
         // Átlós mozgás enemyRows2
@@ -378,6 +374,17 @@ export default class EnemyHandler5 {
         this.fireBulletTimer--;
         if (this.fireBulletTimer <= 0) {
             this.fireBulletTimer = this.fireBulletTimerDefault;
+            const Enemies1 = this.enemyRows2.flat();
+
+            if (Enemies1.length > 0) {
+                const enemyIndex = Math.floor(Math.random() * Enemies1.length);
+                const enemy = Enemies1[enemyIndex];
+                
+                if (enemy) {
+                    this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3, 10);
+                }
+            }
+
             const Enemies2 = this.enemyRows2.flat();
 
             if (Enemies2.length > 0) {
