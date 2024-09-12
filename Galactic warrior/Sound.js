@@ -1,5 +1,5 @@
 export default class Sound {
-    constructor(canvas, ctx, background, menuCallback) {
+    constructor(canvas, ctx, background, menuCallback, soundmenuActive) {
         this.canvas = canvas;
         this.ctx = ctx;
         this.background = background;
@@ -8,27 +8,30 @@ export default class Sound {
         this.buttonImage.src = "images/ikon/back.png";
         this.soundOn = true;
         this.volume = 50;
+        this.isMenuActive = soundmenuActive;
         
         const clickHandler = (event) => {
             const rect = this.canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
         
-            if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
+            if (x >= 910 && x <= 974 && y >= 10 && y <= 74 && this.isMenuActive === true) {
                 this.menuCallback(); // menu() visszahívása
+                this.isMenuActive = false;
+//                console.log(this.soundmenuActive);
             }
         
-            if (x >= 350 && x <= 400 && y >= 180 && y <= 230) {
+            if (x >= 350 && x <= 400 && y >= 180 && y <= 230 && this.isMenuActive === true) {
                 this.toggleSound(); // Hang ki/be kapcsolása
                 this.draw(); // újra rajzolás a gomb on -> off / off -> on váltás miatt
             }
         
-            if (x >= 750 && x <= 800 && y >= 150 && y <= 200) {
+            if (x >= 750 && x <= 800 && y >= 150 && y <= 200 && this.isMenuActive === true) {
                 this.increaseVolume();
                 this.draw();
             }
         
-            if (x >= 750 && x <= 800 && y >= 220 && y <= 270) {
+            if (x >= 750 && x <= 800 && y >= 220 && y <= 270 && this.isMenuActive === true) {
                 this.decreaseVolume();
                 this.draw();
             }
@@ -39,6 +42,8 @@ export default class Sound {
     
 draw() {
     this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
+    this.isMenuActive = true;
+//    console.log(this.soundmenuActive);
 
     this.ctx.fillStyle = "white";
     this.ctx.font = "50px sans-serif";

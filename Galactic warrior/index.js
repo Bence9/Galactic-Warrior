@@ -11,6 +11,7 @@ import EnemyHandler2 from "./EnemyHandler2.js";
 import EnemyHandler3 from "./EnemyHandler3.js";
 import EnemyHandler4 from "./EnemyHandler4.js";
 import EnemyHandler5 from "./EnemyHandler5.js";
+import Highscore from "./HighScore.js";
 
 const canvas = document.getElementById("menu");
 const ctx = canvas.getContext("2d");
@@ -39,10 +40,14 @@ let level2Complete = false;
 let level3Complete = false;
 let level4Complete = false;
 let level5Complete = false;
+let soundMenuActive = false; // figyeli, hogy a sound menu megvan-e nyitva
+let costumizationMenuActive = false;
+let highscoreMenuActive = false;
 
 const description = new Description(canvas, ctx, background, menu);
-const sound = new Sound(canvas, ctx, background, menu);
-const costumization = new Costumization(canvas, ctx, menu, rubin);
+const sound = new Sound(canvas, ctx, background, menu, soundMenuActive);
+const costumization = new Costumization(canvas, ctx, menu, rubin, costumizationMenuActive);
+const highscore = new Highscore(canvas, ctx, background, menu, highscoreMenuActive);
 
 const enemyBulletController = new BulletController(canvas, 5, "red", true);
 const playerBulletController = new BulletController(canvas, 10, "white", true);
@@ -75,7 +80,6 @@ bossSound.loop = true;
 
 function increaseRubin(amount) {
     rubin += amount;
-//    console.log(`New rubin value: ${rubin}`);
     costumization.updateRubin(rubin);
 }
 
@@ -143,8 +147,11 @@ function drawGames() {
     imagePlay.src = "images/ikon/play.png";
 
     imagePlay.onload = () => {
-        ctx.drawImage(imagePlay, 580, 345, 50, 50);
+        ctx.drawImage(imagePlay, 580, 300, 50, 50);
     };
+
+    ctx.fillStyle = "Yellow";
+    ctx.fillText("Levels:", 690, 45);
 
     ctx.strokeStyle = "red";
     ctx.lineWidth = 2; 
@@ -154,7 +161,7 @@ function drawGames() {
     buttonBack.src = "images/ikon/back.png";
 
     buttonBack.onload = () => {
-        ctx.drawImage(buttonBack, 940, 15, 40, 40);
+        ctx.drawImage(buttonBack, 930, 15, 40, 40);
     };
 
     drawLevelField(630, 60, 350, 90, 10, 920, 80, 1, "Easy"); // + 105 px (y, playY)
@@ -210,7 +217,8 @@ function drawGames() {
                 restartGame(level);
             }
         }
-        if(x >= 940 && x <= 980 && y >= 15 && y <= 55){
+        if(x >= 910 && x <= 980 && y >= 15 && y <= 55){
+            // back
             stopAnimation();
             isStartButtonActive = false;
         }
@@ -357,15 +365,19 @@ function makeButton(text, xPos, yPos, width, height) {
     ctx.fillText(text, xPos + 125 , yPos + height / 2 + 10);
 }
 
+
 function drawMenuButtons() {
-    makeButton("Start Game", canvas.width/3, 350, 255, 50);
+    makeButton("Start Game", canvas.width/3, 300, 255, 50);
+    makeButton("Highscore", canvas.width/3, 350, 255, 50);
     makeButton("Description", canvas.width/3, 400, 255, 50);
     makeButton("Sound", canvas.width/3, 450, 255, 50);
     makeButton("Customization", canvas.width/3, 500, 255, 50);
 }
 
+
 const buttons = [
-    { text: "Start Game", x: canvas.width / 3, y: 350, width: 255, height: 50 },
+    { text: "Start Game", x: canvas.width / 3, y: 300, width: 255, height: 50 },
+    { text: "Highscore", x: canvas.width / 3, y: 350, width: 255, height: 50 },
     { text: "Description", x: canvas.width / 3, y: 400, width: 255, height: 50 },
     { text: "Sound", x: canvas.width / 3, y: 450, width: 255, height: 50 },
     { text: "Customization", x: canvas.width / 3, y: 500, width: 255, height: 50 },
@@ -379,7 +391,7 @@ function menu() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-    ctx.drawImage(logoImage, canvas.width/3 - logoImage.width/2, canvas.height/4 - logoImage.height/2 - 75, 350, 300);
+    ctx.drawImage(logoImage, canvas.width/3 - logoImage.width/2, canvas.height/4 - logoImage.height/2 - 100, 350, 300);
 
     ctx.font = "30px sans-serif";
     ctx.fillStyle = "#39FF14";
@@ -392,10 +404,14 @@ const clickHandler = (event) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    if (x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 350 && y <= 400) {
+    if (x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 300 && y <= 350) {
         canvas.removeEventListener('mousemove', mouseMoveHandler);
         drawGames();
         isStartButtonActive = true;
+    }
+    else if (x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 350 && y <= 400) {
+        highscore.draw();
+        canvas.removeEventListener('mousemove', mouseMoveHandler);
     }
     else if(x >= canvas.width/3 && x <= canvas.width/3 + 255 && y >= 400 && y <= 450){
         description.draw();
@@ -418,7 +434,7 @@ const mouseMoveHandler = (event) => {
     const y = event.clientY - rect.top;
 
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-    ctx.drawImage(logoImage, canvas.width / 3 - logoImage.width / 2, canvas.height / 4 - logoImage.height / 2 - 75, 350, 300);
+    ctx.drawImage(logoImage, canvas.width / 3 - logoImage.width / 2, canvas.height / 4 - logoImage.height / 2 - 100, 350, 300);
 
 
     for (const button of buttons) {
@@ -783,6 +799,7 @@ function displayGameOver(level){
             enemyHandler1.score += addScore;
             ctx.fillText("Total Score: " + enemyHandler1.score, canvas.width / 2, 380);
             level1Complete = didwin ? true : false;
+            highscore.setHighscore(actualLevel, enemyHandler1.score, level1Complete);
             if (level1Complete) {
                 increaseRubin(50);
             }
@@ -790,6 +807,7 @@ function displayGameOver(level){
             enemyHandler2.score += addScore;
             ctx.fillText("Total Score: " + enemyHandler2.score, canvas.width / 2, 380);
             level2Complete = didwin ? true : false;
+            highscore.setHighscore(actualLevel, enemyHandler2.score, level2Complete);
             if (level2Complete) {
                 increaseRubin(75);
             }
@@ -797,6 +815,7 @@ function displayGameOver(level){
             enemyHandler3.score += addScore;
             ctx.fillText("Total Score: " + enemyHandler3.score, canvas.width / 2, 380);
             level3Complete = didwin ? true : false;
+            highscore.setHighscore(actualLevel, enemyHandler3.score, level3Complete);
             if (level3Complete) {
                 increaseRubin(100);
             }
@@ -804,6 +823,7 @@ function displayGameOver(level){
             enemyHandler4.score += addScore;
             ctx.fillText("Total Score: " + enemyHandler4.score, canvas.width / 2, 380);
             level4Complete = didwin ? true : false;
+            highscore.setHighscore(actualLevel, enemyHandler4.score, level4Complete);
             if (level4Complete) {
                 increaseRubin(125);
             }
@@ -811,6 +831,7 @@ function displayGameOver(level){
             enemyHandler5.score += addScore;
             ctx.fillText("Total Score: " + enemyHandler5.score, canvas.width / 2, 380);
             level5Complete = didwin ? true : false;
+            highscore.setHighscore(actualLevel, enemyHandler5.score, level5Complete);
             if (level5Complete) {
                 increaseRubin(150);
             }

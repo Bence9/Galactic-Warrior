@@ -6,6 +6,8 @@ export default class Description {
         this.menuCallback = menuCallback; 
         this.buttonImage = new Image();
         this.buttonImage.src = "images/ikon/back.png";
+        this.descriptionImage = new Image();
+        this.descriptionImage.src = "images/ikon/description.png";
 
         const clickHandler = (event) => {
             const rect = this.canvas.getBoundingClientRect();
@@ -38,12 +40,8 @@ draw() {
 
     this.drawWrappedText(text, x, y, maxWidth, lineHeight);
 
-    const image = new Image();
-    image.src = "images/ikon/description.png";
-    image.onload = () => {
-        this.ctx.drawImage(image, 50, 250, 150, 150);
-        this.ctx.drawImage(image, 800, 250, 150, 150);
-    };
+    this.ctx.drawImage(this.descriptionImage, 50, 250, 150, 150);
+    this.ctx.drawImage(this.descriptionImage, 800, 250, 150, 150);
 }
 
 drawButtonBack() {

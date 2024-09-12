@@ -1,5 +1,5 @@
 export default class Costumization {
-    constructor(canvas, ctx, menuCallback, rubin) {
+    constructor(canvas, ctx, menuCallback, rubin, costumizationMenuActive) {
         this.canvas = canvas;
         this.ctx = ctx;
         this.background = new Image(); 
@@ -14,6 +14,9 @@ export default class Costumization {
         this.playerName = "Azure Vortex";
         this.field = "images/background/space.png";
         this.fieldName = "Space";
+        this.costumizeImage = new Image();
+        this.costumizeImage.src = "images/ikon/costumize.png";
+        this.isMenuActive = costumizationMenuActive;
 
         this.player1Bought = true;
         this.player2Bought = false;
@@ -35,71 +38,72 @@ export default class Costumization {
             const y = event.clientY - rect.top;
         
             // Visszalépés a menube
-            if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
+            if (x >= 910 && x <= 974 && y >= 10 && y <= 74 && this.isMenuActive === true) {
                 this.menuCallback();
                 this.stopRubyAnimation();
+                this.isMenuActive = false;
             }
         
             // Player bullet color beállítása
-            if (x >= 450 && x <= 450 + this.squareSize  && y >= 130 && y <= 170) {
+            if (x >= 450 && x <= 450 + this.squareSize  && y >= 130 && y <= 170 && this.isMenuActive === true) {
                 this.playerBulletColor = "blue";
                 this.draw();
-            } else if (x >= 450 + this.squareSize + this.squareGap && x <= 450 + 2 * this.squareSize + this.squareGap && y >= 130 && y <= 170) {
+            } else if (x >= 450 + this.squareSize + this.squareGap && x <= 450 + 2 * this.squareSize + this.squareGap && y >= 130 && y <= 170 && this.isMenuActive === true) {
                 this.playerBulletColor = "red";
                 this.draw();
-            } else if (x >= 450 + 2 * (this.squareSize + this.squareGap) && x <= 450 + 3 * this.squareSize + 2 * this.squareGap && y >= 130 && y <= 170) {
+            } else if (x >= 450 + 2 * (this.squareSize + this.squareGap) && x <= 450 + 3 * this.squareSize + 2 * this.squareGap && y >= 130 && y <= 170 && this.isMenuActive === true) {
                 this.playerBulletColor = "#39FF14"; // Zöld
                 this.draw();
-            } else if (x >= 450 + 3 * (this.squareSize + this.squareGap) && x <= 450 + 4 * this.squareSize + 3 * this.squareGap && y >= 130 && y <= 170) {
+            } else if (x >= 450 + 3 * (this.squareSize + this.squareGap) && x <= 450 + 4 * this.squareSize + 3 * this.squareGap && y >= 130 && y <= 170 && this.isMenuActive === true) {
                 this.playerBulletColor = "yellow";
                 this.draw();
-            } else if (x >= 450 + 4 * (this.squareSize + this.squareGap) && x <= 450 + 5 * this.squareSize + 4 * this.squareGap && y >= 130 && y <= 170) {
+            } else if (x >= 450 + 4 * (this.squareSize + this.squareGap) && x <= 450 + 5 * this.squareSize + 4 * this.squareGap && y >= 130 && y <= 170 && this.isMenuActive === true) {
                 this.playerBulletColor = "#e01fd0"; //lila
                 this.draw();
-            } else if (x >= 450 + 5 * (this.squareSize + this.squareGap) && x <= 450 + 6 * this.squareSize + 5 * this.squareGap && y >= 130 && y <= 170) {
+            } else if (x >= 450 + 5 * (this.squareSize + this.squareGap) && x <= 450 + 6 * this.squareSize + 5 * this.squareGap && y >= 130 && y <= 170 && this.isMenuActive === true) {
                 this.playerBulletColor = "white";
                 this.draw();
             }
 
             // Enemy bullet color beállítása
-            if (x >= 450 && x <= 450 + this.squareSize && y >= 230 && y <= 270) {
+            if (x >= 450 && x <= 450 + this.squareSize && y >= 230 && y <= 270 && this.isMenuActive === true) {
                 this.enemyBulletColor = "blue";
                 this.draw();
-            } else if (x >= 450 + this.squareSize + this.squareGap && x <= 450 + 2 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270) {
+            } else if (x >= 450 + this.squareSize + this.squareGap && x <= 450 + 2 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270 && this.isMenuActive === true) {
                 this.enemyBulletColor = "red";
                 this.draw();
-            } else if (x >= 450 + 2 * (this.squareSize + this.squareGap) && x <= 450 + 3 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270) {
+            } else if (x >= 450 + 2 * (this.squareSize + this.squareGap) && x <= 450 + 3 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270 && this.isMenuActive === true) {
                 this.enemyBulletColor = "#39FF14"; // Zöld
                 this.draw();
-            } else if (x >= 450 + 3 * (this.squareSize + this.squareGap) && x <= 450 + 4 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270) {
+            } else if (x >= 450 + 3 * (this.squareSize + this.squareGap) && x <= 450 + 4 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270 && this.isMenuActive === true) {
                 this.enemyBulletColor = "yellow";
                 this.draw();
-            } else if (x >= 450 + 4 * (this.squareSize + this.squareGap) && x <= 450 + 5 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270) {
+            } else if (x >= 450 + 4 * (this.squareSize + this.squareGap) && x <= 450 + 5 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270 && this.isMenuActive === true) {
                 this.enemyBulletColor = "#e01fd0"; //lila
                 this.draw();
-            } else if (x >= 450 + 5 * (this.squareSize + this.squareGap) && x <= 450 + 6 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270) {
+            } else if (x >= 450 + 5 * (this.squareSize + this.squareGap) && x <= 450 + 6 * (this.squareSize + this.squareGap) && y >= 230 && y <= 270 && this.isMenuActive === true) {
                 this.enemyBulletColor = "white";
                 this.draw();
             }
 
             // Player buyer
-            if (x >= 20 && x <= 70 && y >= 420 && y <= 440 && this.player1Bought === false) {
+            if (x >= 20 && x <= 70 && y >= 420 && y <= 440 && this.player1Bought === false && this.isMenuActive === true) {
                 this.player1Bought = true;
                 // player1 = free ship
                 this.draw(); 
-            } else if (x >= 190 && x <= 240 && y >= 420 && y <= 440 && this.player2Bought === false) {
+            } else if (x >= 190 && x <= 240 && y >= 420 && y <= 440 && this.player2Bought === false && this.isMenuActive === true) {
                 if (this.canAfford(50)) {
                     this.player2Bought = true;
                     this.decreaseRubin(50);
                     this.draw();
                 }
-            } else if (x >= 20 && x <= 70 && y >= 520 && y <= 540 && this.player3Bought === false) {
+            } else if (x >= 20 && x <= 70 && y >= 520 && y <= 540 && this.player3Bought === false && this.isMenuActive === true) {
                 if (this.canAfford(75)) {
                     this.player3Bought = true;
                     this.decreaseRubin(75);
                     this.draw();
                 }
-            } else if (x >= 190 && x <= 240 && y >= 520 && y <= 540 && this.player4Bought === false) {
+            } else if (x >= 190 && x <= 240 && y >= 520 && y <= 540 && this.player4Bought === false && this.isMenuActive === true) {
                 if (this.canAfford(100)) {
                     this.player4Bought = true;
                     this.decreaseRubin(100);
@@ -108,19 +112,19 @@ export default class Costumization {
             }
 
             // Player selector
-            if (x >= 20 && x <= 70 && y >= 445 && y <= 465 && this.player1Bought) {
+            if (x >= 20 && x <= 70 && y >= 445 && y <= 465 && this.player1Bought && this.isMenuActive === true) {
                 this.selectedPlayer = "images/player/player1.png";
                 this.playerName = "Azure Vortex";
                 this.draw(); 
-            } else if (x >= 190 && x <= 240 && y >= 445 && y <= 465 && this.player2Bought) {
+            } else if (x >= 190 && x <= 240 && y >= 445 && y <= 465 && this.player2Bought && this.isMenuActive === true) {
                 this.selectedPlayer = "images/player/player2.png";
                 this.playerName = "Emerald Wing";
                 this.draw(); 
-            } else if (x >= 20 && x <= 70 && y >= 545 && y <= 565 && this.player3Bought) {
+            } else if (x >= 20 && x <= 70 && y >= 545 && y <= 565 && this.player3Bought && this.isMenuActive === true) {
                 this.selectedPlayer = "images/player/player3.png";
                 this.playerName = "Titanium Dragon";
                 this.draw(); 
-            } else if (x >= 190 && x <= 240 && y >= 545 && y <= 565 && this.player4Bought) {
+            } else if (x >= 190 && x <= 240 && y >= 545 && y <= 565 && this.player4Bought && this.isMenuActive === true) {
                 this.selectedPlayer = "images/player/player4.png";
                 this.playerName = "Scarlet Phoenix";
                 this.draw(); 
@@ -128,23 +132,23 @@ export default class Costumization {
 
 
             // Field buyer
-            if (x >= 645 && x <= 695 && y >= 400 && y <= 420 && this.field1Bought === false) {
+            if (x >= 645 && x <= 695 && y >= 400 && y <= 420 && this.field1Bought === false && this.isMenuActive === true) {
                 if (this.canAfford(50)) {
                     this.field1Bought = true;
                     this.decreaseRubin(50);
                     this.draw();
                 }
-            } else if (x >= 835 && x <= 885 && y >= 400 && y <= 420 && this.field2Bought === false) {
+            } else if (x >= 835 && x <= 885 && y >= 400 && y <= 420 && this.field2Bought === false && this.isMenuActive === true) {
                     this.field2Bought = true;
                     // field2 is free
                     this.draw();
-            } else if (x >= 645 && x <= 695 && y >= 520 && y <= 540 && this.field3Bought === false) {
+            } else if (x >= 645 && x <= 695 && y >= 520 && y <= 540 && this.field3Bought === false && this.isMenuActive === true) {
                 if (this.canAfford(100)) {
                     this.field3Bought = true;
                     this.decreaseRubin(100);
                     this.draw();
                 }
-            } else if (x >= 835 && x <= 885 && y >= 520 && y <= 540 && this.field4Bought === false) {
+            } else if (x >= 835 && x <= 885 && y >= 520 && y <= 540 && this.field4Bought === false && this.isMenuActive === true) {
                 if (this.canAfford(150)) {
                     this.field4Bought = true;
                     this.decreaseRubin(150);
@@ -153,25 +157,25 @@ export default class Costumization {
             }
 
             // Field selector
-            if (x >= 645 && x <= 695 && y >= 425 && y <= 445 && this.field1Bought) {
+            if (x >= 645 && x <= 695 && y >= 425 && y <= 445 && this.field1Bought && this.isMenuActive === true) {
                 this.field = "images/background/desert.png";
                 this.fieldName = "Desert";
                 this.draw();
-            } else if (x >= 835 && x <= 885 && y >= 425 && y <= 445 && this.field2Bought) {
+            } else if (x >= 835 && x <= 885 && y >= 425 && y <= 445 && this.field2Bought && this.isMenuActive === true) {
                 this.field = "images/background/space.png";
                 this.fieldName = "Space";
                 this.draw();
-            } else if (x >= 645 && x <= 695 && y >= 545 && y <= 565 && this.field3Bought) {
+            } else if (x >= 645 && x <= 695 && y >= 545 && y <= 565 && this.field3Bought && this.isMenuActive === true) {
                 this.field = "images/background/cosmic.png";
                 this.fieldName = "Cosmic";
                 this.draw();
-            } else if (x >= 835 && x <= 885 && y >= 545 && y <= 565 && this.field4Bought) {
+            } else if (x >= 835 && x <= 885 && y >= 545 && y <= 565 && this.field4Bought && this.isMenuActive === true) {
                 this.field = "images/background/earth.jpg";
                 this.fieldName = "Earth";
                 this.draw();
             }
     };
-        
+
     this.canvas.addEventListener('click', clickHandler);
 
 }
@@ -191,6 +195,7 @@ decreaseRubin(amount) {
 }
 
 draw() {
+    this.isMenuActive = true;
     this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.fillStyle = "white";
@@ -230,11 +235,8 @@ draw() {
     this.ctx.font = "25px sans-serif";
     this.ctx.fillText(this.fieldName + " selected", 800, 330);
 
-    const image = new Image();
-    image.src = "images/ikon/costumize.png";
-    image.onload = () => {
-    this.ctx.drawImage(image, 380, 340, 220, 220);
-    };
+ 
+    this.ctx.drawImage(this.costumizeImage, 380, 340, 220, 220);
 
     this.drawAnimatedRuby();
 
