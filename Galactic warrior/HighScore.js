@@ -12,13 +12,18 @@ export default class Highscore {
         this.highscoreImage.src = "images/ikon/highscore.png";
         this.isMenuActive = highscoremenuactive;
 
-        this.highscores = {
-            1: { score: 0, complete: false }, // Level 1
-            2: { score: 0, complete: false }, 
-            3: { score: 0, complete: false },
-            4: { score: 0, complete: false }, 
-            5: { score: 0, complete: false }  
-        };
+        const savedScores = localStorage.getItem('highscores');
+        if (savedScores) {
+            this.highscores = JSON.parse(savedScores);
+        } else {
+            this.highscores = {
+                1: { score: 0, complete: false }, // Level 1
+                2: { score: 0, complete: false }, 
+                3: { score: 0, complete: false },
+                4: { score: 0, complete: false }, 
+                5: { score: 0, complete: false }
+            };
+        }
 
         const clickHandler = (event) => {
             const rect = this.canvas.getBoundingClientRect();
@@ -27,7 +32,6 @@ export default class Highscore {
             
             if (x >= 820 && x <= 900 && y >= 150 && y <= 230 && this.isMenuActive === true) {
                 this.resetScore();
-                this.draw();
             }
 
             if (x >= 910 && x <= 974 && y >= 10 && y <= 74 && this.isMenuActive === true) {
@@ -79,6 +83,9 @@ setHighscore(level, score, complete) {
         if (score > this.highscores[level].score) {
             this.highscores[level].score = score; 
             this.highscores[level].complete = complete;
+
+            // Adatok mentése a localStorage-ba
+            localStorage.setItem('highscores', JSON.stringify(this.highscores));
         }
     }
 }
@@ -88,6 +95,11 @@ resetScore() {
         this.highscores[level].score = 0;
         this.highscores[level].complete = false;
     }
+
+    // highscores törlése a localStorage-ból
+    localStorage.removeItem('highscores');
+    localStorage.clear();
+    this.draw();
 }
 
 drawButtonBack() {
