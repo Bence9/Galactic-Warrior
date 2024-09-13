@@ -50,7 +50,7 @@ const costumization = new Costumization(canvas, ctx, menu, rubin, costumizationM
 const highscore = new Highscore(canvas, ctx, background, menu, highscoreMenuActive);
 
 const enemyBulletController = new BulletController(canvas, 5, "red", true);
-const playerBulletController = new BulletController(canvas, 10, "white", true);
+const playerBulletController = new BulletController(canvas, 12, "white", true);
 const bossBulletController = new BulletController(canvas, 5, "red", true);
 const giftController = new GiftController(canvas, 1);
 const gift2Controller = new Gift2Controller(canvas, 1);
@@ -69,6 +69,7 @@ let life = 3;
 let seconds = 0;
 let gameInterval;
 let isStartButtonActive = false;
+let collisionCooldown = 0; // megakadályozza az újabb ütközések érzékelését (70fps = 1mp)
 
 let gameSound = new Audio("sounds/battleTheme.mp3");
 gameSound.volume = 0.5;
@@ -1047,7 +1048,14 @@ function checkGameOver(level){
 
 }
 
+
 function collideWithObject(){
+
+    if (collisionCooldown > 0) {
+        collisionCooldown--; 
+        return;
+    }
+
     if(enemyBulletController.collideWith(player)){
         life--;
     }
@@ -1057,6 +1065,7 @@ function collideWithObject(){
     enemyHandlers.forEach(handler => {
         if (handler.collideWith(player)) {
             life--;
+            collisionCooldown = 70;
         }
     });
 
