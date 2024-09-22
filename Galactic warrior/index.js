@@ -67,7 +67,6 @@ let isGameOver = false;
 let didwin = false;
 let life = 3;
 let seconds = 0;
-let gameInterval;
 let isStartButtonActive = false;
 let collisionCooldown = 0; // megakadályozza az újabb ütközések érzékelését (70fps = 1mp)
 
@@ -460,6 +459,13 @@ drawMenuButtons();
 
 }
 
+let animationFrameId = null;
+let gameRunning1 = false;
+let gameRunning2 = false;
+let gameRunning3 = false;
+let gameRunning4 = false;
+let gameRunning5 = false;
+
 ///////////////////// THE GAME /////////////////////////////////////////
 const heartImage = new Image();
 heartImage.src = "images/ikon/redHeart.png";
@@ -471,15 +477,37 @@ const timerImage = new Image();
 timerImage.src = "images/ikon/timer.png";
 
 ///////////////////// Game1 /////////////////////////////
+gameRunning1 = true;
+let previousTime = 0;
+let fps = 70;
+let interval = 1000 / fps;
+
 function startGame1() {
-    if (gameInterval !== null) {
-        clearInterval(gameInterval);
-    }
     stopAllMusic();
-    gameInterval = setInterval(game1, 100 / 70);
     gameBackground.src = costumization.field;
+    gameRunning1 = true;
+    previousTime = performance.now(); // Kezdő idő beállítása
+    requestAnimationFrame(gameLoop1); 
 }
 
+function gameLoop1(currentTime) {
+    if (!gameRunning1) {
+        return;
+    }
+
+    let delta = currentTime - previousTime;
+
+    // Csak akkor frissít, ha eltelt az idő az intervallum szerint
+    if (delta > interval) {
+        previousTime = currentTime - (delta % interval); // Előző idő frissítése
+        game1();
+    }
+
+    animationFrameId = requestAnimationFrame(gameLoop1);
+
+    // Újrahívjuk a következő frame-et
+//    requestAnimationFrame(gameLoop1);
+}
 
 function game1() {
     let level = 1;
@@ -491,18 +519,20 @@ function game1() {
     if (!isGameOver) {
         if (enemyHandler1.soundEnabled) {
             if (gameSound.paused) {
-                gameSound.play(); // Csak akkor játszd le a zenét, ha még nincs lejátszásban
+                gameSound.play();
             }
         } else {
             if (!gameSound.paused) {
-                gameSound.pause(); // Némítsd el a zenét, ha a soundEnabled hamis
+                gameSound.pause();
             }
         }
 
         settings(level);
+
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
         ctx.fillText("Score: " + enemyHandler1.score, 125, 23);
+
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
         }
@@ -510,6 +540,7 @@ function game1() {
         ctx.fillStyle = "white";
         ctx.font = "20px sans-serif";
         ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
+
         if (timerImage.complete) {
             ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
         }
@@ -517,31 +548,53 @@ function game1() {
         ctx.fillStyle = "red";
         ctx.font = "20px sans-serif";
         ctx.fillText("Life: " + life, canvas.width - 125, 23);
+
         if (heartImage.complete) {
             ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
         }
 
         document.addEventListener('keydown', function (event) {
-            if (event.key === 'r' || event.key === 'Escape') {
+            if (event.key === 'Escape') {
                 event.preventDefault();
             }
         });
 
     } else {
-        clearInterval(gameInterval);
+        gameRunning1 = false;
         gameSound.pause();
     }
 }
 ///////////////////// end of Game1 /////////////////////////////
 
 ///////////////////// Game2 /////////////////////////////
+gameRunning2 = true;
+let previousTime2 = 0;
+let fps2 = 70;
+let interval2 = 1000 / fps2;
+
 function startGame2() {
-    if (gameInterval !== null) {
-        clearInterval(gameInterval);
-    }
     stopAllMusic();
-    gameInterval = setInterval(game2, 100 / 70);
     gameBackground.src = costumization.field;
+    gameRunning2 = true;
+    previousTime2 = performance.now(); // Kezdő idő beállítása
+    requestAnimationFrame(gameLoop2);
+}
+
+function gameLoop2(currentTime) {
+    if (!gameRunning2) {
+        return;
+    }
+
+    let delta = currentTime - previousTime2;
+
+    // Csak akkor frissítünk, ha eltelt az idő az intervallum szerint
+    if (delta > interval2) {
+        previousTime2 = currentTime - (delta % interval2); // Előző idő frissítése
+        game2();
+    }
+
+    // Újrahívjuk a következő frame-et
+    animationFrameId = requestAnimationFrame(gameLoop2);
 }
 
 function game2() {
@@ -550,6 +603,7 @@ function game2() {
     collideWithObject();
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
+
     if (!isGameOver) {
 
         if (enemyHandler2.soundEnabled) {
@@ -563,48 +617,71 @@ function game2() {
         }
 
         settings(level);
+
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
         ctx.fillText("Score: " + enemyHandler2.score, 125, 23);
+
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
         }
 
         ctx.fillStyle = "white";
         ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
+
         if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
         }
 
         ctx.fillStyle = "red";
         ctx.font = "20px sans-serif";
         ctx.fillText("Life: " + life, canvas.width - 125, 23);
+
         if (heartImage.complete) {
             ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
         }
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'r' || event.key === 'Escape') {
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
                 event.preventDefault();
             }
         });
 
     } else {
-        clearInterval(gameInterval); 
+        gameRunning2 = false;
         gameSound.pause();
     }
 }
 ///////////////////// end of Game2 /////////////////////////////
 
 ///////////////////// Game3 /////////////////////////////
+gameRunning3 = true;
+let previousTime3 = 0;
+let fps3 = 70;
+let interval3 = 1000 / fps3;
+
 function startGame3() {
-    if (gameInterval !== null) {
-        clearInterval(gameInterval);
-    }
     stopAllMusic();
-    gameInterval = setInterval(game3, 100 / 70);
     gameBackground.src = costumization.field;
+    gameRunning3 = true;
+    previousTime3 = performance.now();
+    requestAnimationFrame(gameLoop3);
+}
+
+function gameLoop3(currentTime) {
+    if (!gameRunning3) {
+        return;
+    }
+
+    let delta = currentTime - previousTime3;
+
+    if (delta > interval3) {
+        previousTime3 = currentTime - (delta % interval3);
+        game3();
+    }
+
+    animationFrameId = requestAnimationFrame(gameLoop3);
 }
 
 function game3() {
@@ -613,6 +690,7 @@ function game3() {
     collideWithObject();
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
+
     if (!isGameOver) {
 
         if (enemyHandler3.soundEnabled) {
@@ -626,48 +704,71 @@ function game3() {
         }
 
         settings(level);
+
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
         ctx.fillText("Score: " + enemyHandler3.score, 125, 23);
+
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
         }
 
         ctx.fillStyle = "white";
         ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
+
         if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
         }
 
         ctx.fillStyle = "red";
         ctx.font = "20px sans-serif";
         ctx.fillText("Life: " + life, canvas.width - 125, 23);
+
         if (heartImage.complete) {
             ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
         }
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'r' || event.key === 'Escape') {
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
                 event.preventDefault();
             }
         });
 
     } else {
-        clearInterval(gameInterval); 
+        gameRunning3 = false;
         gameSound.pause();
     }
 }
 ///////////////////// end of Game3 /////////////////////////////
 
 ///////////////////// Game4 /////////////////////////////
+gameRunning4 = true;
+let previousTime4 = 0;
+let fps4 = 70;
+let interval4 = 1000 / fps4;
+
 function startGame4() {
-    if (gameInterval !== null) {
-        clearInterval(gameInterval);
-    }
     stopAllMusic();
-    gameInterval = setInterval(game4, 100 / 70);
     gameBackground.src = costumization.field;
+    gameRunning4 = true;
+    previousTime4 = performance.now();
+    requestAnimationFrame(gameLoop4);
+}
+
+function gameLoop4(currentTime) {
+    if (!gameRunning4) {
+        return;
+    }
+
+    let delta = currentTime - previousTime4;
+
+    if (delta > interval4) {
+        previousTime4 = currentTime - (delta % interval4);
+        game4();
+    }
+
+    animationFrameId = requestAnimationFrame(gameLoop4);
 }
 
 function game4() {
@@ -676,6 +777,7 @@ function game4() {
     collideWithObject();
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
+
     if (!isGameOver) {
 
         if (enemyHandler4.soundEnabled) {
@@ -689,48 +791,71 @@ function game4() {
         }
 
         settings(level);
+
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
         ctx.fillText("Score: " + enemyHandler4.score, 125, 23);
+
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
         }
 
         ctx.fillStyle = "white";
         ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
+
         if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
         }
 
         ctx.fillStyle = "red";
         ctx.font = "20px sans-serif";
         ctx.fillText("Life: " + life, canvas.width - 125, 23);
+
         if (heartImage.complete) {
             ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
         }
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'r' || event.key === 'Escape') {
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
                 event.preventDefault();
             }
         });
 
     } else {
-        clearInterval(gameInterval); 
+        gameRunning4 = false;
         gameSound.pause();
     }
 }
 ///////////////////// end of Game4 /////////////////////////////
 
 ///////////////////// Game5 /////////////////////////////
+gameRunning5 = true;
+let previousTime5 = 0;
+let fps5 = 70;
+let interval5 = 1000 / fps5;
+
 function startGame5() {
-    if (gameInterval !== null) {
-        clearInterval(gameInterval);
-    }
     stopAllMusic();
-    gameInterval = setInterval(game5, 100 / 70);
     gameBackground.src = costumization.field;
+    gameRunning5 = true;
+    previousTime5 = performance.now();
+    requestAnimationFrame(gameLoop5);
+}
+
+function gameLoop5(currentTime) {
+    if (!gameRunning5) {
+        return;
+    }
+
+    let delta = currentTime - previousTime5;
+
+    if (delta > interval5) {
+        previousTime5 = currentTime - (delta % interval5);
+        game5();
+    }
+
+    animationFrameId = requestAnimationFrame(gameLoop5);
 }
 
 function game5() {
@@ -739,6 +864,7 @@ function game5() {
     collideWithObject();
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
+
     if (!isGameOver) {
 
         if (enemyHandler5.soundEnabled) {
@@ -752,35 +878,39 @@ function game5() {
         }
 
         settings(level);
+
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
         ctx.fillText("Score: " + enemyHandler5.score, 125, 23);
+
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
         }
 
         ctx.fillStyle = "white";
         ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width/2, 23);
+        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
+
         if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width/2 + 60, 2, 25, 25);
+            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
         }
 
         ctx.fillStyle = "red";
         ctx.font = "20px sans-serif";
         ctx.fillText("Life: " + life, canvas.width - 125, 23);
+
         if (heartImage.complete) {
             ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
         }
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'r' || event.key === 'Escape') {
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
                 event.preventDefault();
             }
         });
 
     } else {
-        clearInterval(gameInterval);
+        gameRunning5 = false;
         bossSound.pause();
     }
 }
@@ -859,15 +989,16 @@ function displayGameOver(level){
         ctx.fillText("Press [Esc] or click [back] to return to menu", canvas.width / 2, 550);
         
         // gomb lenyomás figyelő
-        document.addEventListener("keydown", function(event) {
-            if (event.key === "r") {
+        const keyDownHandler = function(event) {
+            if (event.key === "Escape") {
+                isStartButtonActive = false;
+                removeListeners();  // Eltávolítjuk az eseményfigyelőket
+                menu();
+            } else if (event.key === "r") {
+                removeListeners();  // Eltávolítjuk az eseményfigyelőket
                 restartGame(actualLevel);
             }
-            else if (event.key === "Escape"){
-                isStartButtonActive = false;
-                menu();
-            }
-        });
+        };
 
         // click figyelő
         const clickHandler = (event) => {
@@ -881,7 +1012,13 @@ function displayGameOver(level){
             }
         };
 
+        document.addEventListener("keydown", keyDownHandler);
         canvas.addEventListener('click', clickHandler);
+
+        function removeListeners() {
+            document.removeEventListener("keydown", keyDownHandler);
+            canvas.removeEventListener("click", clickHandler);
+        }
 
     }
 }
@@ -942,11 +1079,22 @@ function settings(level){
 
 
 function restartGame(level) {
+
+    if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null; // animáció ID nullázása, mivel leállítottuk
+    }
+
+    gameRunning1 = false;
+    gameRunning2 = false;
+    gameRunning3 = false;
+    gameRunning4 = false;
+    gameRunning5 = false;
+
     seconds = 0;
     isGameOver = false;
     didwin = false;
     life = 3;
-    clearInterval(gameInterval);
     player.x = canvas.width / 2 ;
     player.y = canvas.height - 75;
     enemyBulletController.clearBullets();

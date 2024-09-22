@@ -374,8 +374,8 @@ export default class EnemyHandler5 {
         this.fireBulletTimer--;
         if (this.fireBulletTimer <= 0) {
             this.fireBulletTimer = this.fireBulletTimerDefault;
-            const Enemies1 = this.enemyRows2.flat();
 
+            const Enemies1 = this.enemyRows2.flat();
             if (Enemies1.length > 0) {
                 const enemyIndex = Math.floor(Math.random() * Enemies1.length);
                 const enemy = Enemies1[enemyIndex];
@@ -386,7 +386,6 @@ export default class EnemyHandler5 {
             }
 
             const Enemies2 = this.enemyRows2.flat();
-
             if (Enemies2.length > 0) {
                 const enemyIndex = Math.floor(Math.random() * Enemies2.length);
                 const enemy = Enemies2[enemyIndex];
@@ -397,7 +396,6 @@ export default class EnemyHandler5 {
             }
 
             const Enemies3 = this.enemyRows2.flat();
-
             if (Enemies3.length > 0) {
                 const enemyIndex = Math.floor(Math.random() * Enemies3.length);
                 const enemy = Enemies3[enemyIndex];

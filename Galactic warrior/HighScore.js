@@ -47,6 +47,7 @@ export default class Highscore {
 draw() {
     this.isMenuActive = true;
     this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
+//    console.log(localStorage.getItem('highscores'));
 
     this.ctx.fillStyle = "white";
     this.ctx.font = "50px sans-serif";
@@ -98,7 +99,6 @@ resetScore() {
 
     // highscores törlése a localStorage-ból
     localStorage.removeItem('highscores');
-    localStorage.clear();
     this.draw();
 }
 

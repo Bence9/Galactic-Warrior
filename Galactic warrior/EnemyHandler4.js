@@ -100,7 +100,7 @@ export default class EnemyHandler4 {
 
     updateVelocityAndDirection() {
         let bottomMostY = Math.max(...this.enemyRows.flat().map(enemy => enemy.y + enemy.height));
-        let topMostY = Math.min(...this.enemyRows.flat().map(enemy => enemy.y));
+        let topMostY = Math.min(...this.enemyRows.flat().map(enemy => enemy.y - 30));
         let rightMostX = Math.max(...this.enemyRows.flat().map(enemy => enemy.x + enemy.width));
         let leftMostX = Math.min(...this.enemyRows.flat().map(enemy => enemy.x));
     
