@@ -49,17 +49,13 @@ export default class EnemyHandler2 {
         this.gift2Controller = gift2Controller;
         this.meteorController = meteorController;
         this.soundEnabled = soundEnabled;
-
         this.enemyDeathSound = new Audio("sounds/enemy-death.wav");
         this.enemyDeathSound.volume = 0.5;
         this.explosionSound = new Audio("sounds/explosion.wav");
         this.explosionSound.volume = 0.5;
 
         this.createEnemies();
-        this.createEnemies2();
-
         this.meteor1 = new MeteorStand(450, 300, 0, 5);
-
     }
 
     draw(ctx) {
@@ -72,7 +68,7 @@ export default class EnemyHandler2 {
         this.dropGift();
         this.dropMeteor();
         this.drawMeteors(ctx);
-        this.drawEnemies2(ctx);
+        this.meteor1 = this.handleMeteorCollision(this.meteor1, 450, 300);
     }
 
     drawMeteors(ctx){
@@ -86,8 +82,7 @@ export default class EnemyHandler2 {
             enemyRow.forEach((enemy, enemyIndex)=>{
             if(this.playerBulletController.collideWith(enemy)){
 
-                const enemyValue = enemy.value; 
-
+                const enemyValue = enemy.value;
                 this.addScore(enemyValue);
 
                 if(this.soundEnabled){
@@ -107,7 +102,6 @@ export default class EnemyHandler2 {
             if(this.playerBulletController.collideWith(enemy)){
 
                 const enemyValue = enemy.value; 
-
                 this.addScore(enemyValue);
 
                 if(this.soundEnabled){
@@ -122,16 +116,20 @@ export default class EnemyHandler2 {
         });
         this.enemyRows2 = this.enemyRows2.filter((enemyRow) => enemyRow.length > 0);
 
-        if(this.meteor1 && this.playerBulletController.collideWith(this.meteor1)){
-            this.meteor1.life -= 1;
-            if(this.meteor1.life <= 0){
-                if(this.soundEnabled){
+    }
+
+    handleMeteorCollision(meteor, dropX, dropY) {
+        if (meteor && this.playerBulletController.collideWith(meteor)) {
+            meteor.life -= 1;
+            if (meteor.life <= 0) {
+                if (this.soundEnabled) {
                     this.explosionSound.play();
                 }
-                this.meteorController.drop(450, 300, -5, 10);
-                this.meteor1 = null;
+                this.meteorController.drop(dropX, dropY, -5, 10);
+                return null; // A meteor megsemmisítése
             }
         }
+        return meteor; // A meteor visszaadása, ha még életben van
     }
 
 
@@ -139,8 +137,8 @@ export default class EnemyHandler2 {
         this.fireBulletTimer--;
         if (this.fireBulletTimer <= 0) {
             this.fireBulletTimer = this.fireBulletTimerDefault;
-            const Enemies1 = this.enemyRows1.flat();
 
+            const Enemies1 = this.enemyRows1.flat();
             if (Enemies1.length > 0) {
                 const enemyIndex = Math.floor(Math.random() * Enemies1.length);
                 const enemy = Enemies1[enemyIndex];
@@ -151,7 +149,6 @@ export default class EnemyHandler2 {
             }
 
             const Enemies2 = this.enemyRows2.flat();
-
             if (Enemies2.length > 0) {
                 const enemyIndex = Math.floor(Math.random() * Enemies2.length);
                 const enemy = Enemies2[enemyIndex];
@@ -217,42 +214,41 @@ export default class EnemyHandler2 {
         }
 
          // EnemyMap2 mozgatása
-    for (const enemyRow of this.enemyRows2) {
-        const validEnemies = enemyRow.filter(enemy => enemy !== 0);
+        for (const enemyRow of this.enemyRows2) {
+            const validEnemies = enemyRow.filter(enemy => enemy !== 0);
 
-        if (validEnemies.length === 0) {
-            continue;
-        }
+            if (validEnemies.length === 0) {
+                continue;
+            }
 
-        if (this.currentDirection2 === MovingDirection.left) {
-            this.xVelocity2 = -this.defaultXVelocity;
-            this.yVelocity2 = 0;
-            const leftMostEnemy = validEnemies[0];
-            if (leftMostEnemy.x <= 0) {
-                this.currentDirection2 = MovingDirection.downRight;
-                break;
-            }
-        } else if (this.currentDirection2 === MovingDirection.downRight) {
-            if (this.moveDown2(MovingDirection.right)) { 
-                this.currentDirection2 = MovingDirection.right; 
-                break;
-            }
-        } else if (this.currentDirection2 === MovingDirection.right) {
-            this.xVelocity2 = this.defaultXVelocity;
-            this.yVelocity2 = 0;
-            const rightMostEnemy = validEnemies[validEnemies.length - 1];
-            if (rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width) {
-                this.currentDirection2 = MovingDirection.downLeft;
-                break;
-            }
-        } else if (this.currentDirection2 === MovingDirection.downLeft) {
-            if (this.moveDown2(MovingDirection.left)) { 
-                this.currentDirection2 = MovingDirection.left;
-                break;
+            if (this.currentDirection2 === MovingDirection.left) {
+                this.xVelocity2 = -this.defaultXVelocity;
+                this.yVelocity2 = 0;
+                const leftMostEnemy = validEnemies[0];
+                if (leftMostEnemy.x <= 0) {
+                    this.currentDirection2 = MovingDirection.downRight;
+                    break;
+                }
+            } else if (this.currentDirection2 === MovingDirection.downRight) {
+                if (this.moveDown2(MovingDirection.right)) { 
+                    this.currentDirection2 = MovingDirection.right; 
+                    break;
+                }
+            } else if (this.currentDirection2 === MovingDirection.right) {
+                this.xVelocity2 = this.defaultXVelocity;
+                this.yVelocity2 = 0;
+                const rightMostEnemy = validEnemies[validEnemies.length - 1];
+                if (rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width) {
+                    this.currentDirection2 = MovingDirection.downLeft;
+                    break;
+                }
+            } else if (this.currentDirection2 === MovingDirection.downLeft) {
+                if (this.moveDown2(MovingDirection.left)) { 
+                    this.currentDirection2 = MovingDirection.left;
+                    break;
+                }
             }
         }
-    }
-    
     }
     
 
@@ -276,48 +272,44 @@ export default class EnemyHandler2 {
         return false;
     }
 
+
     drawEnemies(ctx) {
-        this.enemyRows1.flat().forEach((enemy) => {
-                enemy.move(this.xVelocity1, this.yVelocity1);
-                enemy.draw(ctx);
+        const enemyRows = [this.enemyRows1, this.enemyRows2];
+        const xVelocities = [this.xVelocity1, this.xVelocity2];
+        const yVelocities = [this.yVelocity1, this.yVelocity2];
+    
+        enemyRows.forEach((row, index) => {
+            row.flat().forEach((enemy) => {
+                if (enemy) {
+                    enemy.move(xVelocities[index], yVelocities[index]);
+                    enemy.draw(ctx);
+                }
+            });
         });
     }
 
-    drawEnemies2(ctx) {
-        this.enemyRows2.flat().forEach((enemy) => {
-                enemy.move(this.xVelocity2, this.yVelocity2);
-                enemy.draw(ctx);
-        });
-    }
 
     createEnemies() {
-        this.enemyMap1.forEach((row, rowIndex) => {
-            this.enemyRows1[rowIndex] = [];
-            row.forEach((enemyNumber, enemyIndex) => {
-                if (enemyNumber > 0) {
-                    this.enemyRows1[rowIndex].push(
-                        new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
-                    );
-                }
+        const enemyMaps = [this.enemyMap1, this.enemyMap2];
+        const enemyRows = [this.enemyRows1, this.enemyRows2];
+    
+        enemyMaps.forEach((enemyMap, mapIndex) => {
+            enemyMap.forEach((row, rowIndex) => {
+                enemyRows[mapIndex][rowIndex] = [];
+                row.forEach((enemyNumber, enemyIndex) => {
+                    if (enemyNumber > 0) {
+                        enemyRows[mapIndex][rowIndex].push(
+                            new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
+                        );
+                    }
+                });
             });
         });
     }
 
-    createEnemies2() {
-        this.enemyMap2.forEach((row, rowIndex) => {
-            this.enemyRows2[rowIndex] = [];
-            row.forEach((enemyNumber, enemyIndex) => {
-                if (enemyNumber > 0) {
-                    this.enemyRows2[rowIndex].push(
-                        new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
-                    );
-                }
-            });
-        });
-    }
 
     collideWith(sprite) {
-        // Ellenőrizd mindkét enemyRows csoportot az ütközéshez
+        // Ellenőrzi mindkét enemyRowst az ütközéshez
         const collisionDetected1 = this.enemyRows1.flat().some((enemy) => enemy !== 0 && enemy.collideWith(sprite));
         const collisionDetected2 = this.enemyRows2.flat().some((enemy) => enemy !== 0 && enemy.collideWith(sprite));
         
@@ -327,7 +319,6 @@ export default class EnemyHandler2 {
 
         return false;
     }
-
 
     // This method count the score based on the enemyValue (literally: based on different colors of enemies)
     addScore(enemyValue) {
@@ -358,7 +349,7 @@ export default class EnemyHandler2 {
         this.dropGiftTimer--;
         if (this.dropGiftTimer <= 0) {
             this.dropGiftTimer = Math.floor(Math.random() * (2500 - 1000)) + 1000; //Véletlenszerű időpontokban ajándékledobás (1000-2500 ms)
-            const x = Math.random() * this.canvas.width; // Véletlenszerű x pozíció a vászon szélességének tartományából
+            const x = Math.random() * this.canvas.width; // Véletlenszerű x pozíció (vászon szélessége)
             const y = 0; // A vászon teteje
             const Yvelocity = -2; // Sebesség, lefelé esés
             const Xvelocity = 0;
@@ -374,12 +365,11 @@ export default class EnemyHandler2 {
         }
     }
 
-
     dropMeteor() {
         this.dropMeteorTimer--;
         if (this.dropMeteorTimer <= 0) {
             this.dropMeteorTimer = Math.floor(Math.random() * (1200 - 600)) + 600; //Véletlenszerű időpontokban ledobás (600 - 1200 ms)
-            const x = Math.random() * this.canvas.width; // Véletlenszerű x pozíció a vászon szélességének tartományából
+            const x = Math.random() * this.canvas.width; // Véletlenszerű x pozíció (vászon szélessége)
             const y = 0; // A vászon teteje
             const Yvelocity = -4; // Sebesség (4), lefelé esés (-)
             const timeTillNextMeteorAllowed = 10;

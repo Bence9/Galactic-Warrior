@@ -60,8 +60,7 @@ export default class EnemyHandler1 {
             enemyRow.forEach((enemy, enemyIndex)=>{
             if(this.playerBulletController.collideWith(enemy)){
 
-                const enemyValue = enemy.value; 
-
+                const enemyValue = enemy.value;
                 this.addScore(enemyValue);
 
                 if(this.soundEnabled){
@@ -216,7 +215,6 @@ export default class EnemyHandler1 {
             
         }
     }
-
 
     dropMeteor() {
         this.dropMeteorTimer--;

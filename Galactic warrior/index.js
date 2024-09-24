@@ -71,11 +71,11 @@ let isStartButtonActive = false;
 let collisionCooldown = 0; // megakadályozza az újabb ütközések érzékelését (70fps = 1mp)
 
 let gameSound = new Audio("sounds/battleTheme.mp3");
-gameSound.volume = 0.5;
+gameSound.volume = 0.3;
 gameSound.loop = true;
 
 let bossSound = new Audio("sounds/bossSound.wav");
-bossSound.volume = 0.7;
+bossSound.volume = 0.2;
 bossSound.loop = true;
 
 function increaseRubin(amount) {
@@ -866,7 +866,6 @@ function game5() {
     displayGameOver(level);
 
     if (!isGameOver) {
-
         if (enemyHandler5.soundEnabled) {
             if (bossSound.paused) {
                 bossSound.play();
@@ -1119,7 +1118,6 @@ function restartGame(level) {
     else if(actualLevel === 2){
         enemyHandler2.score = 0;
         enemyHandler2.createEnemies();
-        enemyHandler2.createEnemies2();
         enemyHandler2.resetGame();
         if (enemyHandler2.soundEnabled) {
             gameSound.currentTime = 0;
@@ -1150,8 +1148,6 @@ function restartGame(level) {
     else if(actualLevel === 5){
         enemyHandler5.score = 0;
         enemyHandler5.createEnemies();
-        enemyHandler5.createEnemies2();
-        enemyHandler5.createEnemies3();
         enemyHandler5.resetGame();
         if (enemyHandler5.soundEnabled) {
             bossSound.currentTime = 0;

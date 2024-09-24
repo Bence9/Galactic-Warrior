@@ -57,15 +57,12 @@ export default class EnemyHandler5 {
         this.gift2Controller = gift2Controller;
         this.meteorController = meteorController;
         this.soundEnabled = soundEnabled;
-
         this.enemyDeathSound = new Audio("sounds/enemy-death.wav");
         this.enemyDeathSound.volume = 0.5;
         this.explosionSound = new Audio("sounds/explosion.wav");
         this.explosionSound.volume = 0.5;
 
         this.createEnemies();
-        this.createEnemies2();
-        this.createEnemies3();
 
         this.boss = new Boss(180, 30, 6, 30, this.bossBulletController);
         this.meteor1 = new MeteorStand(150, 300, 0, 10);
@@ -84,13 +81,13 @@ export default class EnemyHandler5 {
         this.dropGift();
         this.dropMeteor();
         this.drawMeteors(ctx);
-        this.drawEnemies2(ctx);
-        this.drawEnemies3(ctx);
         this.bossBulletController.draw(ctx);
         if(this.boss){
             this.boss.fireDiagonalBullets();
         }
-
+        this.meteor1 = this.handleMeteorCollision(this.meteor1, 150, 300);
+        this.meteor2 = this.handleMeteorCollision(this.meteor2, 450, 250);
+        this.meteor3 = this.handleMeteorCollision(this.meteor3, 750, 300);
     }
 
     drawBoss(ctx) {
@@ -195,70 +192,39 @@ export default class EnemyHandler5 {
     }
 
     drawEnemies(ctx) {
-        this.enemyRows1.flat().forEach((enemy) => {
-            if (enemy) {
-                enemy.move(this.xVelocity, this.yVelocity);
-                enemy.draw(ctx);
-            }
+        const enemyRows = [this.enemyRows1, this.enemyRows2, this.enemyRows3];
+        const xVelocities = [this.xVelocity, this.xVelocity2, this.xVelocity3];
+        const yVelocities = [this.yVelocity, this.yVelocity2, this.yVelocity3];
+    
+        enemyRows.forEach((row, index) => {
+            row.flat().forEach((enemy) => {
+                if (enemy) {
+                    enemy.move(xVelocities[index], yVelocities[index]);
+                    enemy.draw(ctx);
+                }
+            });
         });
     }
 
-    drawEnemies2(ctx) {
-        this.enemyRows2.flat().forEach((enemy) => {
-            if (enemy) {
-                enemy.move(this.xVelocity2, this.yVelocity2);
-                enemy.draw(ctx);
-            }
-        });
-    }
-
-    drawEnemies3(ctx) {
-        this.enemyRows3.flat().forEach((enemy) => {
-            if (enemy) {
-                enemy.move(this.xVelocity3, this.yVelocity3);
-                enemy.draw(ctx);
-            }
-        });
-    }
 
     createEnemies() {
-        this.enemyMap1.forEach((row, rowIndex) => {
-            this.enemyRows1[rowIndex] = [];
-            row.forEach((enemyNumber, enemyIndex) => {
-                if (enemyNumber > 0) {
-                    this.enemyRows1[rowIndex].push(
-                        new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
-                    );
-                }
+        const enemyMaps = [this.enemyMap1, this.enemyMap2, this.enemyMap3];
+        const enemyRows = [this.enemyRows1, this.enemyRows2, this.enemyRows3];
+    
+        enemyMaps.forEach((enemyMap, mapIndex) => {
+            enemyMap.forEach((row, rowIndex) => {
+                enemyRows[mapIndex][rowIndex] = [];
+                row.forEach((enemyNumber, enemyIndex) => {
+                    if (enemyNumber > 0) {
+                        enemyRows[mapIndex][rowIndex].push(
+                            new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
+                        );
+                    }
+                });
             });
         });
     }
 
-    createEnemies2() {
-        this.enemyMap2.forEach((row, rowIndex) => {
-            this.enemyRows2[rowIndex] = [];  
-            row.forEach((enemyNumber, enemyIndex) => {
-                if (enemyNumber > 0) {
-                    this.enemyRows2[rowIndex].push(
-                        new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
-                    );
-                }
-            });
-        });
-    }
-
-    createEnemies3() {
-        this.enemyMap3.forEach((row, rowIndex) => {
-            this.enemyRows3[rowIndex] = [];  
-            row.forEach((enemyNumber, enemyIndex) => {
-                if (enemyNumber > 0) {
-                    this.enemyRows3[rowIndex].push(
-                        new Enemy(enemyIndex * 45, rowIndex * 30 + 30, enemyNumber)
-                    );
-                }
-            });
-        });
-    }
 
     collisionDetection() {
         this.enemyRows1.forEach((enemyRow) => {
@@ -326,37 +292,20 @@ export default class EnemyHandler5 {
                 }
             }
         }
+    }
 
-        if(this.meteor1 && this.playerBulletController.collideWith(this.meteor1)){
-            this.meteor1.life -= 1;
-            if(this.meteor1.life <= 0){
-                if(this.soundEnabled){
+    handleMeteorCollision(meteor, dropX, dropY) {
+        if (meteor && this.playerBulletController.collideWith(meteor)) {
+            meteor.life -= 1;
+            if (meteor.life <= 0) {
+                if (this.soundEnabled) {
                     this.explosionSound.play();
                 }
-                this.meteorController.drop(150, 300, -5, 10);
-                this.meteor1 = null;
+                this.meteorController.drop(dropX, dropY, -5, 10);
+                return null; // A meteor megsemmisítése
             }
         }
-        if(this.meteor2 && this.playerBulletController.collideWith(this.meteor2)){
-            this.meteor2.life -= 1;
-            if(this.meteor2.life <= 0){
-                if(this.soundEnabled){
-                    this.explosionSound.play();
-                }
-                this.meteorController.drop(450, 250, -5, 10);
-                this.meteor2 = null;
-            }
-        }
-        if(this.meteor3 && this.playerBulletController.collideWith(this.meteor3)){
-            this.meteor3.life -= 1;
-            if(this.meteor3.life <= 0){
-                if(this.soundEnabled){
-                    this.explosionSound.play();
-                }
-                this.meteorController.drop(750, 300, -5, 10);
-                this.meteor3 = null;
-            }
-        }
+        return meteor;
     }
 
     moveDown(newDirection) {
@@ -480,7 +429,6 @@ export default class EnemyHandler5 {
 
     collideWith(sprite) {
         let collisionDetected = this.enemyRows1.flat().some((enemy) => enemy.collideWith(sprite));
-    
         if (this.boss && this.boss.collideWith(sprite)) {
             collisionDetected = true;
         }

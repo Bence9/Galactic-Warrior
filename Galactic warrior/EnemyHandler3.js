@@ -62,6 +62,8 @@ export default class EnemyHandler3 {
         this.dropGift();
         this.dropMeteor();
         this.drawMeteors(ctx);
+        this.meteor1 = this.handleMeteorCollision(this.meteor1, 200, 300);
+        this.meteor2 = this.handleMeteorCollision(this.meteor2, 700, 300);
     }
 
     drawBosses(ctx) {
@@ -198,44 +200,39 @@ export default class EnemyHandler3 {
                 }
             }
         }
-        if(this.meteor1 && this.playerBulletController.collideWith(this.meteor1)){
-            this.meteor1.life -= 1;
-            if(this.meteor1.life <= 0){
-                if(this.soundEnabled){
-                    this.explosionSound.play();
-                }
-                this.meteorController.drop(200, 300, -5, 10);
-                this.meteor1 = null;
-            }
-        }
-        if(this.meteor2 && this.playerBulletController.collideWith(this.meteor2)){
-            this.meteor2.life -= 1;
-            if(this.meteor2.life <= 0){
-                if(this.soundEnabled){
-                    this.explosionSound.play();
-                }
-                this.meteorController.drop(700, 300, -5, 10);
-                this.meteor2 = null;
-            }
-        }
+
     }
 
-fireBullet() {
-    this.fireBulletTimer--;
-    if (this.fireBulletTimer <= 0) {
-        this.fireBulletTimer = this.fireBulletTimerDefault;
-        const allEnemies = this.enemyRows.flat();
+    handleMeteorCollision(meteor, dropX, dropY) {
+        if (meteor && this.playerBulletController.collideWith(meteor)) {
+            meteor.life -= 1;
+            if (meteor.life <= 0) {
+                if (this.soundEnabled) {
+                    this.explosionSound.play();
+                }
+                this.meteorController.drop(dropX, dropY, -5, 10);
+                return null; // A meteor megsemmisítése
+            }
+        }
+        return meteor; // A meteor visszaadása, ha még életben van
+    }
 
-        if (allEnemies.length > 0) {
-            const enemyIndex = Math.floor(Math.random() * allEnemies.length);
-            const enemy = allEnemies[enemyIndex];
+    fireBullet() {
+        this.fireBulletTimer--;
+        if (this.fireBulletTimer <= 0) {
+            this.fireBulletTimer = this.fireBulletTimerDefault;
+            const allEnemies = this.enemyRows.flat();
+
+            if (allEnemies.length > 0) {
+                const enemyIndex = Math.floor(Math.random() * allEnemies.length);
+                const enemy = allEnemies[enemyIndex];
             
-            if (enemy) {
-                this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3);
+                if (enemy) {
+                    this.enemyBulletController.shoot(enemy.x + enemy.width / 2, enemy.y, -3);
+                }
             }
         }
     }
-}
 
     resetMoveDownTimer() {
         if (this.moveDownTimer <= 0) {
