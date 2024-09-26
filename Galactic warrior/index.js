@@ -75,7 +75,7 @@ gameSound.volume = 0.3;
 gameSound.loop = true;
 
 let bossSound = new Audio("sounds/bossSound.wav");
-bossSound.volume = 0.2;
+bossSound.volume = 0.4;
 bossSound.loop = true;
 
 function increaseRubin(amount) {
@@ -87,7 +87,7 @@ function increaseRubin(amount) {
 function drawLevelField(x, y, width, height, radius, playX, playY, level, challenge) {
     // yellow square
     ctx.strokeStyle = "#FFFF00"; // yellow
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(x + radius, y);
     ctx.lineTo(x + width - radius, y);
@@ -358,6 +358,7 @@ function makeButton(text, xPos, yPos, width, height) {
     ctx.fillRect(xPos, yPos, width, height);
 
     ctx.strokeStyle = "red";
+    ctx.lineWidth = 2; 
     ctx.strokeRect(xPos, yPos, width, height);
 
     ctx.fillStyle = "#39ff14";

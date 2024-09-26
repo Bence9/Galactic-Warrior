@@ -54,7 +54,7 @@ export default class Player {
 
         if (this.image.src.includes("player3.png")) {
             if (this.shootPressed) {
-                this.bulletController.shoot2(this.x + 10, this.y, this.x + this.width -10, this.y, 3, 15);
+                this.bulletController.doubleShoot(this.x + 10, this.y, this.x + this.width -10, this.y, 3, 15);
             }
         }
 
@@ -66,7 +66,7 @@ export default class Player {
                     { x: 1, y: -3.5 }, // jobbra fel
                 ];
         
-                this.bulletController.shoot3(this.x + this.width / 2, this.y, velocities, 15);
+                this.bulletController.TripleShoot(this.x + this.width / 2, this.y, velocities, 15);
             }
         }
 

@@ -40,7 +40,7 @@ export default class BulletController {
     }
 
     // Two shoot in same time
-    shoot2(x1, y1, x2, y2, velocity, timeTillNextBulletAllowed = 0) {
+    doubleShoot(x1, y1, x2, y2, velocity, timeTillNextBulletAllowed = 0) {
         if (this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime) {
             const bullet1 = new Bullet(this.canvas, x1, y1, velocity, this.bulletColor);
             const bullet2 = new Bullet(this.canvas, x2, y2, velocity, this.bulletColor);
@@ -57,7 +57,7 @@ export default class BulletController {
     }
 
     // 3 shot in half round
-    shoot3(x, y, velocities, timeTillNextBulletAllowed = 0){
+    TripleShoot(x, y, velocities, timeTillNextBulletAllowed = 0){
         if (this.timeTillNextBulletAllowed <= 0 && this.bullets.length < this.maxBulletsAtATime) {
             velocities.forEach(velocity => {
                 const bullet = new BossBullet(this.canvas, x, y, velocity.x, velocity.y, this.bulletColor);
