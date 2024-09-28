@@ -1,4 +1,3 @@
-
 export default class Player {
     constructor(canvas, velocity, bulletController) {
         this.canvas = canvas;

@@ -15,10 +15,8 @@ import Highscore from "./HighScore.js";
 
 const canvas = document.getElementById("menu");
 const ctx = canvas.getContext("2d");
-
 canvas.width = 1000;
 canvas.height = 600;
-
 
 // menu background
 const background = new Image();
@@ -33,13 +31,7 @@ const logoImage = new Image();
 logoImage.src = "images/ikon/welcomeIcon.png";
 logoImage.onload = menu;
 
-
 let rubin = 100;
-let level1Complete = false;
-let level2Complete = false;
-let level3Complete = false;
-let level4Complete = false;
-let level5Complete = false;
 let soundMenuActive = false; // figyeli, hogy a sound menu megvan-e nyitva
 let costumizationMenuActive = false;
 let highscoreMenuActive = false;
@@ -460,14 +452,7 @@ drawMenuButtons();
 
 }
 
-let animationFrameId = null;
-let gameRunning1 = false;
-let gameRunning2 = false;
-let gameRunning3 = false;
-let gameRunning4 = false;
-let gameRunning5 = false;
-
-///////////////////// THE GAME /////////////////////////////////////////
+///////////////////// THE GAME //////////////////////////////////////
 const heartImage = new Image();
 heartImage.src = "images/ikon/redHeart.png";
 
@@ -477,18 +462,24 @@ scoreImage.src = "images/ikon/score.png";
 const timerImage = new Image();
 timerImage.src = "images/ikon/timer.png";
 
-///////////////////// Game1 /////////////////////////////
-gameRunning1 = true;
+let animationFrameId = null;
+let gameRunning1 = false;
+let gameRunning2 = false;
+let gameRunning3 = false;
+let gameRunning4 = false;
+let gameRunning5 = false;
+
 let previousTime = 0;
 let fps = 70;
 let interval = 1000 / fps;
 
+///////////////////// Game1 /////////////////////////////
 function startGame1() {
     stopAllMusic();
     gameBackground.src = costumization.field;
     gameRunning1 = true;
-    previousTime = performance.now(); // Kezdő idő beállítása
-    requestAnimationFrame(gameLoop1); 
+    previousTime = performance.now(); // kezdő idő beállítása
+    requestAnimationFrame(gameLoop1);
 }
 
 function gameLoop1(currentTime) {
@@ -498,7 +489,7 @@ function gameLoop1(currentTime) {
 
     let delta = currentTime - previousTime;
 
-    // Csak akkor frissít, ha eltelt az idő az intervallum szerint
+    // Csak akkor frissül, ha eltelt az idő az intervallum szerint
     if (delta > interval) {
         previousTime = currentTime - (delta % interval); // Előző idő frissítése
         game1();
@@ -506,78 +497,19 @@ function gameLoop1(currentTime) {
 
     animationFrameId = requestAnimationFrame(gameLoop1);
 
-    // Újrahívjuk a következő frame-et
-//    requestAnimationFrame(gameLoop1);
 }
 
 function game1() {
-    let level = 1;
-    checkGameOver(level);
-    collideWithObject();
-    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
-    displayGameOver(level);
-
-    if (!isGameOver) {
-        if (enemyHandler1.soundEnabled) {
-            if (gameSound.paused) {
-                gameSound.play();
-            }
-        } else {
-            if (!gameSound.paused) {
-                gameSound.pause();
-            }
-        }
-
-        settings(level);
-
-        ctx.fillStyle = "yellow";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Score: " + enemyHandler1.score, 125, 23);
-
-        if (scoreImage.complete) {
-            ctx.drawImage(scoreImage, 185, 2, 25, 25);
-        }
-
-        ctx.fillStyle = "white";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
-
-        if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
-        }
-
-        ctx.fillStyle = "red";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Life: " + life, canvas.width - 125, 23);
-
-        if (heartImage.complete) {
-            ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
-        }
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                event.preventDefault();
-            }
-        });
-
-    } else {
-        gameRunning1 = false;
-        gameSound.pause();
-    }
+    gameHandler(1, enemyHandler1);
 }
-///////////////////// end of Game1 /////////////////////////////
+///////////////////// end of Game1 ///////////////////////
 
 ///////////////////// Game2 /////////////////////////////
-gameRunning2 = true;
-let previousTime2 = 0;
-let fps2 = 70;
-let interval2 = 1000 / fps2;
-
 function startGame2() {
     stopAllMusic();
     gameBackground.src = costumization.field;
     gameRunning2 = true;
-    previousTime2 = performance.now(); // Kezdő idő beállítása
+    previousTime = performance.now();
     requestAnimationFrame(gameLoop2);
 }
 
@@ -586,87 +518,27 @@ function gameLoop2(currentTime) {
         return;
     }
 
-    let delta = currentTime - previousTime2;
+    let delta = currentTime - previousTime;
 
-    // Csak akkor frissítünk, ha eltelt az idő az intervallum szerint
-    if (delta > interval2) {
-        previousTime2 = currentTime - (delta % interval2); // Előző idő frissítése
+    if (delta > interval) {
+        previousTime = currentTime - (delta % interval); 
         game2();
     }
 
-    // Újrahívjuk a következő frame-et
     animationFrameId = requestAnimationFrame(gameLoop2);
 }
 
 function game2() {
-    let level = 2;
-    checkGameOver(level);
-    collideWithObject();
-    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
-    displayGameOver(level);
-
-    if (!isGameOver) {
-
-        if (enemyHandler2.soundEnabled) {
-            if (gameSound.paused) {
-                gameSound.play();
-            }
-        } else {
-            if (!gameSound.paused) {
-                gameSound.pause();
-            }
-        }
-
-        settings(level);
-
-        ctx.fillStyle = "yellow";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Score: " + enemyHandler2.score, 125, 23);
-
-        if (scoreImage.complete) {
-            ctx.drawImage(scoreImage, 185, 2, 25, 25);
-        }
-
-        ctx.fillStyle = "white";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
-
-        if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
-        }
-
-        ctx.fillStyle = "red";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Life: " + life, canvas.width - 125, 23);
-
-        if (heartImage.complete) {
-            ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
-        }
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                event.preventDefault();
-            }
-        });
-
-    } else {
-        gameRunning2 = false;
-        gameSound.pause();
-    }
+    gameHandler(2, enemyHandler2);
 }
-///////////////////// end of Game2 /////////////////////////////
+///////////////////// end of Game2 //////////////////////
 
 ///////////////////// Game3 /////////////////////////////
-gameRunning3 = true;
-let previousTime3 = 0;
-let fps3 = 70;
-let interval3 = 1000 / fps3;
-
 function startGame3() {
     stopAllMusic();
     gameBackground.src = costumization.field;
     gameRunning3 = true;
-    previousTime3 = performance.now();
+    previousTime = performance.now();
     requestAnimationFrame(gameLoop3);
 }
 
@@ -675,10 +547,10 @@ function gameLoop3(currentTime) {
         return;
     }
 
-    let delta = currentTime - previousTime3;
+    let delta = currentTime - previousTime;
 
-    if (delta > interval3) {
-        previousTime3 = currentTime - (delta % interval3);
+    if (delta > interval) {
+        previousTime = currentTime - (delta % interval);
         game3();
     }
 
@@ -686,74 +558,16 @@ function gameLoop3(currentTime) {
 }
 
 function game3() {
-    let level = 3;
-    checkGameOver(level);
-    collideWithObject();
-    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
-    displayGameOver(level);
-
-    if (!isGameOver) {
-
-        if (enemyHandler3.soundEnabled) {
-            if (gameSound.paused) {
-                gameSound.play();
-            }
-        } else {
-            if (!gameSound.paused) {
-                gameSound.pause();
-            }
-        }
-
-        settings(level);
-
-        ctx.fillStyle = "yellow";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Score: " + enemyHandler3.score, 125, 23);
-
-        if (scoreImage.complete) {
-            ctx.drawImage(scoreImage, 185, 2, 25, 25);
-        }
-
-        ctx.fillStyle = "white";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
-
-        if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
-        }
-
-        ctx.fillStyle = "red";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Life: " + life, canvas.width - 125, 23);
-
-        if (heartImage.complete) {
-            ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
-        }
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                event.preventDefault();
-            }
-        });
-
-    } else {
-        gameRunning3 = false;
-        gameSound.pause();
-    }
+   gameHandler(3, enemyHandler3);
 }
-///////////////////// end of Game3 /////////////////////////////
+///////////////////// end of Game3 //////////////////////
 
 ///////////////////// Game4 /////////////////////////////
-gameRunning4 = true;
-let previousTime4 = 0;
-let fps4 = 70;
-let interval4 = 1000 / fps4;
-
 function startGame4() {
     stopAllMusic();
     gameBackground.src = costumization.field;
     gameRunning4 = true;
-    previousTime4 = performance.now();
+    previousTime = performance.now();
     requestAnimationFrame(gameLoop4);
 }
 
@@ -762,10 +576,10 @@ function gameLoop4(currentTime) {
         return;
     }
 
-    let delta = currentTime - previousTime4;
+    let delta = currentTime - previousTime;
 
-    if (delta > interval4) {
-        previousTime4 = currentTime - (delta % interval4);
+    if (delta > interval) {
+        previousTime = currentTime - (delta % interval);
         game4();
     }
 
@@ -773,74 +587,16 @@ function gameLoop4(currentTime) {
 }
 
 function game4() {
-    let level = 4;
-    checkGameOver(level);
-    collideWithObject();
-    ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
-    displayGameOver(level);
-
-    if (!isGameOver) {
-
-        if (enemyHandler4.soundEnabled) {
-            if (gameSound.paused) {
-                gameSound.play();
-            }
-        } else {
-            if (!gameSound.paused) {
-                gameSound.pause();
-            }
-        }
-
-        settings(level);
-
-        ctx.fillStyle = "yellow";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Score: " + enemyHandler4.score, 125, 23);
-
-        if (scoreImage.complete) {
-            ctx.drawImage(scoreImage, 185, 2, 25, 25);
-        }
-
-        ctx.fillStyle = "white";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
-
-        if (timerImage.complete) {
-            ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
-        }
-
-        ctx.fillStyle = "red";
-        ctx.font = "20px sans-serif";
-        ctx.fillText("Life: " + life, canvas.width - 125, 23);
-
-        if (heartImage.complete) {
-            ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
-        }
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                event.preventDefault();
-            }
-        });
-
-    } else {
-        gameRunning4 = false;
-        gameSound.pause();
-    }
+    gameHandler(4, enemyHandler4);
 }
-///////////////////// end of Game4 /////////////////////////////
+///////////////////// end of Game4 //////////////////////
 
 ///////////////////// Game5 /////////////////////////////
-gameRunning5 = true;
-let previousTime5 = 0;
-let fps5 = 70;
-let interval5 = 1000 / fps5;
-
 function startGame5() {
     stopAllMusic();
     gameBackground.src = costumization.field;
     gameRunning5 = true;
-    previousTime5 = performance.now();
+    previousTime = performance.now();
     requestAnimationFrame(gameLoop5);
 }
 
@@ -849,10 +605,10 @@ function gameLoop5(currentTime) {
         return;
     }
 
-    let delta = currentTime - previousTime5;
+    let delta = currentTime - previousTime;
 
-    if (delta > interval5) {
-        previousTime5 = currentTime - (delta % interval5);
+    if (delta > interval) {
+        previousTime = currentTime - (delta % interval);
         game5();
     }
 
@@ -860,20 +616,47 @@ function gameLoop5(currentTime) {
 }
 
 function game5() {
-    let level = 5;
+    gameHandler(5, enemyHandler5);
+}
+///////////////////// end of Game5 /////////////////////////////
+
+function gameHandler(level, enemyHandler) {
+    let gameRunningVar;
+    let soundToUse = gameSound;
+
+    // Switch-case szerkezet a gameRunning változó kiválasztásához
+    switch (level) {
+        case 1:
+            gameRunningVar = gameRunning1;
+            break;
+        case 2:
+            gameRunningVar = gameRunning2;
+            break;
+        case 3:
+            gameRunningVar = gameRunning3;
+            break;
+        case 4:
+            gameRunningVar = gameRunning4;
+            break;
+        case 5:
+            gameRunningVar = gameRunning5;
+            soundToUse = bossSound;         // Boss fight esetén más zene
+            break;
+    }
+
     checkGameOver(level);
     collideWithObject();
     ctx.drawImage(gameBackground, 0, 0, canvas.width, canvas.height);
     displayGameOver(level);
 
     if (!isGameOver) {
-        if (enemyHandler5.soundEnabled) {
-            if (bossSound.paused) {
-                bossSound.play();
+        if (enemyHandler.soundEnabled) {
+            if (soundToUse.paused) {
+                soundToUse.play();
             }
         } else {
-            if (!bossSound.paused) {
-                bossSound.pause();
+            if (!soundToUse.paused) {
+                soundToUse.pause();
             }
         }
 
@@ -881,7 +664,7 @@ function game5() {
 
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
-        ctx.fillText("Score: " + enemyHandler5.score, 125, 23);
+        ctx.fillText("Score: " + enemyHandler.score, 125, 23);
 
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
@@ -910,61 +693,49 @@ function game5() {
         });
 
     } else {
-        gameRunning5 = false;
-        bossSound.pause();
+        // Stop the game
+        gameRunningVar = false;
+        soundToUse.pause();
+
+        switch (level) {
+            case 1:
+                gameRunning1 = gameRunningVar;
+                break;
+            case 2:
+                gameRunning2 = gameRunningVar;
+                break;
+            case 3:
+                gameRunning3 = gameRunningVar;
+                break;
+            case 4:
+                gameRunning4 = gameRunningVar;
+                break;
+            case 5:
+                gameRunning5 = gameRunningVar;
+                break;
+        }
     }
 }
-///////////////////// end of Game5 /////////////////////////////
 
-
-function displayGameOver(level){
-    if(isGameOver) {
+function displayGameOver(level) {
+    if (isGameOver) {
         let text = didwin ? "You win" : "Game Over";
-        let actualLevel = level;
         let addScore = life * 50; // remaining life added to score
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "30px Arial";
-        
-        if (actualLevel === 1) {
-            enemyHandler1.score += addScore;
-            ctx.fillText("Total Score: " + enemyHandler1.score, canvas.width / 2, 380);
-            level1Complete = didwin ? true : false;
-            highscore.setHighscore(actualLevel, enemyHandler1.score, level1Complete);
-            if (level1Complete) {
-                increaseRubin(50);
-            }
-        } else if (actualLevel === 2) {
-            enemyHandler2.score += addScore;
-            ctx.fillText("Total Score: " + enemyHandler2.score, canvas.width / 2, 380);
-            level2Complete = didwin ? true : false;
-            highscore.setHighscore(actualLevel, enemyHandler2.score, level2Complete);
-            if (level2Complete) {
-                increaseRubin(75);
-            }
-        } else if (actualLevel === 3) {
-            enemyHandler3.score += addScore;
-            ctx.fillText("Total Score: " + enemyHandler3.score, canvas.width / 2, 380);
-            level3Complete = didwin ? true : false;
-            highscore.setHighscore(actualLevel, enemyHandler3.score, level3Complete);
-            if (level3Complete) {
-                increaseRubin(100);
-            }
-        } else if (actualLevel === 4) {
-            enemyHandler4.score += addScore;
-            ctx.fillText("Total Score: " + enemyHandler4.score, canvas.width / 2, 380);
-            level4Complete = didwin ? true : false;
-            highscore.setHighscore(actualLevel, enemyHandler4.score, level4Complete);
-            if (level4Complete) {
-                increaseRubin(125);
-            }
-        } else if (actualLevel === 5) {
-            enemyHandler5.score += addScore;
-            ctx.fillText("Total Score: " + enemyHandler5.score, canvas.width / 2, 380);
-            level5Complete = didwin ? true : false;
-            highscore.setHighscore(actualLevel, enemyHandler5.score, level5Complete);
-            if (level5Complete) {
-                increaseRubin(150);
+
+        const enemyHandler = getEnemyHandler(level);
+        if (enemyHandler) {
+            enemyHandler.score += addScore;
+            ctx.fillText("Total Score: " + enemyHandler.score, canvas.width / 2, 380);
+            
+            let levelComplete = didwin ? true : false;
+            highscore.setHighscore(level, enemyHandler.score, levelComplete);
+          
+            const rubinBonus = level * 25 + 25;
+            if (levelComplete) {
+                increaseRubin(rubinBonus);
             }
         }
 
@@ -972,40 +743,36 @@ function displayGameOver(level){
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "100px Arial";
-        ctx.fillText(text, canvas.width / 2 , 250);
+        ctx.fillText(text, canvas.width / 2, 250);
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "25px Arial";
-        if(addScore <= 0){
-            addScore = 0;
-        }
-        ctx.fillText("(+ " + addScore + " point added from remaining life)", canvas.width / 2, 340);
-        
+        ctx.fillText("(+ " + Math.max(addScore, 0) + " point added from remaining life)", canvas.width / 2, 340);
         ctx.fillText("Time: " + updateTime(), canvas.width / 2, 420);
 
         ctx.fillStyle = "#39ff14";
         ctx.font = "30px Arial";
         ctx.fillText("Press [R] to restart game", canvas.width / 2, 510);
         ctx.fillText("Press [Esc] or click [back] to return to menu", canvas.width / 2, 550);
-        
-        // gomb lenyomás figyelő
+
+        // Gomb lenyomás figyelő
         const keyDownHandler = function(event) {
             if (event.key === "Escape") {
                 isStartButtonActive = false;
-                removeListeners();  // Eltávolítjuk az eseményfigyelőket
+                removeListeners();
                 menu();
             } else if (event.key === "r") {
-                removeListeners();  // Eltávolítjuk az eseményfigyelőket
-                restartGame(actualLevel);
+                removeListeners();
+                restartGame(level);
             }
         };
 
-        // click figyelő
+        // Kattintás figyelő
         const clickHandler = (event) => {
             const rect = canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
-            
+
             if (x >= 910 && x <= 974 && y >= 10 && y <= 74) {
                 isStartButtonActive = false;
                 menu();
@@ -1019,12 +786,11 @@ function displayGameOver(level){
             document.removeEventListener("keydown", keyDownHandler);
             canvas.removeEventListener("click", clickHandler);
         }
-
     }
 }
 
 // All things to set that user choose from sound and costumization menu
-function settings(level){
+function settings(level) {
     player.image.src = costumization.selectedPlayer;
     player.draw(ctx);
     playerBulletController.draw(ctx);
@@ -1034,69 +800,48 @@ function settings(level){
     gift2Controller.draw(ctx);
     meteorController.draw(ctx);
 
-    let actualLevel = level;
+    // Az enemy handler beszerzése a szint alapján
+    const enemyHandler = getEnemyHandler(level);
 
-    if(actualLevel === 1){
-        enemyHandler1.draw(ctx);
-        enemyHandler1.soundEnabled = sound.soundOn;
-        enemyHandler1.enemyDeathSound.volume = (sound.volume / 100);
-    }
-    else if(actualLevel === 2){
-        enemyHandler2.draw(ctx);
-        enemyHandler2.soundEnabled = sound.soundOn;
-        enemyHandler2.enemyDeathSound.volume = (sound.volume / 100);
-    }
-    else if(actualLevel === 3){
-        enemyHandler3.draw(ctx);
-        enemyHandler3.soundEnabled = sound.soundOn;
-        enemyHandler3.enemyDeathSound.volume = (sound.volume / 100);
-    }
-    else if(actualLevel === 4){
-        enemyHandler4.draw(ctx);
-        enemyHandler4.soundEnabled = sound.soundOn;
-        enemyHandler4.enemyDeathSound.volume = (sound.volume / 100);
-    }
-    else if(actualLevel === 5){
-        enemyHandler5.draw(ctx);
-        enemyHandler5.soundEnabled = sound.soundOn;
-        enemyHandler5.enemyDeathSound.volume = (sound.volume / 100);
+    // Ha létezik enemyHandler, akkor végezd el a rajzolást és a hang beállításokat
+    if (enemyHandler) {
+        enemyHandler.draw(ctx);
+        enemyHandler.soundEnabled = sound.soundOn;
+        enemyHandler.enemyDeathSound.volume = (sound.volume / 100);
     }
 
+    // Közös hang beállítások
     playerBulletController.soundEnabled = sound.soundOn;
     enemyBulletController.soundEnabled = sound.soundOn;
     bossBulletController.soundEnabled = sound.soundOn;
     meteorController.soundEnabled = sound.soundOn;
-    
+
+    // Hangok hangerő beállítása
     playerBulletController.shootSound.volume = (sound.volume / 100);
     enemyBulletController.shootSound.volume = (sound.volume / 100);
     bossBulletController.shootSound.volume = (sound.volume / 100);
     meteorController.meteorBoom.volume = (sound.volume / 100);
 
+    // Lövedék színének beállítása
     playerBulletController.bulletColor = costumization.playerBulletColor;
     enemyBulletController.bulletColor = costumization.enemyBulletColor;
     bossBulletController.bulletColor = costumization.enemyBulletColor;
 }
 
-
 function restartGame(level) {
-
     if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId);
-        animationFrameId = null; // animáció ID nullázása, mivel leállítottuk
+        animationFrameId = null; // animáció ID nullázása
     }
 
-    gameRunning1 = false;
-    gameRunning2 = false;
-    gameRunning3 = false;
-    gameRunning4 = false;
-    gameRunning5 = false;
-
+    gameRunning1 = gameRunning2 = gameRunning3 = gameRunning4 = gameRunning5 = false;
     seconds = 0;
     isGameOver = false;
     didwin = false;
     life = 3;
-    player.x = canvas.width / 2 ;
+    player.x = canvas.width / 2;
     player.y = canvas.height - 75;
+
     enemyBulletController.clearBullets();
     playerBulletController.clearBullets();
     bossBulletController.clearBullets();
@@ -1104,59 +849,50 @@ function restartGame(level) {
     gift2Controller.clearGifts();
     meteorController.clearMeteors();
 
-    let actualLevel = level;
+    const enemyHandler = getEnemyHandler(level);
+    if (enemyHandler) {
+        enemyHandler.score = 0;
+        enemyHandler.createEnemies();
+        enemyHandler.resetGame();
 
-    if(actualLevel === 1){
-        enemyHandler1.score = 0;
-        enemyHandler1.createEnemies();
-        enemyHandler1.resetGame();
-        if (enemyHandler1.soundEnabled) {
+        if (enemyHandler.soundEnabled) {
             gameSound.currentTime = 0;
-            gameSound.play();
-        } 
-        startGame1();
-    }
-    else if(actualLevel === 2){
-        enemyHandler2.score = 0;
-        enemyHandler2.createEnemies();
-        enemyHandler2.resetGame();
-        if (enemyHandler2.soundEnabled) {
-            gameSound.currentTime = 0;
-            gameSound.play();
-        } 
-        startGame2();
-    }
-    else if(actualLevel === 3){
-        enemyHandler3.score = 0;
-        enemyHandler3.createEnemies();
-        enemyHandler3.resetGame();
-        if (enemyHandler3.soundEnabled) {
-            gameSound.currentTime = 0;
-            gameSound.play();
-        } 
-        startGame3();
-    }
-    else if(actualLevel === 4){
-        enemyHandler4.score = 0;
-        enemyHandler4.createEnemies();
-        enemyHandler4.resetGame();
-        if (enemyHandler4.soundEnabled) {
-            gameSound.currentTime = 0;
-            gameSound.play();
-        } 
-        startGame4();
-    }
-    else if(actualLevel === 5){
-        enemyHandler5.score = 0;
-        enemyHandler5.createEnemies();
-        enemyHandler5.resetGame();
-        if (enemyHandler5.soundEnabled) {
-            bossSound.currentTime = 0;
-            bossSound.play();
-        } 
-        startGame5();
-    }
+        }
 
+        switch (level) {
+            case 1:
+                startGame1();
+                break;
+            case 2:
+                startGame2();
+                break;
+            case 3:
+                startGame3();
+                break;
+            case 4:
+                startGame4();
+                break;
+            case 5:
+                bossSound.currentTime = 0;
+                startGame5();
+                break;
+        }
+    }
+}
+
+function getEnemyHandler(level) {
+    switch (level) {
+        case 1:
+            return enemyHandler1;
+        case 2:
+            return enemyHandler2;
+        case 3:
+            return enemyHandler3;
+        case 4:
+            return enemyHandler4;
+        case 5:
+            return enemyHandler5;
+    }
 }
 
 function checkGameOver(level){

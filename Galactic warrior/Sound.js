@@ -18,7 +18,6 @@ export default class Sound {
             if (x >= 910 && x <= 974 && y >= 10 && y <= 74 && this.isMenuActive === true) {
                 this.menuCallback(); // menu() visszahívása
                 this.isMenuActive = false;
-//                console.log(this.soundmenuActive);
             }
         
             if (x >= 350 && x <= 400 && y >= 180 && y <= 230 && this.isMenuActive === true) {
@@ -43,7 +42,6 @@ export default class Sound {
 draw() {
     this.ctx.drawImage(this.background, 0, 0, this.canvas.width, this.canvas.height);
     this.isMenuActive = true;
-//    console.log(this.soundmenuActive);
 
     this.ctx.fillStyle = "white";
     this.ctx.font = "50px sans-serif";

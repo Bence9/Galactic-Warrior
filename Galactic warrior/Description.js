@@ -69,7 +69,7 @@ drawWrappedText(text, x, y, maxWidth, lineHeight) {
     lines.push(line);
 
     lines.forEach((line, index) => {
-        this.ctx.font = "25px Arial"; // ettől nagyobbnak tűnik a szöveg
+        this.ctx.font = "25px Arial"; // szöveg méretezése
         this.ctx.fillStyle = "white";
         this.ctx.fillText(line, x, y + (index * lineHeight));
     });

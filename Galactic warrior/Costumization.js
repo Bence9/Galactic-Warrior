@@ -140,7 +140,7 @@ export default class Costumization {
                 }
             } else if (x >= 835 && x <= 885 && y >= 400 && y <= 420 && this.field2Bought === false && this.isMenuActive === true) {
                     this.field2Bought = true;
-                    // field2 is free
+                    // space = free field
                     this.draw();
             } else if (x >= 645 && x <= 695 && y >= 520 && y <= 540 && this.field3Bought === false && this.isMenuActive === true) {
                 if (this.canAfford(100)) {
