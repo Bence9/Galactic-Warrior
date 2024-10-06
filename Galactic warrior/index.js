@@ -171,40 +171,40 @@ function drawGames() {
 
         if (x >= 920 && x <= 970 && y >= 80 && y <= 110) {
             stopAnimation();
-            startGame1();
             let level = 1;
+            startGame(level);
             if (isGameOver) {
                 restartGame(level);
             }
         }
         if (x >= 920 && x <= 970 && y >= 185 && y <= 215) {
             stopAnimation();
-            startGame2();
             let level = 2;
+            startGame(level);
             if (isGameOver) {
                 restartGame(level);
             }
         }
         if (x >= 920 && x <= 970 && y >= 290 && y <= 320) {
             stopAnimation();
-            startGame3();
             let level = 3;
+            startGame(level);
             if (isGameOver) {
                 restartGame(level);
             }
         }
         if (x >= 920 && x <= 970 && y >= 395 && y <= 425) {
             stopAnimation();
-            startGame4();
             let level = 4;
+            startGame(level);
             if (isGameOver) {
                 restartGame(level);
             }
         }
         if (x >= 920 && x <= 970 && y >= 500 && y <= 530) {
             stopAnimation();
-            startGame5();
             let level = 5;
+            startGame(level);
             if (isGameOver) {
                 restartGame(level);
             }
@@ -429,12 +429,10 @@ const mouseMoveHandler = (event) => {
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(logoImage, canvas.width / 3 - logoImage.width / 2, canvas.height / 4 - logoImage.height / 2 - 100, 350, 300);
 
-
     for (const button of buttons) {
         if (x >= button.x && x <= button.x + button.width && y >= button.y && y <= button.y + button.height) {
-            ctx.fillStyle = "rgba(57, 255, 20, 0.8)";
+            ctx.fillStyle = "rgba(57, 255, 20, 0.8)"; // neon green
             ctx.fillRect(button.x, button.y, button.width, button.height);
-            ctx.strokeStyle = "red";
             ctx.strokeRect(button.x, button.y, button.width, button.height);
             ctx.fillStyle = "#000000"; // black
             ctx.font = "30px sans-serif";
@@ -449,7 +447,6 @@ canvas.addEventListener('mousemove', mouseMoveHandler);
 canvas.addEventListener('click', clickHandler);
 
 drawMenuButtons();
-
 }
 
 ///////////////////// THE GAME //////////////////////////////////////
@@ -463,185 +460,58 @@ const timerImage = new Image();
 timerImage.src = "images/ikon/timer.png";
 
 let animationFrameId = null;
-let gameRunning1 = false;
-let gameRunning2 = false;
-let gameRunning3 = false;
-let gameRunning4 = false;
-let gameRunning5 = false;
-
+let gameRunning = [false, false, false, false, false];
 let previousTime = 0;
 let fps = 70;
 let interval = 1000 / fps;
 
-///////////////////// Game1 /////////////////////////////
-function startGame1() {
+
+function startGame(level) {
     stopAllMusic();
     gameBackground.src = costumization.field;
-    gameRunning1 = true;
-    previousTime = performance.now(); // kezdő idő beállítása
-    requestAnimationFrame(gameLoop1);
+    previousTime = performance.now(); // kezdeti idő beállítása
+    gameRunning[level - 1] = true;
+    requestAnimationFrame(currentTime => gameLoop(currentTime, level));
 }
 
-function gameLoop1(currentTime) {
-    if (!gameRunning1) {
-        return;
-    }
-
-    let delta = currentTime - previousTime;
-
-    // Csak akkor frissül, ha eltelt az idő az intervallum szerint
-    if (delta > interval) {
-        previousTime = currentTime - (delta % interval); // Előző idő frissítése
-        game1();
-    }
-
-    animationFrameId = requestAnimationFrame(gameLoop1);
-
-}
-
-function game1() {
-    gameHandler(1, enemyHandler1);
-}
-///////////////////// end of Game1 ///////////////////////
-
-///////////////////// Game2 /////////////////////////////
-function startGame2() {
-    stopAllMusic();
-    gameBackground.src = costumization.field;
-    gameRunning2 = true;
-    previousTime = performance.now();
-    requestAnimationFrame(gameLoop2);
-}
-
-function gameLoop2(currentTime) {
-    if (!gameRunning2) {
-        return;
-    }
-
-    let delta = currentTime - previousTime;
-
-    if (delta > interval) {
-        previousTime = currentTime - (delta % interval); 
-        game2();
-    }
-
-    animationFrameId = requestAnimationFrame(gameLoop2);
-}
-
-function game2() {
-    gameHandler(2, enemyHandler2);
-}
-///////////////////// end of Game2 //////////////////////
-
-///////////////////// Game3 /////////////////////////////
-function startGame3() {
-    stopAllMusic();
-    gameBackground.src = costumization.field;
-    gameRunning3 = true;
-    previousTime = performance.now();
-    requestAnimationFrame(gameLoop3);
-}
-
-function gameLoop3(currentTime) {
-    if (!gameRunning3) {
-        return;
-    }
+function gameLoop(currentTime, level) {
+    if (!gameRunning[level - 1]) return;
 
     let delta = currentTime - previousTime;
 
     if (delta > interval) {
         previousTime = currentTime - (delta % interval);
-        game3();
+
+        switch (level) {
+            case 1: // level 1
+                gameHandler(1, enemyHandler1);
+                break;
+            case 2:
+                gameHandler(2, enemyHandler2);
+                break;
+            case 3:
+                gameHandler(3, enemyHandler3);
+                break;
+            case 4:
+                gameHandler(4, enemyHandler4);
+                break;
+            case 5:
+                gameHandler(5, enemyHandler5);
+                break;
+        }
     }
 
-    animationFrameId = requestAnimationFrame(gameLoop3);
+    animationFrameId = requestAnimationFrame(currentTime => gameLoop(currentTime, level));
 }
 
-function game3() {
-   gameHandler(3, enemyHandler3);
-}
-///////////////////// end of Game3 //////////////////////
-
-///////////////////// Game4 /////////////////////////////
-function startGame4() {
-    stopAllMusic();
-    gameBackground.src = costumization.field;
-    gameRunning4 = true;
-    previousTime = performance.now();
-    requestAnimationFrame(gameLoop4);
-}
-
-function gameLoop4(currentTime) {
-    if (!gameRunning4) {
-        return;
-    }
-
-    let delta = currentTime - previousTime;
-
-    if (delta > interval) {
-        previousTime = currentTime - (delta % interval);
-        game4();
-    }
-
-    animationFrameId = requestAnimationFrame(gameLoop4);
-}
-
-function game4() {
-    gameHandler(4, enemyHandler4);
-}
-///////////////////// end of Game4 //////////////////////
-
-///////////////////// Game5 /////////////////////////////
-function startGame5() {
-    stopAllMusic();
-    gameBackground.src = costumization.field;
-    gameRunning5 = true;
-    previousTime = performance.now();
-    requestAnimationFrame(gameLoop5);
-}
-
-function gameLoop5(currentTime) {
-    if (!gameRunning5) {
-        return;
-    }
-
-    let delta = currentTime - previousTime;
-
-    if (delta > interval) {
-        previousTime = currentTime - (delta % interval);
-        game5();
-    }
-
-    animationFrameId = requestAnimationFrame(gameLoop5);
-}
-
-function game5() {
-    gameHandler(5, enemyHandler5);
-}
-///////////////////// end of Game5 /////////////////////////////
+///////////////////// End of Games //////////////////////////
 
 function gameHandler(level, enemyHandler) {
-    let gameRunningVar;
     let soundToUse = gameSound;
 
-    // Switch-case szerkezet a gameRunning változó kiválasztásához
-    switch (level) {
-        case 1:
-            gameRunningVar = gameRunning1;
-            break;
-        case 2:
-            gameRunningVar = gameRunning2;
-            break;
-        case 3:
-            gameRunningVar = gameRunning3;
-            break;
-        case 4:
-            gameRunningVar = gameRunning4;
-            break;
-        case 5:
-            gameRunningVar = gameRunning5;
-            soundToUse = bossSound;         // Boss fight esetén más zene
-            break;
+    // Boss fight esetén más zene
+    if (level === 5) {
+        soundToUse = bossSound;
     }
 
     checkGameOver(level);
@@ -665,7 +535,6 @@ function gameHandler(level, enemyHandler) {
         ctx.fillStyle = "yellow";
         ctx.font = "20px sans-serif";
         ctx.fillText("Score: " + enemyHandler.score, 125, 23);
-
         if (scoreImage.complete) {
             ctx.drawImage(scoreImage, 185, 2, 25, 25);
         }
@@ -673,7 +542,6 @@ function gameHandler(level, enemyHandler) {
         ctx.fillStyle = "white";
         ctx.font = "20px sans-serif";
         ctx.fillText("Time: " + updateTime(), canvas.width / 2, 23);
-
         if (timerImage.complete) {
             ctx.drawImage(timerImage, canvas.width / 2 + 60, 2, 25, 25);
         }
@@ -681,7 +549,6 @@ function gameHandler(level, enemyHandler) {
         ctx.fillStyle = "red";
         ctx.font = "20px sans-serif";
         ctx.fillText("Life: " + life, canvas.width - 125, 23);
-
         if (heartImage.complete) {
             ctx.drawImage(heartImage, canvas.width - 95, 2, 25, 25);
         }
@@ -691,29 +558,9 @@ function gameHandler(level, enemyHandler) {
                 event.preventDefault();
             }
         });
-
     } else {
-        // Stop the game
-        gameRunningVar = false;
+        gameRunning[level - 1] = false;
         soundToUse.pause();
-
-        switch (level) {
-            case 1:
-                gameRunning1 = gameRunningVar;
-                break;
-            case 2:
-                gameRunning2 = gameRunningVar;
-                break;
-            case 3:
-                gameRunning3 = gameRunningVar;
-                break;
-            case 4:
-                gameRunning4 = gameRunningVar;
-                break;
-            case 5:
-                gameRunning5 = gameRunningVar;
-                break;
-        }
     }
 }
 
@@ -800,23 +647,20 @@ function settings(level) {
     gift2Controller.draw(ctx);
     meteorController.draw(ctx);
 
-    // Az enemy handler beszerzése a szint alapján
     const enemyHandler = getEnemyHandler(level);
 
-    // Ha létezik enemyHandler, akkor végezd el a rajzolást és a hang beállításokat
     if (enemyHandler) {
         enemyHandler.draw(ctx);
         enemyHandler.soundEnabled = sound.soundOn;
         enemyHandler.enemyDeathSound.volume = (sound.volume / 100);
     }
 
-    // Közös hang beállítások
+    // hangerő beállítása
     playerBulletController.soundEnabled = sound.soundOn;
     enemyBulletController.soundEnabled = sound.soundOn;
     bossBulletController.soundEnabled = sound.soundOn;
     meteorController.soundEnabled = sound.soundOn;
 
-    // Hangok hangerő beállítása
     playerBulletController.shootSound.volume = (sound.volume / 100);
     enemyBulletController.shootSound.volume = (sound.volume / 100);
     bossBulletController.shootSound.volume = (sound.volume / 100);
@@ -834,7 +678,7 @@ function restartGame(level) {
         animationFrameId = null; // animáció ID nullázása
     }
 
-    gameRunning1 = gameRunning2 = gameRunning3 = gameRunning4 = gameRunning5 = false;
+    gameRunning = [false, false, false, false, false];
     seconds = 0;
     isGameOver = false;
     didwin = false;
@@ -859,24 +703,11 @@ function restartGame(level) {
             gameSound.currentTime = 0;
         }
 
-        switch (level) {
-            case 1:
-                startGame1();
-                break;
-            case 2:
-                startGame2();
-                break;
-            case 3:
-                startGame3();
-                break;
-            case 4:
-                startGame4();
-                break;
-            case 5:
-                bossSound.currentTime = 0;
-                startGame5();
-                break;
+        if (level === 5) {
+            bossSound.currentTime = 0;
         }
+
+        startGame(level);
     }
 }
 
@@ -895,40 +726,48 @@ function getEnemyHandler(level) {
     }
 }
 
-function checkGameOver(level){
-    let actualLevel = level;
+function checkGameOver(level) {
+    const enemyHandler = getEnemyHandler(level);  // Az aktuális enemyHandler megszerzése
 
-    if(life === 0){
+    if (life === 0) {
         isGameOver = true;
+        return;  // Ha a játékos élete elfogyott, nincs értelme tovább ellenőrizni a nyerést
     }
 
-    if(enemyHandler1.enemyRows.length === 0 && actualLevel === 1){
-        didwin = true;
-        isGameOver = true;
+    switch (level) {
+        case 1:
+            if (enemyHandler.enemyRows.length === 0) {
+                didwin = true;
+                isGameOver = true;
+            }
+            break;
+        case 2:
+            if (enemyHandler.enemyRows1.length === 0 && enemyHandler.enemyRows2.length === 0) {
+                didwin = true;
+                isGameOver = true;
+            }
+            break;
+        case 3:
+            if (enemyHandler.enemyRows.length === 0 && !enemyHandler.boss1 && !enemyHandler.boss2) {
+                didwin = true;
+                isGameOver = true;
+            }
+            break;
+        case 4:
+            if (enemyHandler.enemyRows.length === 0) {
+                didwin = true;
+                isGameOver = true;
+            }
+            break;
+        case 5:
+            if (enemyHandler.enemyRows1.length === 0 && enemyHandler.enemyRows2.length === 0 && 
+                enemyHandler.enemyRows3.length === 0 && !enemyHandler.boss) {
+                didwin = true;
+                isGameOver = true;
+            }
+            break;
     }
-
-    if(enemyHandler2.enemyRows1.length === 0 && enemyHandler2.enemyRows2.length === 0 && actualLevel === 2){
-        didwin = true;
-        isGameOver = true;
-    }
-
-    if(enemyHandler3.enemyRows.length === 0 && actualLevel === 3 && !enemyHandler3.boss1 && !enemyHandler3.boss2 ){
-        didwin = true;
-        isGameOver = true;
-    }
-
-    if(enemyHandler4.enemyRows.length === 0 && actualLevel === 4){
-        didwin = true;
-        isGameOver = true;
-    }
-
-    if(enemyHandler5.enemyRows1.length === 0 && enemyHandler5.enemyRows2.length === 0 && enemyHandler5.enemyRows3.length === 0 && actualLevel === 5  && !enemyHandler5.boss){
-        didwin = true;
-        isGameOver = true;
-    }
-
 }
-
 
 function collideWithObject(){
 
