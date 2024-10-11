@@ -504,7 +504,6 @@ function gameLoop(currentTime, level) {
     animationFrameId = requestAnimationFrame(currentTime => gameLoop(currentTime, level));
 }
 
-///////////////////// End of Games //////////////////////////
 
 function gameHandler(level, enemyHandler) {
     let soundToUse = gameSound;

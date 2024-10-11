@@ -179,7 +179,7 @@ export default class EnemyHandler4 {
             row.forEach((enemyNumber, enemyIndex) => {
                 if (enemyNumber > 0) {
                     this.enemyRows[rowIndex].push(
-                        new Enemy(enemyIndex * 50, rowIndex * 30 + 30, enemyNumber)
+                        new Enemy(enemyIndex * 55, rowIndex * 30 + 30, enemyNumber)
                     );
                 }
             });

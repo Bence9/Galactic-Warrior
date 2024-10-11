@@ -31,12 +31,12 @@ draw() {
 
     this.drawButtonBack();
 
-    var text="Galactic Warrior is a thrilling arcade game where players pilot a spaceship, dodging waves of enemy fire and hazardous meteors. As the game intensifies, enemies grow fiercer, demanding swift reflexes and precise shooting. The game features customizable ships and battlefields, offering a tailored and challenging adventure. Players can gather Rubies, the in-game currency, to unlock special features and deepen their gameplay experience. With its captivating mechanics and strategic elements, Galactic Warrior stands out as a premier title in the modern space arcade genre.";
+    var text="Galactic Warrior is a fun and exciting arcade game where players control a spaceship, avoiding enemy attacks and dangerous meteors. As the game goes on, the enemies become stronger, requiring quick reactions and accurate shooting. Players can customize their ships and battlefields, creating a more personal and challenging experience. By collecting Rubies, the game's currency, players can unlock special features and improve their gameplay. With its thrilling gameplay and strategic elements, Galactic Warrior stands out as a top space combat game, where players' skills and tactics determine their survival in the huge and dangerous universe.";
 
-    var maxWidth = 400;
+    var maxWidth = 450;
     var lineHeight = 30;
     var x = 500;
-    var y = 130;
+    var y = 150;
 
     this.drawWrappedText(text, x, y, maxWidth, lineHeight);
 
